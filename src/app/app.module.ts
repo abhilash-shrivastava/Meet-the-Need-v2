@@ -19,6 +19,8 @@ import { AboutComponent } from './about';
 import { NoContentComponent } from './no-content';
 import { XLarge } from './home/x-large';
 
+
+
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
@@ -35,13 +37,13 @@ type StoreType = {
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
 @NgModule({
-  bootstrap: [ AppComponent ],
+  bootstrap: [ AppComponent],
   declarations: [
     AppComponent,
-    AboutComponent,
+    // AboutComponent,
     HomeComponent,
-    NoContentComponent,
-    XLarge
+    // NoContentComponent,
+    // XLarge
   ],
   imports: [ // import Angular's modules
     BrowserModule,
