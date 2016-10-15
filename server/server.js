@@ -2,7 +2,7 @@
 /**
  * Created by Abhi on 6/12/16.
  */
-'use strict'
+'use strict';
 const express = require('express');
 var cors = require('cors');
 const bodyParser= require('body-parser');
@@ -43,91 +43,90 @@ app.all('*', function(req, res, next) {
 
 
 app.use('/sender-list', jwtCheck);
-app.post('/sender-list', (req, res) => {
+app.post('/sender-list', function(req, res) {
   res.connection.setTimeout(0);
-  getParcelSenderList(req.body, (responseToProvider) => {
-  res.send(JSON.stringify(responseToProvider));
+  getParcelSenderList(req.body, function (responseToProvider) {
+    res.send(JSON.stringify(responseToProvider));
   });
 });
 
 app.use('/provider-list', jwtCheck);
-app.post('/provider-list', (req, res) => {
+app.post('/provider-list', function(req, res) {
   res.connection.setTimeout(0);
-  getServiceProviderList(req.body, (responseToSender) => {
+  getServiceProviderList(req.body, function (responseToSender) {
   res.send(JSON.stringify(responseToSender));
   });
 });
 
 app.use('/save-user', jwtCheck);
-app.post('/save-user', (req, res) => {
-  db.collection('user').save(req.body, (err, result) => {
+app.post('/save-user', function(req, res) {
+  db.collection('user').save(req.body, function(err, result){
   res.connection.setTimeout(0);
-if (err) return console.log(err);
-sendEmail(req.body.email,"User Account created as " + req.body.nickname, "You have successfully logged in with Meet-the-Need App")
-console.log('saved to database');
-res.send(JSON.stringify(response));
-})
+  if (err) return console.log(err);
+  sendEmail(req.body.email,"User Account created as " + req.body.nickname, "You have successfully logged in with Meet-the-Need App");
+  res.send(JSON.stringify(response));
+  })
 });
 
 app.use('/select-provider', jwtCheck);
-app.post('/select-provider', (req, res) => {
+app.post('/select-provider', function(req, res) {
   res.connection.setTimeout(0);
-  assignProviderForApproval(req.body, (responseToSender) => {
+  assignProviderForApproval(req.body, function(responseToSender) {
     res.send(JSON.stringify(responseToSender));
   });
 });
 
 app.use('/select-parcel', jwtCheck);
-app.post('/select-parcel', (req, res) => {
+app.post('/select-parcel', function(req, res) {
   res.connection.setTimeout(0);
-  assignParcelForApproval(req.body, (responseToSender) => {
+  assignParcelForApproval(req.body, function(responseToSender) {
   res.send(JSON.stringify(responseToSender));
-});
+  });
 });
 
 
-MongoClient.connect(LocalDbUrl, (err, database) => {
+MongoClient.connect(LocalDbUrl, function(err, database){
   if (err) return console.log(err)
   db = database
-app.listen(9000, () => {
-  console.log('listening on 9000');
+  app.listen(9000, function(){
+    console.log('listening on 9000');
   })
-})
+});
 
 app.use('/assigned-service-request', jwtCheck);
 
 app.post('/assigned-service-request', function (req, res) {
   res.connection.setTimeout(0);
-  assignedServiceRequest(req.body, (requests) => {
+  assignedServiceRequest(req.body, function(requests){
   res.send(JSON.stringify(requests));
-})
+  })
 });
 
 app.use('/unassigned-service-request', jwtCheck);
 
 app.post('/unassigned-service-request', function (req, res) {
   res.connection.setTimeout(0);
-  unassignedServiceRequest(req.body, (requests) => {
+  unassignedServiceRequest(req.body, function(requests) {
     res.send(JSON.stringify(requests));
-})
+  })
 });
 
 app.use('/assigned-sender-request', jwtCheck);
 
 app.post('/assigned-sender-request', function (req, res) {
   res.connection.setTimeout(0);
-  assignedSenderRequest(req.body, (requests) => {
+  assignedSenderRequest(req.body, function(requests) {
     res.send(JSON.stringify(requests));
-})
+  })
 });
 
 app.use('/unassigned-sender-request', jwtCheck);
 
 app.post('/unassigned-sender-request', function (req, res) {
   res.connection.setTimeout(0);
-  unassignedSenderRequest(req.body, (requests) => {
+  unassignedSenderRequest(req.body, function(requests){
     res.send(JSON.stringify(requests));
-})
+  })
 });
 
 
@@ -135,45 +134,45 @@ app.use('/parcel-receiving-request', jwtCheck);
 
 app.post('/parcel-receiving-request', function (req, res) {
   res.connection.setTimeout(0);
-  parcelReceivingRequest(req.body, (requests) => {
+  parcelReceivingRequest(req.body, function(requests){
     res.send(JSON.stringify(requests));
-})
+  })
 });
 
 app.use('/change-status', jwtCheck);
 
 app.post('/change-status', function (req, res) {
   res.connection.setTimeout(0);
-  parcelStatusChange(req.body, (requests) => {
+  parcelStatusChange(req.body, function(requests){
     res.send(JSON.stringify(requests));
-})
+  })
 });
 
 app.use('/service-details', jwtCheck);
 
 app.post('/service-details', function (req, res) {
   res.connection.setTimeout(0);
-  getServiceProviderDetails(req.body, (requests) => {
+  getServiceProviderDetails(req.body, function(requests) {
     res.send(JSON.stringify(requests));
-})
+  })
 });
 
 app.use('/sender-details', jwtCheck);
 
 app.post('/sender-details', function (req, res) {
   res.connection.setTimeout(0);
-  getParcelSenderDetails(req.body, (requests) => {
+  getParcelSenderDetails(req.body, function(requests){
     res.send(JSON.stringify(requests));
-})
+  })
 });
 
 app.use('/cancel-request', jwtCheck);
 
 app.post('/cancel-request', function (req, res) {
   res.connection.setTimeout(0);
-  cancelRequest(req.body, (response) => {
+  cancelRequest(req.body, function(response){
     res.send(JSON.stringify(response));
-})
+  })
 });
 
 
@@ -181,9 +180,9 @@ app.use('/update-request', jwtCheck);
 
 app.post('/update-request', function (req, res) {
   res.connection.setTimeout(0);
-  updateRequest(req.body, (response) => {
+  updateRequest(req.body, function(response){
     res.send(JSON.stringify(response));
-})
+  })
 });
 
 
@@ -191,9 +190,9 @@ app.use('/reject-request', jwtCheck);
 
 app.post('/reject-request', function (req, res) {
   res.connection.setTimeout(0);
-  rejectRequest(req.body, (response) => {
+  rejectRequest(req.body, function(response){
     res.send(JSON.stringify(response));
-})
+  })
 });
 
 var assignProvider =  function (data, callback) {
@@ -204,13 +203,13 @@ var assignProvider =  function (data, callback) {
   cursorone.count(function (e, count) {
 
     if (count == 0){
-      db.collection('serviceProvider').save(data, (err, result) => {
+      db.collection('serviceProvider').save(data, function(err, result){
         if (err) return console.log(err);
-      responseToProvider = [];
-      callback(responseToProvider);
-      sendRaisedEmailToProvider(data);
-      console.log("saved to serviceProvider");
-    })
+          responseToProvider = [];
+          callback(responseToProvider);
+          sendRaisedEmailToProvider(data);
+          console.log("saved to serviceProvider");
+      })
     }
     else {
       cursorone.each(function(err, sender){
@@ -219,7 +218,7 @@ var assignProvider =  function (data, callback) {
             sender["serviceProvider"] = data;
             sender["status"] = "Assigned To Service Provider";
           }
-          db.collection('providerAssigned').insertOne(sender, (err, result) => {
+          db.collection('providerAssigned').insertOne(sender, function(err, result){
             if (err) return console.log(err);
           db.collection('parcelSender').deleteOne(
             { "_id": sender._id },
@@ -258,7 +257,7 @@ var assignParcelForApproval =  function (data, callback) {
     data._id = ObjectId(data._id);
   }
   data["status"] = "Pending Approval At Parcel Sender";
-  db.collection('providerAssigned').insertOne(data, (err, result) => {
+  db.collection('providerAssigned').insertOne(data, function(err, result){
     if (err) return console.log(err);
   responseToSender = [];
   responseToSender.push(data);
@@ -301,7 +300,7 @@ var assignProviderForApproval =  function (data, callback) {
     data._id = ObjectId(data._id);
   }
   data["status"] = "Pending Approval At Service Provider";
-  db.collection('providerAssigned').insertOne(data, (err, result) => {
+  db.collection('providerAssigned').insertOne(data, function(err, result){
     if (err) return console.log(err);
   responseToSender = [];
   responseToSender.push(data.serviceProvider);
@@ -343,12 +342,12 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
     parcelDetails._id = ObjectId(parcelDetails._id);
   }
   var cursorone = db.collection('serviceProvider')
-    .find({$and: [ {$or:[{"currentCity": parcelDetails.currentCity}, {"itineraryCitiesToDestination.city": parcelDetails.currentCity}]}, {$or:[{"destinationCity": parcelDetails.deliveryCity}, {"itineraryCitiesToDestination.city": parcelDetails.deliveryCity}]}, {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }}, {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}}, {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}}, {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}}, {"journeyDate" : { $gte: new Date().toISOString().split('T')[0], $gte: parcelDetails.startDeliveryDate, $lte: parcelDetails.endDeliveryDate}}]}).sort({maxParcelWeight: + 1});
+    .find({$and: [ {$or:[{"currentCity": parcelDetails.currentCity}, {"itineraryCitiesToDestination.city": parcelDetails.currentCity}]}, {$or:[{"destinationCity": parcelDetails.deliveryCity}, {"itineraryCitiesToDestination.city": parcelDetails.deliveryCity}]}, {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }}, {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}}, {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}}, {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}}, {"journeyDate" : {$gte: [parcelDetails.startDeliveryDate, new Date().toISOString().split('T')[0]], $lte: parcelDetails.endDeliveryDate}}]}).sort({maxParcelWeight: + 1});
 
   cursorone.count(function (e, count) {
 
     if (count === 0) {
-      db.collection('parcelSender').save(parcelDetails, (err, result) => {
+      db.collection('parcelSender').save(parcelDetails, function(err, result){
         if (err) return console.log(err);
       responseToProvider = [];
       sendResponse(responseToSender);
@@ -391,7 +390,7 @@ var getParcelSenderList = function (serviceDetails,  sendResponse) {
       .find( {$and: [{$or: [{ "currentCity": serviceDetails.currentCity} , { "currentCity": { $in: connectingCitiesToDestination}}]}, {$or: [{ "deliveryCity": serviceDetails.destinationCity} ,{ "deliveryCity": { $in: connectingCitiesToDestination}}]}, {"parcelWeight": { $lte: (serviceDetails.maxParcelWeight)}}, {"parcelHeight": { $lte: (serviceDetails.maxParcelHeight)}}, {"parcelLength": { $lte: (serviceDetails.maxParcelLength)}}, {"parcelWidth": { $lte: (serviceDetails.maxParcelWidth)}}, {"startDeliveryDate" : {$lte: serviceDetails.journeyDate}}, {"endDeliveryDate" : {$gte: serviceDetails.journeyDate}}]}).sort({parcelWeight: -1})
   cursorone.count(function (e, count) {
     if (count === 0) {
-      db.collection('serviceProvider').save(serviceDetails, (err, result) => {
+      db.collection('serviceProvider').save(serviceDetails, function(err, result){
         if (err) return console.log(err);
       responseToProvider = [];
       sendResponse(responseToSender);
@@ -415,8 +414,8 @@ var getParcelSenderList = function (serviceDetails,  sendResponse) {
 
 var sendRaisedEmailToSender = function (sender) {
 
-  let subject = "Parcel Request Raised for the Item " + sender.parcelDisclosure;
-  let content = "You have successfully raised the Parcel request for the Item " + sender.parcelDisclosure + " \n " +
+  var subject = "Parcel Request Raised for the Item " + sender.parcelDisclosure;
+  var content = "You have successfully raised the Parcel request for the Item " + sender.parcelDisclosure + " \n " +
     "Parcel Capacity Mentioned: \n" +
     "Max. Parcel Weight: " + sender.maxParcelWeight + " pounds" + " \n " + "Max. Parcel Height: " + sender.maxParcelHeight + " cm." + " \n " + "Max. Parcel Length: " + sender.maxParcelLength+ " cm." + " \n " + "Max. Parcel Width: " + sender.maxParcelWidth+ " cm." + " \n\n\n " +
     "Team\nMeet-the-Need";
@@ -425,8 +424,8 @@ var sendRaisedEmailToSender = function (sender) {
 }
 
 var sendRaisedEmailToProvider = function (provider) {
-  let subject = "Service Request Raised for the Travel to " + provider.destinationCity + " on "+ provider.journeyDate;
-  let content = "You have successfully raised the service request for the travel to " + provider.destinationCity + " on " + provider.journeyDate + " \n " +
+  var subject = "Service Request Raised for the Travel to " + provider.destinationCity + " on "+ provider.journeyDate;
+  var content = "You have successfully raised the service request for the travel to " + provider.destinationCity + " on " + provider.journeyDate + " \n " +
     "Parcel Capacity Mentioned: \n" +
     "Max. Parcel Weight: " + provider.maxParcelWeight + " pounds" + " \n " + "Max. Parcel Height: " + provider.maxParcelHeight + " cm." + " \n " + "Max. Parcel Length: " + provider.maxParcelLength+ " cm." + " \n " + "Max. Parcel Width: " + provider.maxParcelWidth+ " cm." + " \n\n\n " +
     "Team\nMeet-the-Need";
@@ -436,8 +435,8 @@ var sendRaisedEmailToProvider = function (provider) {
 
 var sendRaisedEmailToReceiver = function (sender) {
 
-  let subject = "Parcel " + sender.parcelDisclosure + " is requested to delivery to you";
-  let content = "Parcel " + sender.parcelDisclosure + " is successfully requested to delivery to you" + " \n " +
+  var subject = "Parcel " + sender.parcelDisclosure + " is requested to delivery to you";
+  var content = "Parcel " + sender.parcelDisclosure + " is successfully requested to delivery to you" + " \n " +
     "Assigned Parcel Details: \n " +
     "Parcel Description: "+ sender.parcelDisclosure + "Parcel Weight: " + sender.parcelWeight + " pounds" + " \n " + "Parcel Height: " + sender.parcelHeight + " cm." + " \n " + "Parcel Length: " + sender.parcelLength+ " cm." + " \n " + "Parcel Width: " + sender.parcelWidth+ " cm." + " \n\n\n " +
     "Sender Details: \nName : " + sender.senderName + " \n " + "Email : " + sender.senderEmail + " \n " + "Phone : " + sender.senderPhone + " \n " +
@@ -445,11 +444,11 @@ var sendRaisedEmailToReceiver = function (sender) {
     "Team\nMeet-the-Need";
   sendEmail(sender.receiverEmail, subject, content);
 
-}
+};
 
 var sendAssignedEmailToSender = function (sender, provider) {
-  let subject = "Service Provider is Assigned for the Parcel Request  for Item " + sender.parcelDisclosure;
-  let content = "Service Provider is successfully assigned for the Parcel Request  for Item " + sender.parcelDisclosure +
+  var subject = "Service Provider is Assigned for the Parcel Request  for Item " + sender.parcelDisclosure;
+  var content = "Service Provider is successfully assigned for the Parcel Request  for Item " + sender.parcelDisclosure +
     "Parcel Description: "+ sender.parcelDisclosure + "Parcel Weight: " + sender.parcelWeight + " pounds" + " \n " + "Parcel Height: " + sender.parcelHeight + " cm." + " \n " + "Parcel Length: " + sender.parcelLength+ " cm." + " \n " + "Parcel Width: " + sender.parcelWidth+ " cm." + " \n\n\n " +
     "Assigned Service Provider Details:\n" +
     "Name : " + provider.name + " \n " + "Email : " + provider.email + " \n " + "Phone : " + provider.phone + " \n " +
@@ -458,13 +457,13 @@ var sendAssignedEmailToSender = function (sender, provider) {
     "Team\nMeet-the-Need";
   sendEmail(sender.senderEmail, subject, content);
 
-}
+};
 
 
 
 var sendAssignedEmailToProvider = function (sender, provider) {
-  let subject = "Parcel Request Assigned for the Travel to " + provider.destinationCity + " on "+ provider.journeyDate;
-  let content = "Parcel Request is successfully assigned for the travel to " + provider.destinationCity + " on " + provider.journeyDate + " \n " +
+  var subject = "Parcel Request Assigned for the Travel to " + provider.destinationCity + " on "+ provider.journeyDate;
+  var content = "Parcel Request is successfully assigned for the travel to " + provider.destinationCity + " on " + provider.journeyDate + " \n " +
     "Assigned Parcel Details: \n" +
     "Parcel Description: "+ sender.parcelDisclosure + "\nParcel Weight: " + sender.parcelWeight + " pounds" + " \n " + "Parcel Height: " + sender.parcelHeight + " cm." + " \n " + "Parcel Length: " + sender.parcelLength+ " cm." + " \n " + "Parcel Width: " + sender.parcelWidth+ " cm." + " \n\n\n " +
     "Sender Details: \nName : " + sender.senderName + " \n " + "Email : " + sender.senderEmail + " \n " + "Phone : " + sender.senderPhone + " \n " +
@@ -477,8 +476,8 @@ var sendAssignedEmailToProvider = function (sender, provider) {
 };
 
 var sendAssignedEmailToReceiver = function (sender, provider) {
-  let subject = "Service Provider is Assigned for Parcel Item " + sender.parcelDisclosure + " to Deliver to You";
-  let content = "Service Provider is Successfully Assigned for Parcel Item " + sender.parcelDisclosure + " to Deliver to You" + " \n " +
+  var subject = "Service Provider is Assigned for Parcel Item " + sender.parcelDisclosure + " to Deliver to You";
+  var content = "Service Provider is Successfully Assigned for Parcel Item " + sender.parcelDisclosure + " to Deliver to You" + " \n " +
     "Assigned Parcel Details: \n " +
     "Parcel Description: "+ sender.parcelDisclosure + "Parcel Weight: " + sender.parcelWeight + " pounds" + " \n " + "Parcel Height: " + sender.parcelHeight + " cm." + " \n " + "Parcel Length: " + sender.parcelLength+ " cm." + " \n " + "Parcel Width: " + sender.parcelWidth+ " cm." + " \n\n\n " +
     "Sender Details: \nName : " + sender.senderName + " \n " + "Email : " + sender.senderEmail + " \n" + "Phone : " + sender.senderPhone + " \n" +
@@ -592,8 +591,8 @@ var parcelStatusChange = function (data, callback) {
 };
 
 var sendStatusChangeEmail = function (data, status) {
-  let subject = "Status of Request changed to " + status;
-  let content = "Status of Request changed to " + status + " for parcel Item " + data.parcelDisclosuren + " \n " +
+  var subject = "Status of Request changed to " + status;
+  var content = "Status of Request changed to " + status + " for parcel Item " + data.parcelDisclosuren + " \n " +
     "Assigned Parcel Details: \n " +
     "Parcel Description: "+ data.parcelDisclosure + "Parcel Weight: " + data.parcelWeight + " pounds" + " \n " + "Parcel Height: " + data.parcelHeight + " cm." + " \n " + "Parcel Length: " + data.parcelLength+ " cm." + " \n " + "Parcel Width: " + data.parcelWidth+ " cm." + " \n\n\n " +
     "Sender Details: \nName : " + data.senderName + " \n " + "Email : " + data.senderEmail + " \n " + "Phone : " + data.senderPhone + " \n" +
