@@ -25,7 +25,10 @@
 <div id="mySidenav" class="sidenav">
   <div *ngIf="selection == 'provider'">
     <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-    <a href="#">New Service Proposal</a>
+    <a routerLink="/service-provider" routerLinkActive="active">New Service Proposal</a>
+    <a href="#">Need Your Action</a>
+    <a href="#">See All Service Proposal</a>
+
   </div>
   <div *ngIf="selection == 'sender'">
     <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>

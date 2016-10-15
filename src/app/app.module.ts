@@ -16,6 +16,9 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState, InternalStateType } from './app.service';
 import { HomeComponent } from './home';
 import { NoContentComponent } from './no-content';
+import {ServiceProviderComponent} from "./service-provider/service-provider.component";
+import {MapDirective} from "./profile/map.directive";
+import {Panel} from "./profile/panel";
 
 
 
@@ -39,13 +42,16 @@ type StoreType = {
   declarations: [
     AppComponent,
     HomeComponent,
+    ServiceProviderComponent,  
     NoContentComponent,
+    MapDirective,
+    Panel
   ],
   imports: [ // import Angular's modules
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: true })
+    RouterModule.forRoot(ROUTES)
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

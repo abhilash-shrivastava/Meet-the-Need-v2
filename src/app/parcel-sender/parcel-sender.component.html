@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parcel Sender</title>
+</head>
+<body>
+<div *ngIf="loggedIn()" [hidden] = "!isLoading" class="loader">Loading...</div>
+<div *ngIf="loggedIn()" [hidden]="submitted || isLoading || serviceProviderSelected">
+<div class="form-style-10">
+    <h1>Details Needed<span>Please provide the following details to send a parcel!</span></h1>
+    <form (ngSubmit) = "onSubmit()" #parcelSenderDetailsForm = "ngForm">
+        <div class="section"><span>1</span>Sender Information</div>
+        <div class="inner-wrap">
+            <label>Your Full Name <input type="text" placeholder="Name" [(ngModel)]="model.senderName" required ngControl="senderName"  #senderName="ngForm"/>
+                <div [hidden]="senderName.valid || senderName.pristine" class="alert alert-danger">
+                    Name is required
+                </div>
+            </label>
+            <label>Phone Number <input type="text" placeholder="(123)-456-7890" [(ngModel)]="model.senderPhone" required/></label>
+        </div>
+
+        <div class="section"><span>2</span>Receiver Information</div>
+        <div class="inner-wrap">
+            <label>Full Name <input type="text" placeholder="Name" [(ngModel)]="model.receiverName" required ngControl="receiverName"  #receiverName="ngForm" /></label>
+            <label>Email Address <input type="email" placeholder="abc@example.com" [(ngModel)]="model.receiverEmail" required/></label>
+            <label>Phone Number <input type="text" placeholder="(123)-456-7890" [(ngModel)]="model.receiverPhone" required/></label>
+        </div>
+
+        <div class="section"><span>2</span>Enter Current Address</div>
+        <form (ngSubmit) = "geolocate('Current Address')" #currentAddress="ngForm">
+            <div>
+                <input id="currentaddressautocomplete"  placeholder="Enter your address" type="text" >
+            </div>
+            <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
+            <div  *ngIf = "model.currentCity" class="inner-wrap">
+                <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" ></label>
+                <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddreddaddressLine2" ></label>
+                <label>State <input type="text" [(ngModel)]="model.currentState" required></label>
+                <label>City <input type = "text" [(ngModel)]="model.currentCity" required></label>
+                <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" ></label>
+            </div>
+            <input [hidden] = "true" type="submit" [disabled]="!currentAddress.form.valid"/>
+        </form>
+
+        <div class="section"><span>3</span>Enter Delivery Address</div>
+
+        <form (ngSubmit) = "geolocate('Delivery Address')" #deliveryAddress="ngForm">
+            <div>
+                <input id="deliveryaddressautocomplete"  placeholder="Enter your address" type="text" >
+            </div>
+            <div *ngIf="loggedIn()" [hidden] = "!isDeliveryAddressLoading" class="loader">Loading...</div>
+            <div  *ngIf = "model.deliveryCity" class="inner-wrap">
+                <label>Address line 1 <input type="text" [(ngModel)]="model.deliveryAddreddaddressLine1" ></label>
+                <label>Address line 2 <input type="text" [(ngModel)]="model.deliveryAddreddaddressLine2" ></label>
+                <label>State <input type="text" [(ngModel)]="model.deliveryState" required></label>
+                <label>City <input type = "text" [(ngModel)]="model.deliveryCity" required></label>
+                <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.deliveryZip" ></label>
+            </div>
+            <input [hidden] = "true" type="submit" [disabled]="!deliveryAddress.form.valid"/>
+        </form>
+
+        <div class="section"><span>4</span>Parcel Details</div>
+        <div class="inner-wrap">
+            <label>Delivery Date Range </label>
+            <label>From <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.startDeliveryDate" required/></label>
+            <label> To
+                <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.endDeliveryDate" required/></label>
+            <label>Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.parcelWeight" required></label>
+            <label>Parcel Dimensions </label>
+            <label>Height (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelHeight" required></label>
+            <label>Length (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelLength" required></label>
+            <label>Width (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelWidth" required></label>
+            <label>Disclosure <textarea [(ngModel)]="model.parcelDisclosure" required></textarea></label>
+        </div>
+        <div class="button-section">
+            <input type="submit" name="Submit" />
+     <span class="privacy-policy">
+     <input type="checkbox" name="field7">You agree to our Terms and Policy.
+     </span>
+        </div>
+    </form>
+</div>
+</div>
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading || serviceProviderSelected">
+    <div *ngIf="requests" [hidden]="!showDetails" >
+        <h1>Found Matches</h1>
+        <h2>Please select the service provider</h2>
+        <ul *ngFor="let request of requests " class="form-style-10-assign">
+            <h3>Request Details:</h3>
+            <li>Journey Date:   {{request.journeyDate}}</li>
+            <h4>Service Provider Details:</h4>
+            <li>Name :  <b>{{request.name}}</b></li>
+            <li>Email Id : <b>{{request.email}}</b></li>
+            <li>Contact Number : <b>{{request.phone}}</b></li>
+            <li>Address :  <b>{{request.currentAddreddaddressLine1}}</b></li>
+            <li><b>{{request.currentAddreddaddressLine2}}</b></li>
+            <li>City : {{request.currentCity}}</li>
+            <b><i>Distance and Time Required to Reach Provider from Current Address</i></b>
+            <li *ngIf="request.ProviderDistanceAndDuration">Distance : {{request.ProviderDistanceAndDuration.distance}}</li>
+            <li *ngIf="request.ProviderDistanceAndDuration">Time Required: {{request.ProviderDistanceAndDuration.duration}}</li>
+            <button class="resubmit-button" (click)="selectProvider(request)">Select</button>
+        </ul>
+    </div>
+    <div *ngIf="requests" [hidden]="showDetails">
+        <h3>Parcel sending request submitted and No Suitable Service Provider Match Found</h3>
+        <h2>Be patience, a service provider may request you.</h2>
+        <button class="resubmit-button" (click)="initializeFlag()">Send Another Parcel Request</button>
+    </div>
+</div>
+
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!serviceProviderSelected || !submitted || isLoading">
+    <h2>You have selected the following service provider</h2>
+    <div *ngIf="requests" >
+        <ul *ngFor="let request of requests " class="form-style-10-assign">
+            <h3>Request Details:</h3>
+            <li>Journey Date:   {{request.journeyDate}}</li>
+            <h4>Service Provider Details:</h4>
+            <li>Name :  <b>{{request.name}}</b></li>
+            <li>Email Id : <b>{{request.email}}</b></li>
+            <li>Contact Number : <b>{{request.phone}}</b></li>
+            <li>Address :  <b>{{request.currentAddreddaddressLine1}}</b></li>
+            <li><b>{{request.currentAddreddaddressLine2}}</b></li>
+            <li>City : {{request.currentCity}}</li>
+            <button class="resubmit-button" (click)="initializeFlag()">Send Another Parcel Request</button>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Provider</title>
+</head>
+<body>
+<div *ngIf="loggedIn()" [hidden] = "!isLoading" class="loader">Loading...</div>
+<div *ngIf="loggedIn()" [hidden]="submitted || isLoading || parcelOrderSelected">
+    <div class="form-style-10">
+        <h1>Details Needed<span>Please provide the following details to offer parcel service!</span></h1>
+        <form (ngSubmit) = "onSubmit()" #serviceProviderDetailsForm="ngForm">
+            <div class="section"><span>1</span>General Information</div>
+            <div class="inner-wrap">
+                <label>Your Full Name <input type="text" placeholder="Name" [(ngModel)]="model.name" required ngControl="name" [ngModelOptions]="{standalone: true}"/>
+                </label>
+                <label>Phone Number <input type="text" placeholder="(123)-456-7890" [(ngModel)]="model.phone" required [ngModelOptions]="{standalone: true}"/></label>
+            </div>
+
+            <div class="section"><span>2</span>Enter Current Address
+            </div>
+            <form (ngSubmit) = "geolocate('Current Address')" #currentAddress="ngForm">
+                <div>
+                    <input id="currentaddressautocomplete"  placeholder="Enter your address" type="text">
+                </div>
+                <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
+                <div *ngIf = "model.currentCity" class="inner-wrap" >
+                    <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" [ngModelOptions]="{standalone: true}"></label>
+                    <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddreddaddressLine2" [ngModelOptions]="{standalone: true}"></label>
+                    <label>State <input type="text" [(ngModel)]="model.currentState" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>City <input type = "text" [(ngModel)]="model.currentCity" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" [ngModelOptions]="{standalone: true}"></label>
+                </div>
+                <input [hidden] = "true" type="submit" [disabled]="!currentAddress.form.valid"/>
+            </form>
+
+            <div  class="section"><span>3</span>Enter Itinerary Cities to Destination</div>
+
+            <form >
+                <div>
+                    <input id="itinerarycitytodestinationautocomplete" [(ngModel)]="searchAddress" placeholder="Add City in Destination Itinerary" type="text" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div>
+                    <label>Parcel Pickup Date<input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToDestination.pickupDate" (change)="addItineraryToDestination()"  #date [ngModelOptions]="{standalone: true}"/></label>
+                </div>
+                <div *ngIf = "model.itineraryCitiesToDestination">
+                    <h4>Travel Itinerary to Destination Trip</h4>
+                    <ul *ngFor="let city of model.itineraryCitiesToDestination">
+                        <li >{{city.city}}, {{city.state}} - {{city.pickupDate}}</li>
+                    </ul>
+                </div>
+            </form>
+
+            <div class="section"><span>4</span>Enter Destination Address</div>
+
+            <form (ngSubmit) = "geolocate('Destination Address')" #destinationAddress="ngForm">
+                <div>
+                    <input id="destinationaddressautocomplete"  placeholder="Enter your address" type="text">
+                </div>
+                <div *ngIf="loggedIn()" [hidden] = "!isDestinationAddressLoading" class="loader">Loading...</div>
+                <div  *ngIf = "model.destinationCity" class="inner-wrap">
+                    <label>Address line 1 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine1" [ngModelOptions]="{standalone: true}"></label>
+                    <label>Address line 2 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine2" [ngModelOptions]="{standalone: true}"></label>
+                    <label>State <input type="text" [(ngModel)]="model.destinationState" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>City <input type = "text" [(ngModel)]="model.destinationCity" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.destinationZip" [ngModelOptions]="{standalone: true}"></label>
+                </div>
+                <input [hidden] = "true" type="submit" [disabled]="!destinationAddress.form.valid"/>
+            </form>
+
+            <input [(ngModel)] = "returnTrip" type="checkbox" name="field7" [ngModelOptions]="{standalone: true}"><b>Look parcel request for return trip.</b>
+
+
+            <div [hidden]="!returnTrip" class="section"><span>5</span>Enter Itinerary Cities to Current</div>
+
+            <form [hidden]="!returnTrip">
+                <div>
+                    <input id="itinerarycitytocurrentautocomplete" [(ngModel)]="searchAddress"  placeholder="Add City in Return Itinerary" type="text" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div>
+                    <label>Parcel Pickup Date <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToCurrent.pickupDate" (change)="addItineraryToCurrent()"  #date [ngModelOptions]="{standalone: true}"/></label>
+                </div>
+                <div *ngIf = "model.itineraryCitiesToCurrent">
+                    <h4>Travel Itinerary to Return Trip</h4>
+                    <ul *ngFor="let city of model.itineraryCitiesToCurrent">
+                        <li >{{city.city}}, {{city.state}} - {{city.pickupDate}}</li>
+                    </ul>
+                </div>
+            </form>
+
+            <div class="section"><span>6</span>Date &amp; Time</div>
+            <div class="inner-wrap">
+                <label>Journey Date <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.journeyDate" required [ngModelOptions]="{standalone: true}"/></label>
+                <label>Availability Time</label>
+                <label>From  <input type="time" name="time" placeholder="Hrs:Mins" [(ngModel)]="model.availabilityFrom" required [ngModelOptions]="{standalone: true}"/></label>
+                <label>To  <input type="time" name="time"  placeholder="Hrs:Mins" [(ngModel)]="model.availabilityTo" required [ngModelOptions]="{standalone: true}"/></label>
+            </div>
+
+            <div class="section"><span>7</span>Parcel Carrying Capacity</div>
+            <div class="inner-wrap">
+                <label>Max. Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.maxParcelWeight" required [ngModelOptions]="{standalone: true}"></label>
+                <label>Max Parcel Dimensions </label>
+                <label>Height (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelHeight" required [ngModelOptions]="{standalone: true}"></label>
+                <label>Length (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelLength" required [ngModelOptions]="{standalone: true}"></label>
+                <label>Width (approx.) <input type="number"  placeholder="in cm" [(ngModel)]="model.maxParcelWidth" required [ngModelOptions]="{standalone: true}"></label>
+            </div>
+
+            <div class="button-section">
+                <input type="submit" name="Submit"/>
+     <span class="privacy-policy">
+     <input type="checkbox" name="field7">You agree to our Terms and Policy.
+     </span>
+            </div>
+        </form>
+    </div>
+</div>
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading || parcelOrderSelected">
+    <div *ngIf="requests" [hidden]="!showDetails">
+        <h1>Found Matches</h1>
+        <h2>Please select the parcel order</h2>
+        <ul *ngFor="let request of requests " class="form-style-10-assign">
+            <h3>Request Details:</h3>
+            <li>Parcel Details : {{request.parcelDisclosure}}</li>
+            <h4>Sender Details</h4>
+            <li>Sender Name : {{request.senderName}}</li>
+            <li>Sender Email : {{request.senderEmail}}</li>
+            <li>Sender Contact Number :   {{request.senderPhone}}</li>
+            <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
+            <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
+            <li>City : {{request.currentCity}}</li>
+            <b><i>Distance and Time Required to Reach Sender from Current Address</i></b>
+            <li *ngIf="request.SenderDistanceAndDuration">Distance : {{request.SenderDistanceAndDuration.distance}}</li>
+            <li *ngIf="request.SenderDistanceAndDuration">Time Required : {{request.SenderDistanceAndDuration.duration}}</li>
+            <h4>Receiver Details</h4>
+            <li>Receiver Name : {{request.receiverName}}</li>
+            <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>
+            <li>Receiver Contact Number :  <b>{{request.receiverPhone}}</b></li>
+            <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
+            <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
+            <li>City : {{request.deliveryCity}}</li>
+            <b><i>Distance and Time Required to Reach Receiver from Destination Address</i></b>
+            <li *ngIf="request.ReceiverDistanceAndDuration">Distance : {{request.ReceiverDistanceAndDuration.distance}}</li>
+            <li *ngIf="request.ReceiverDistanceAndDuration">Time Required: {{request.ReceiverDistanceAndDuration.duration}}</li>
+            <button class="resubmit-button" (click)="selectParcel(request)">Select</button>
+        </ul>
+    </div>
+    <div *ngIf="requests" [hidden]="showDetails">
+        <h3>Service providing request submitted and No Suitable Parcel Order Match Found</h3>
+        <h2>Be patience, a parcel sender may request you.</h2>
+        <button class="resubmit-button" (click)="initializeFlag()">Submit Another Request</button>
+    </div>
+</div>
+
+<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!parcelOrderSelected || !submitted || isLoading">
+    <h2>You have selected the following service provider</h2>
+    <div *ngIf="requests" >
+            <ul *ngFor="let request of requests " class="form-style-10-assign">
+                <h3>Request Details:</h3>
+                <li>Parcel Details : {{request.parcelDisclosure}}</li>
+                <h4>Sender Details</h4>
+                <li>Sender Name : {{request.senderName}}</li>
+                <li>Sender Email : {{request.senderEmail}}</li>
+                <li>Sender Contact Number :   {{request.senderPhone}}</li>
+                <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
+                <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
+                <li>City : {{request.currentCity}}</li>
+                <h4>Receiver Details</h4>
+                <li>Receiver Name : {{request.receiverName}}</li>
+                <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>
+                <li>Receiver Contact Number :  <b>{{request.receiverPhone}}</b></li>
+                <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
+                <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
+                <li>City : {{request.deliveryCity}}</li>
+                <button class="resubmit-button" (click)="initializeFlag()">Submit Another Request</button>
+            </ul>
+    </div>
+</div>
+</body>
+</html>

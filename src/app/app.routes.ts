@@ -1,11 +1,11 @@
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home';
 import { NoContentComponent } from './no-content';
-
-import { DataResolver } from './app.resolver';
+import {ServiceProviderComponent} from "./service-provider/service-provider.component";
 
 
 export const ROUTES: Routes = [
   { path: '',      component: HomeComponent },
-  { path: '**',    component: NoContentComponent },
+  {path: 'service-provider',    component: ServiceProviderComponent},
+  { path: '**',    component: NoContentComponent }
 ];
