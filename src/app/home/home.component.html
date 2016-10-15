@@ -31,7 +31,10 @@
     <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
     <a href="#">New Parcel Request</a>
   </div>
-  <router-outlet></router-outlet>
+  <div *ngIf="selection == 'receiver'">
+    <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+    <a href="#">Receiver</a>
+  </div>
 </div>
 </body>
 </html>
