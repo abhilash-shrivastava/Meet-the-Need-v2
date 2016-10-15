@@ -1,0 +1,153 @@
+/*styles for home content only*/
+h1 {
+    font-size: 1.2em;
+    color: white;
+    background: #0273D4;
+    text-align: center;
+    padding: 20px;
+}
+h2 {
+    font-size: 2em;
+}
+.home a {
+    text-decoration: none;
+    display: inline-block;
+    background-color: #0273D4;
+    border-radius: 4px;
+    padding: 10px;
+    color: white;
+}
+
+
+.signed-in{
+    background: white;
+    padding: 10px;
+}
+nav a.sign-in{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+nav a.sign-up{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+nav a.reset{
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+nav button {
+    padding: 10px;
+    font-size: 12px;
+}
+nav button:visited {
+    color: red;
+}
+nav button:hover {
+    color: #039be5;
+    background-color: #CFD8DC;
+}
+nav button:focus {
+    color: white;
+    background-color: black;
+}
+div {
+    color: white;
+    alignment: right;
+}
+img {
+    color: white;
+}
+
+nav label {
+    vertical-align: middle
+}
+.signed-in label {
+    background-color: #0273D4;
+    color: white;
+    display: inline-block;
+    float: right;
+    padding: 10px;
+}
+
+.signed-in img {
+    float: right;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+.bg-image {
+    /*background-image: url(http://www.mbagusi.com/i/light-abstract-background-wallpaper-2.jpg);*/
+    background-image: url(http://www.ngepluk.com/p/plain-white-wallpaper-images-f44.jpeg);
+    animation: animatedBackground 40s linear infinite;
+}
+
+body {
+    margin: 0px !important;
+}
+
+
+@keyframes animatedBackground {
+    /*from { background-position: 0 0; }*/
+    /*to { background-position: 100% 0; }*/
+}
+
+.button-section {
+    background: #0273D4;
+    color: white;
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
