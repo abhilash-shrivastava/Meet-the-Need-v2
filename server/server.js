@@ -528,14 +528,26 @@ var unassignedServiceRequest = function (data, callback) {
 
 var assignedSenderRequest = function (data, callback) {
   var assignedServiceRequests = [];
-  var cursor = db.collection('providerAssigned').find( { "senderEmail": data.email} );
-  cursor.each(function(err, request){
-    if (request !== null) {
-      assignedServiceRequests.push(request);
-    }else {
-      callback(assignedServiceRequests)
-    }
-  })
+  if (data.status){
+    var cursor = db.collection('providerAssigned').find( {$and: [{ "senderEmail": data.email}, {"status": data.status}]});
+    cursor.each(function(err, request){
+      if (request !== null) {
+        assignedServiceRequests.push(request);
+      }else {
+        callback(assignedServiceRequests)
+      }
+    })
+  }else {
+    var cursor = db.collection('providerAssigned').find( { "senderEmail": data.email} );
+    cursor.each(function(err, request){
+      if (request !== null) {
+        assignedServiceRequests.push(request);
+      }else {
+        callback(assignedServiceRequests)
+      }
+    })
+  }
+
 };
 
 var unassignedSenderRequest = function (data, callback) {

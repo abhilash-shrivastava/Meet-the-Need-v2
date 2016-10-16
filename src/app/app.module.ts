@@ -26,6 +26,7 @@ import {ParcelReceivingComponent} from "./parcel-receiving/parcel-receiving.comp
 import {ParcelDeliveryComponent} from "./parcel-delivery/parcel-delivery.component";
 import {AllServiceRequestsComponent} from "./all-service-requests/all-service-requests.component";
 import {ParcelSenderComponent} from "./parcel-sender/parcel-sender.component";
+import {AcceptServiceComponent} from "./accept-service/accept-service.component";
 
 
 
@@ -60,7 +61,8 @@ type StoreType = {
     ParcelReceivingComponent,
     ParcelDeliveryComponent,
     AllServiceRequestsComponent,
-    ParcelSenderComponent  
+    ParcelSenderComponent,
+    AcceptServiceComponent  
   ],
   imports: [ // import Angular's modules
     BrowserModule,

@@ -38,6 +38,12 @@
     <div *ngIf="selection == 'sender'">
         <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
         <a routerLink="/parcel-sender" routerLinkActive="active">New Parcel Request</a>
+        <a (click)="toggleActionClicked()">Need Your Action</a>
+        <ul [hidden]="!actionClicked">
+            <li><a routerLink="/accept-service" routerLinkActive="active">Accept Service Request</a></li>
+            <li><a routerLink="/parcel-given" routerLinkActive="active">Parcel Given Pending</a></li>
+        </ul>
+        <a routerLink="/all-parcel-requests" routerLinkActive="active">See All Service Proposal</a>
     </div>
     <div *ngIf="selection == 'receiver'">
         <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
