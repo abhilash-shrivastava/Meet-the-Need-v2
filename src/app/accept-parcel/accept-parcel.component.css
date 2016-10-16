@@ -33,6 +33,10 @@
     border: 1px solid #257C9E;
 }
 
+#main {
+    margin-left: 350px;
+}
+
 .form-style-10 h4{
     background: #0273D4;
     padding: 10px;

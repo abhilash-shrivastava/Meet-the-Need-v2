@@ -8,10 +8,14 @@ import {ParcelDeliveryComponent} from "./parcel-delivery/parcel-delivery.compone
 import {AllServiceRequestsComponent} from "./all-service-requests/all-service-requests.component";
 import {ParcelSenderComponent} from "./parcel-sender/parcel-sender.component";
 import {AcceptServiceComponent} from "./accept-service/accept-service.component";
+import {ParcelGivenComponent} from "./parcel-given/parcel-given.component";
+import {AllParcelRequestsComponent} from "./all-parcel-requests/all-parcel-requests.component";
 
 
 export const ROUTES: Routes = [
   { path: '',      component: HomeComponent },
+  {path: 'all-parcel-requests',    component: AllParcelRequestsComponent},
+  {path: 'parcel-given',    component: ParcelGivenComponent},
   {path: 'accept-service',    component: AcceptServiceComponent},
   {path: 'parcel-sender',    component: ParcelSenderComponent},
   {path: 'service-provider',    component: ServiceProviderComponent},

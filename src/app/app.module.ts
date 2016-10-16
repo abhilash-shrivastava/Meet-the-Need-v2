@@ -27,6 +27,8 @@ import {ParcelDeliveryComponent} from "./parcel-delivery/parcel-delivery.compone
 import {AllServiceRequestsComponent} from "./all-service-requests/all-service-requests.component";
 import {ParcelSenderComponent} from "./parcel-sender/parcel-sender.component";
 import {AcceptServiceComponent} from "./accept-service/accept-service.component";
+import {ParcelGivenComponent} from "./parcel-given/parcel-given.component";
+import {AllParcelRequestsComponent} from "./all-parcel-requests/all-parcel-requests.component";
 
 
 
@@ -62,7 +64,9 @@ type StoreType = {
     ParcelDeliveryComponent,
     AllServiceRequestsComponent,
     ParcelSenderComponent,
-    AcceptServiceComponent  
+    AcceptServiceComponent,
+    ParcelGivenComponent,
+    AllParcelRequestsComponent  
   ],
   imports: [ // import Angular's modules
     BrowserModule,

@@ -209,3 +209,7 @@ div button:focus {
     transform: translate(-50%, -50%);
     margin: 30px;
 }
+
+#main {
+    margin-left: 350px;
+}
