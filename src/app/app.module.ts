@@ -22,6 +22,8 @@ import {Panel} from "./profile/panel";
 import {ProfileComponent} from "./profile/profile.component";
 import {PaginationControlsCmp, PaginatePipe} from "ng2-pagination/index";
 import {AcceptParcelComponent} from "./accept-parcel/accept-parcel.component";
+import {ParcelReceivingComponent} from "./parcel-receiving/parcel-receiving.component";
+import {ParcelDeliveryComponent} from "./parcel-delivery/parcel-delivery.component";
 
 
 
@@ -52,7 +54,9 @@ type StoreType = {
     ProfileComponent,
     PaginationControlsCmp,
     PaginatePipe,
-    AcceptParcelComponent  
+    AcceptParcelComponent,
+    ParcelReceivingComponent,
+    ParcelDeliveryComponent  
   ],
   imports: [ // import Angular's modules
     BrowserModule,
