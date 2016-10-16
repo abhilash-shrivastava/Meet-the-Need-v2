@@ -19,6 +19,9 @@ import { NoContentComponent } from './no-content';
 import {ServiceProviderComponent} from "./service-provider/service-provider.component";
 import {MapDirective} from "./profile/map.directive";
 import {Panel} from "./profile/panel";
+import {ProfileComponent} from "./profile/profile.component";
+import {PaginationControlsCmp, PaginatePipe} from "ng2-pagination/index";
+import {AcceptParcelComponent} from "./accept-parcel/accept-parcel.component";
 
 
 
@@ -45,7 +48,11 @@ type StoreType = {
     ServiceProviderComponent,  
     NoContentComponent,
     MapDirective,
-    Panel
+    Panel,
+    ProfileComponent,
+    PaginationControlsCmp,
+    PaginatePipe,
+    AcceptParcelComponent  
   ],
   imports: [ // import Angular's modules
     BrowserModule,

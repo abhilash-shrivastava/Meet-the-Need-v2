@@ -6,15 +6,15 @@
 </head>
 <body >
 <div id="main" *ngIf="loggedIn()">
-    <div  >
-        <nav class="profile-button">
-            <button class="btn btn-default" (click)="onAssignedServiceClick()">Assigned Service request</button>
-            <button class="btn btn-default" (click)="onUnassignedServiceClick()">Unassigned Service request</button>
-            <button class="btn btn-default" (click)="onAssignedSenderClick()">Assigned Parcel request</button>
-            <button class="btn btn-default" (click)="onUnassignedSenderClick()">Unassigned Parcel request</button>
-            <button class="btn btn-default" (click)="onReceivingRequestStatusClick()">Receiving Parcel Request</button>
-        </nav>
-    </div>
+    <!--<div  >-->
+        <!--<nav class="profile-button">-->
+            <!--<button class="btn btn-default" (click)="onAssignedServiceClick()">Assigned Service request</button>-->
+            <!--<button class="btn btn-default" (click)="onUnassignedServiceClick()">Unassigned Service request</button>-->
+            <!--<button class="btn btn-default" (click)="onAssignedSenderClick()">Assigned Parcel request</button>-->
+            <!--<button class="btn btn-default" (click)="onUnassignedSenderClick()">Unassigned Parcel request</button>-->
+            <!--<button class="btn btn-default" (click)="onReceivingRequestStatusClick()">Receiving Parcel Request</button>-->
+        <!--</nav>-->
+    <!--</div>-->
     <div >
     <div *ngIf="unassignedServiceRequests" [hidden]="!showDetails">
         <ul *ngFor="let request of unassignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p1 }" myMap>

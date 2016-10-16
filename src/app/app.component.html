@@ -26,7 +26,12 @@
     <div *ngIf="selection == 'provider'">
         <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
         <a routerLink="/service-provider" routerLinkActive="active">New Service Proposal</a>
-        <a href="#">Need Your Action</a>
+        <a (click)="toggleActionClicked()">Need Your Action</a>
+        <ul [hidden]="!actionClicked">
+            <li><a routerLink="/accept-parcel" routerLinkActive="active">Accept Parcel Request</a></li>
+            <li><a>Parcel Receiving Pending</a></li>
+            <li><a>Parcel Delivery Pending</a></li>
+        </ul>
         <a href="#">See All Service Proposal</a>
 
     </div>

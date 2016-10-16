@@ -1,11 +1,12 @@
 /*
  * Angular 2 decorators and services
  */
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 import {UserCRUDService} from "./services/user-crud.service";
 import {AppState} from "./app.service";
 import {JwtHelper, tokenNotExpired} from "angular2-jwt/angular2-jwt";
 import {UserDetails} from "./services/user";
+import {ProfileComponent} from "./profile/profile.component";
 declare var Auth0Lock;
 
 /*
@@ -28,11 +29,28 @@ export class AppComponent {
   status: string;
   mode = 'Observable';
   selection: any;
+  actionClicked = false;
+  proposalClicked= false;
+  @ViewChild(ProfileComponent)
+  private profileComponent: ProfileComponent;
   constructor(private userCRUDService: UserCRUDService, public appState: AppState) {
     this.profile = JSON.parse(localStorage.getItem('profile'));
   }
   lock = new Auth0Lock('0CKZr9nRkW4Yp8XSlFbJhkqzJOEBLzsf', 'abhilashshrivastava.auth0.com');
   jwtHelper = new JwtHelper();
+
+  onAssignedServiceClick(status: string){
+    this.profileComponent.status = status;
+    this.profileComponent.onAssignedServiceClick();
+  }
+  showProposal(){
+    this.actionClicked = false;
+    this.proposalClicked = !this.proposalClicked;
+  }
+  toggleActionClicked(){
+    this.proposalClicked = false;
+    this.actionClicked = !this.actionClicked;
+  }
 
   openNav() {
     document.getElementById("mySidenav").style.width = "350px";
@@ -44,6 +62,8 @@ export class AppComponent {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main").style.marginLeft= "0";
     document.body.style.backgroundColor = "white";
+    this.actionClicked = false;
+    this.proposalClicked = false;
   }
 
   logout() {
@@ -109,7 +129,6 @@ export class AppComponent {
             data  => this.status = JSON.stringify(data),
             error =>  this.errorMessage = <any>error
         );
-
   }
 }
 

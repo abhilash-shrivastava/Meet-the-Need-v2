@@ -2,24 +2,20 @@
  * Created by Abhi on 6/14/16.
  */
 import {Component, OnInit, OnDestroy, AfterViewInit, Input, ViewChild, ElementRef, Renderer} from '@angular/core';
-import {AuthHttp} from 'angular2-jwt';
 import {tokenNotExpired} from 'angular2-jwt';
 import { RequestsService } from './../services/request.service';
-import { RouteParams, Router } from '@angular/router-deprecated';
-import {PaginationControlsCmp, PaginatePipe, PaginationService} from 'ng2-pagination';
-import {GoogleApiService} from "../services/googleAPIService.service";
+import {PaginationService} from 'ng2-pagination';
 import {Panel} from './panel';
+import {GoogleApiService} from "../services/googleAPIService.service";
 
 
 
 
 @Component({
     selector: 'profile',
-    templateUrl: 'app/profile/profile.html',
-    styleUrls: ['app/profile/profile.css'],
-    providers: [PaginationService, RequestsService, Panel],
-    directives: [PaginationControlsCmp, Panel],
-    pipes: [PaginatePipe]
+    templateUrl: './profile.html',
+    styleUrls: ['./profile.css'],
+    providers: [PaginationService, RequestsService, Panel, GoogleApiService],
 })
 
 export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -106,7 +102,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onAssignedServiceClick(){
-        this.closeNav()
         this.status = null;
         this.id = null;
         this.getAssignedServiceRequests(this.profile);
@@ -166,16 +161,14 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onUpdateClick(requestId, requestType){
         if (requestType == 'Service'){
-            this.router.navigate( ['ServiceProvider', {id: requestId}] );
+            // this.router.navigate( ['ServiceProvider', {id: requestId}] );
         }
         if (requestType == 'Parcel'){
-            this.router.navigate( ['ParcelSender', {id: requestId}] );
+            // this.router.navigate( ['ParcelSender', {id: requestId}] );
         }
     }
-    constructor(    private router: Router, private requestsService: RequestsService,
-                    private panel: Panel,
-                    private renderer: Renderer,
-                    public authHttp: AuthHttp) {
+    constructor(private requestsService: RequestsService,
+                    private panel: Panel) {
     }
 
     ngOnInit(): void {
@@ -257,7 +250,6 @@ export class ProfileComponent implements OnInit, OnDestroy, AfterViewInit {
                         delete this.parcelReceivingRequests;
                         this.showDetails = true;
                         this.requestType = false;
-                        this.openNav();
                     }else{
                         delete this.unassignedServiceRequests;
                         delete this.assignedServiceRequests;

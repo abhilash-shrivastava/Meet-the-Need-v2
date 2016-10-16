@@ -407,6 +407,9 @@ export class ServiceProviderComponent {
             .subscribe(
                 data  => {
                     this.data = data;
+                    if(this.data[0] === null){
+                        return;
+                    }
                     if (this.data[0].serviceProvider){
                         delete this.data[0].serviceProvider['_id']
                         this.model = this.data[0].serviceProvider;
