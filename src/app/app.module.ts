@@ -24,6 +24,7 @@ import {PaginationControlsCmp, PaginatePipe} from "ng2-pagination/index";
 import {AcceptParcelComponent} from "./accept-parcel/accept-parcel.component";
 import {ParcelReceivingComponent} from "./parcel-receiving/parcel-receiving.component";
 import {ParcelDeliveryComponent} from "./parcel-delivery/parcel-delivery.component";
+import {AllServiceRequestsComponent} from "./all-service-requests/all-service-requests.component";
 
 
 
@@ -56,7 +57,8 @@ type StoreType = {
     PaginatePipe,
     AcceptParcelComponent,
     ParcelReceivingComponent,
-    ParcelDeliveryComponent  
+    ParcelDeliveryComponent,
+    AllServiceRequestsComponent  
   ],
   imports: [ // import Angular's modules
     BrowserModule,

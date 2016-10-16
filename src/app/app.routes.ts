@@ -5,6 +5,7 @@ import {ServiceProviderComponent} from "./service-provider/service-provider.comp
 import {AcceptParcelComponent} from "./accept-parcel/accept-parcel.component";
 import {ParcelReceivingComponent} from "./parcel-receiving/parcel-receiving.component";
 import {ParcelDeliveryComponent} from "./parcel-delivery/parcel-delivery.component";
+import {AllServiceRequestsComponent} from "./all-service-requests/all-service-requests.component";
 
 
 export const ROUTES: Routes = [
@@ -13,5 +14,6 @@ export const ROUTES: Routes = [
   {path: 'accept-parcel',    component: AcceptParcelComponent},
   {path: 'parcel-receiving',    component: ParcelReceivingComponent},
   {path: 'parcel-delivery',    component: ParcelDeliveryComponent},
+  {path: 'all-service-requests',    component: AllServiceRequestsComponent},
   { path: '**',    component: NoContentComponent }
 ];
