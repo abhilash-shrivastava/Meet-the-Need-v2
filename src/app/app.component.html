@@ -37,7 +37,7 @@
     </div>
     <div *ngIf="selection == 'sender'">
         <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-        <a href="#">New Parcel Request</a>
+        <a routerLink="/parcel-sender" routerLinkActive="active">New Parcel Request</a>
     </div>
     <div *ngIf="selection == 'receiver'">
         <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>

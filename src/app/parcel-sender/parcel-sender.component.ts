@@ -5,7 +5,6 @@
 import {tokenNotExpired} from 'angular2-jwt';
 import {ParcelSenderDetails} from "../services/parcel-sender-details";
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { RouteParams, Router } from '@angular/router-deprecated';
 import { ParcelSenderCRUDService } from './../services/parcel-sender-crud.service';
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {Panel} from "../profile/panel";
@@ -13,10 +12,9 @@ import {Panel} from "../profile/panel";
 
 @Component({
     selector: 'parcel-sender',
-    templateUrl: 'app/parcel-sender/parcel-sender.component.html',
-    styleUrls: ['app/parcel-sender/parcel-sender.component.css'],
-    providers: [ ParcelSenderCRUDService, Panel ],
-    directives: [Panel],
+    templateUrl: './parcel-sender.component.html',
+    styleUrls: ['./parcel-sender.component.css'],
+    providers: [ ParcelSenderCRUDService, Panel, GoogleApiService ]
 })
 
 export class ParcelSenderComponent {
@@ -81,10 +79,9 @@ export class ParcelSenderComponent {
     error: any;
 
     status: string;
-    constructor( private router: Router, private panel: Panel,
+    constructor( private panel: Panel,
                  private googleApi:GoogleApiService,
-        private parcelSenderCRUDService: ParcelSenderCRUDService,
-        private routeParams: RouteParams) {
+        private parcelSenderCRUDService: ParcelSenderCRUDService) {
     }
 
     selectProvider(provider){
@@ -113,11 +110,11 @@ export class ParcelSenderComponent {
         });
 
         this.profile = JSON.parse(localStorage.getItem('profile'));
-        let id = this.routeParams.get('id');
-        if (id != null){
-            this.profile["id"] = id;
-            this.model["_id"] = id;
-        }
+        // let id = this.routeParams.get('id');
+        // if (id != null){
+        //     this.profile["id"] = id;
+        //     this.model["_id"] = id;
+        // }
         this.getParcelSenderDetails(this.profile);
     }
 
@@ -268,7 +265,7 @@ export class ParcelSenderComponent {
                         this.showDetails = true;
                     }else{
                         if (this.profile["id"] != null){
-                            this.router.navigate( ['Profile'] );
+                            // this.router.navigate( ['Profile'] );
                         }
                         this.showDetails = false;
                     }
@@ -290,7 +287,7 @@ export class ParcelSenderComponent {
                         this.showDetails = true;
                     }else{
                         if (this.profile["id"] != null){
-                            this.router.navigate( ['Profile'] );
+                            // this.router.navigate( ['Profile'] );
                         }
                         this.showDetails = false;
                     }
@@ -307,6 +304,9 @@ export class ParcelSenderComponent {
             .subscribe(
                 data  => {
                     this.data = data;
+                    if(this.data[0] === null){
+                        return;
+                    }
                     delete this.data[0]['status'];
                     delete this.data[0]['_id'];
                     if (this.data[0]['serviceProvider']){
