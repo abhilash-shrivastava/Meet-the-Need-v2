@@ -31,24 +31,13 @@ export class AppComponent {
   selection: any;
   actionClicked = false;
   proposalClicked= false;
-  @ViewChild(ProfileComponent)
-  private profileComponent: ProfileComponent;
   constructor(private userCRUDService: UserCRUDService, public appState: AppState) {
     this.profile = JSON.parse(localStorage.getItem('profile'));
   }
   lock = new Auth0Lock('0CKZr9nRkW4Yp8XSlFbJhkqzJOEBLzsf', 'abhilashshrivastava.auth0.com');
   jwtHelper = new JwtHelper();
-
-  onAssignedServiceClick(status: string){
-    this.profileComponent.status = status;
-    this.profileComponent.onAssignedServiceClick();
-  }
-  showProposal(){
-    this.actionClicked = false;
-    this.proposalClicked = !this.proposalClicked;
-  }
+  
   toggleActionClicked(){
-    this.proposalClicked = false;
     this.actionClicked = !this.actionClicked;
   }
 

@@ -77,6 +77,7 @@ export class AcceptParcelComponent{
             .subscribe(
                 data  => {
                     this.assignedServiceRequests = data;
+                    console.log(this.assignedServiceRequests);
                     if(this.assignedServiceRequests.length > 0){
                         this.showDetails = true;
                     }else{

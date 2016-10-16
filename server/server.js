@@ -493,7 +493,7 @@ var sendAssignedEmailToReceiver = function (sender, provider) {
 
 var assignedServiceRequest = function (data, callback) {
   var assignedServiceRequests = [];
-  var cursor = db.collection('providerAssigned').find( { "serviceProvider.email": data.email}, {"status": data.status} );
+  var cursor = db.collection('providerAssigned').find({$and: [{ "serviceProvider.email": data.email}, {"status": data.status}]});
   cursor.each(function(err, request){
     if (request !== null) {
       assignedServiceRequests.push(request);
