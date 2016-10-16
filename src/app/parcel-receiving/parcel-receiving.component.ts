@@ -9,6 +9,7 @@ import {Panel} from "../profile/panel";
 import {RequestsService} from "../services/request.service";
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {PaginationService} from "ng2-pagination/index";
+import {tokenNotExpired} from "angular2-jwt/angular2-jwt";
 
 @Component({
     selector: 'accept-parcel',
@@ -122,5 +123,9 @@ export class ParcelReceivingComponent{
                 },
                 error =>  this.errorMessage = <any>error
             );
+    }
+
+    loggedIn() {
+        return tokenNotExpired();
     }
 }

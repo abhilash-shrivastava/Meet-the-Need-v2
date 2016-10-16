@@ -1,4 +1,4 @@
-<main id="main">
+<main id="main" *ngIf="loggedIn()">
     <div [hidden]="!showDetails">
         <ul *ngFor="let request of assignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <div>
