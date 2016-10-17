@@ -1,0 +1,49 @@
+<main id="main" *ngIf="loggedIn()">
+    <div [hidden]="!showDetails">
+        <ul *ngFor="let request of parcelReceivingRequests | paginate: { itemsPerPage: 5, currentPage: p4 }" >
+            <div >
+                <h3>
+                    <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
+                           (click)="mapLoadAssignedReceiver(request._id, request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                       + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity
+                       + ' ' + request.serviceProvider.currentState + ' ' + request.serviceProvider.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
+                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, request.serviceProvider.destinationAddreddaddressLine1 + ' ' + request.serviceProvider.destinationAddreddaddressLine2 + ' ' + request.serviceProvider.destinationCity
+                       + ' ' + request.serviceProvider.destinationState + ' ' + request.serviceProvider.destinationZip,  request.status)">
+                        <div class="form-style-10">
+                            <h3>Parcel Receiving Details:</h3>
+                            <h4>{{request.serviceProvider.journeyDate}}-{{request.currentCity}}-{{request.deliveryCity}}</h4>
+                            <h4>Parcel Details:</h4>
+                            <li>Parcel Description : <b>{{request.parcelDisclosure}}</b></li>
+                            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> pound</li>
+                            <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
+                            <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
+                            <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
+                            <li>Parcel Status :  <b>{{request.status}}</b></li>
+                            <h4>Sender Details</h4>
+                            <li>Sender Name : <b>{{request.senderName}}</b></li>
+                            <li>Sender Email : <b>{{request.senderEmail}}</b></li>
+                            <li>Sender Contact Number :   <b>{{request.senderPhone}}</b></li>
+                            <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
+                            <li *ngIf = "request.currentAddreddaddressLine2"> <b>{{request.currentAddreddaddressLine2}}</b></li>
+                            <li>City : <b>{{request.currentCity}}</b></li>
+                            <h4>Service Provider Details</h4>
+                            <li>Provider Name : <b>{{request.serviceProvider.name}}</b></li>
+                            <li>Provider Email : <b>{{request.serviceProvider.email}}</b></li>
+                            <li>Provider Contact Number :  <b>{{request.serviceProvider.phone}}</b></li>
+                            <li>Provider Address : <b>{{request.serviceProvider.destinationAddreddaddressLine1}}</b></li>
+                            <li *ngIf = "request.destinationAddreddaddressLine2"> <b>{{request.destinationAddreddaddressLine2}}</b></li>
+                            <li>City : <b>{{request.serviceProvider.destinationCity}}</b></li>
+                            <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
+                            <h4>{{mapAddress}}</h4>
+                            <div id="{{request._id}}" class="map"></div>
+                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Delivered To Receiver'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Received</button>
+                        </div>
+                    </panel>
+                </h3>
+            </div>
+        </ul>
+        <pagination-controls class="centerAlignText" (pageChange)="p4 = $event" #api>
+        </pagination-controls>
+    </div>
+    <div [hidden]="showDetails" class="form-style-10"><h3>No Parcel Receiving Requests</h3></div>
+</main>

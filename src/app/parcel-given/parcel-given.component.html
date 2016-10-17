@@ -1,0 +1,63 @@
+<main id="main" *ngIf="loggedIn()">
+    <div [hidden]="!showDetails">
+        <ul *ngFor="let request of parcelRequests | paginate: { itemsPerPage: 5, currentPage: p3 }" >
+            <h3 >
+                <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
+                       (click)="mapLoadAssignedParcel(request._id, request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                       + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity
+                       + ' ' + request.serviceProvider.currentState + ' ' + request.serviceProvider.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
+                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, request.serviceProvider.destinationAddreddaddressLine1 + ' ' + request.serviceProvider.destinationAddreddaddressLine2 + ' ' + request.serviceProvider.destinationCity
+                       + ' ' + request.serviceProvider.destinationState + ' ' + request.serviceProvider.destinationZip,  request.status)">
+                    <div class="form-style-10">
+                        <h3>Parcel Sending Details:</h3>
+                        <h4 *ngIf = "request.status">{{request.serviceProvider.journeyDate}}-{{request.currentCity}}-{{request.deliveryCity}}</h4>
+                        <h4 *ngIf = "!request.status">{{request.currentCity}}-{{request.deliveryCity}}</h4>
+                        <li>Receiver Name : <b>{{request.receiverName}}</b></li>
+                        <li>Parcel Details : <b>{{request.parcelDisclosure}}</b></li>
+                        <li>Delivery City : <b>{{request.deliveryCity}}</b></li>
+                        <h4 >Service Provider Details</h4>
+                        <li >Provider Name : <b>{{request.serviceProvider.name}}</b></li>
+                        <li >Provider Email : <b>{{request.serviceProvider.email}}</b></li>
+                        <li >Provider Contact Number :  <b>{{request.serviceProvider.phone}}</b></li>
+                        <li >Provider Address : <b>{{request.serviceProvider.destinationAddreddaddressLine1}}</b></li>
+                        <li *ngIf = "request.destinationAddreddaddressLine2"> <b>{{request.destinationAddreddaddressLine2}}</b></li>
+                        <li >City : <b>{{request.serviceProvider.destinationCity}}</b></li>
+                        <h4>Parcel Details:</h4>
+                        <li>Parcel Id : <b>{{request._id}}</b></li>
+                        <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> pound</li>
+                        <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
+                        <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
+                        <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
+                        <li >Parcel Status :  <b>{{request.status}}</b></li>
+                        <h4>{{mapAddress}}</h4>
+                        <div id="{{request._id}}" class="map"></div>
+                        <button [hidden] = "request.status !== 'Assigned To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
+                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-approve" (click)="onStatusChangeClick(request._id)">Approve</button>
+                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-reject" (click)="onRejectClick(request._id, 'Parcel')">Reject</button>
+                    </div>
+                </panel>
+                <panel *ngIf = "!request.status" [title]="request.currentCity + '-' + request.deliveryCity">
+                    <div class="form-style-10">
+                        <h3>Parcel Sending Details:</h3>
+                        <h4 >{{request.currentCity}}-{{request.deliveryCity}}</h4>
+                        <li>Receiver Name : <b>{{request.receiverName}}</b></li>
+                        <li>Parcel Details : <b>{{request.parcelDisclosure}}</b></li>
+                        <li>Delivery City : <b>{{request.deliveryCity}}</b></li>
+                        <h4>Parcel Details:</h4>
+                        <li>Parcel Id : <b>{{request._id}}</b></li>
+                        <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> pound</li>
+                        <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
+                        <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
+                        <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
+                        <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
+                        <button class="button-cancel" (click)="onCancelClick(request._id, 'Parcel')">Cancel</button>
+                        <button class="button-update" (click)="onUpdateClick(request._id, 'Parcel')">Update</button>
+                    </div>
+                </panel>
+            </h3>
+        </ul>
+        <pagination-controls class="centerAlignText" (pageChange)="p3 = $event" #api>
+        </pagination-controls>
+    </div>
+    <div [hidden]="showDetails" class="form-style-10"><h3>No Parcel Pending To Give</h3></div>
+</main>
