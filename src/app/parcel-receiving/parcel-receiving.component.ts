@@ -12,7 +12,7 @@ import {PaginationService} from "ng2-pagination/index";
 import {tokenNotExpired} from "angular2-jwt/angular2-jwt";
 
 @Component({
-    selector: 'accept-parcel',
+    selector: 'parcel-receiving',
     templateUrl: './parcel-receiving.component.html',
     styleUrls: ['./parcel-receiving.component.css'],
     providers: [PaginationService, RequestsService, Panel, GoogleApiService],

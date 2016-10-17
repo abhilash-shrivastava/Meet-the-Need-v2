@@ -47,7 +47,11 @@
     </div>
     <div *ngIf="selection == 'receiver'">
         <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-        <a href="#">Receiver</a>
+        <a (click)="toggleActionClicked()">Need Your Action</a>
+        <ul [hidden]="!actionClicked">
+            <li><a routerLink="/receiver-action" routerLinkActive="active">Accept Service Request</a></li>
+        </ul>
+        <a routerLink="/all-receiver-requests" routerLinkActive="active">See All Receiving Requests</a>
     </div>
 </div>
 <router-outlet></router-outlet>

@@ -565,14 +565,25 @@ var unassignedSenderRequest = function (data, callback) {
 
 var parcelReceivingRequest = function (data, callback) {
   var parcelReceivingRequests = [];
-  var cursor = db.collection('providerAssigned').find( { "receiverEmail": data.email} );
-  cursor.each(function(err, request){
-    if (request !== null) {
-      parcelReceivingRequests.push(request);
-    }else {
-      callback(parcelReceivingRequests)
-    }
-  })
+  if (data.status){
+    var cursor = db.collection('providerAssigned').find( {$and: [{ "receiverEmail": data.email}, {"status": data.status}]} );
+    cursor.each(function(err, request){
+      if (request !== null) {
+        parcelReceivingRequests.push(request);
+      }else {
+        callback(parcelReceivingRequests)
+      }
+    }) 
+  }else {
+    var cursor = db.collection('providerAssigned').find( { "receiverEmail": data.email} );
+    cursor.each(function(err, request){
+      if (request !== null) {
+        parcelReceivingRequests.push(request);
+      }else {
+        callback(parcelReceivingRequests)
+      }
+    })
+  }
 };
 
 var parcelStatusChange = function (data, callback) {
