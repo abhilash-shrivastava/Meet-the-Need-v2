@@ -1,0 +1,19 @@
+<div>
+    <a (click)="toggleActionClicked()">Need Your Action</a>
+    <ul [hidden]="!actionClicked">
+        <li><a routerLink="/receiver-action" routerLinkActive="active">Accept Service Request</a></li>
+    </ul>
+    <a routerLink="/all-receiver-requests" routerLinkActive="active" (click)="toggleFilter()">See All Receiving Requests</a>
+</div>
+
+<div [hidden]="!requestsClicked">
+    <a (click)="toggleFiltersClicked()">Filters</a>
+    <ul [hidden]="!filtersClicked">
+        <li><a>Journey Date</a></li>
+        <li><a>Cities</a></li>
+        <li><a>Journey Type</a></li>
+        <li><a>Route</a></li>
+        <li><a>Item Description</a></li>
+        <li><a>Status</a></li>
+    </ul>
+</div>

@@ -23,35 +23,15 @@
     </nav>
 </div>
 <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
     <div *ngIf="selection == 'provider'">
-        <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-        <a routerLink="/service-provider" routerLinkActive="active">New Service Proposal</a>
-        <a (click)="toggleActionClicked()">Need Your Action</a>
-        <ul [hidden]="!actionClicked">
-            <li><a routerLink="/accept-parcel" routerLinkActive="active">Accept Parcel Request</a></li>
-            <li><a routerLink="/parcel-receiving" routerLinkActive="active">Parcel Receiving Pending</a></li>
-            <li><a routerLink="/parcel-delivery" routerLinkActive="active">Parcel Delivery Pending</a></li>
-        </ul>
-        <a routerLink="/all-service-requests" routerLinkActive="active">See All Service Proposal</a>
-
+        <provider-sidebar></provider-sidebar>
     </div>
     <div *ngIf="selection == 'sender'">
-        <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-        <a routerLink="/parcel-sender" routerLinkActive="active">New Parcel Request</a>
-        <a (click)="toggleActionClicked()">Need Your Action</a>
-        <ul [hidden]="!actionClicked">
-            <li><a routerLink="/accept-service" routerLinkActive="active">Accept Service Request</a></li>
-            <li><a routerLink="/parcel-given" routerLinkActive="active">Parcel Given Pending</a></li>
-        </ul>
-        <a routerLink="/all-parcel-requests" routerLinkActive="active">See All Parcel Requests</a>
+        <sender-sidebar></sender-sidebar>
     </div>
     <div *ngIf="selection == 'receiver'">
-        <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-        <a (click)="toggleActionClicked()">Need Your Action</a>
-        <ul [hidden]="!actionClicked">
-            <li><a routerLink="/receiver-action" routerLinkActive="active">Accept Service Request</a></li>
-        </ul>
-        <a routerLink="/all-receiver-requests" routerLinkActive="active">See All Receiving Requests</a>
+        <receiver-sidebar></receiver-sidebar>
     </div>
 </div>
 <router-outlet></router-outlet>

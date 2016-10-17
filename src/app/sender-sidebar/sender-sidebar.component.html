@@ -1,0 +1,21 @@
+<div>
+    <a routerLink="/parcel-sender" routerLinkActive="active">New Parcel Request</a>
+    <a (click)="toggleActionClicked()">Need Your Action</a>
+    <ul [hidden]="!actionClicked">
+        <li><a routerLink="/accept-service" routerLinkActive="active">Accept Service Request</a></li>
+        <li><a routerLink="/parcel-given" routerLinkActive="active">Parcel Given Pending</a></li>
+    </ul>
+    <a routerLink="/all-parcel-requests" routerLinkActive="active" (click)="toggleFilter()">See All Parcel Requests</a>
+</div>
+
+<div [hidden]="!requestsClicked">
+    <a (click)="toggleFiltersClicked()">Filters</a>
+    <ul [hidden]="!filtersClicked">
+        <li><a>Journey Date</a></li>
+        <li><a>Cities</a></li>
+        <li><a>Journey Type</a></li>
+        <li><a>Route</a></li>
+        <li><a>Item Description</a></li>
+        <li><a>Status</a></li>
+    </ul>
+</div>

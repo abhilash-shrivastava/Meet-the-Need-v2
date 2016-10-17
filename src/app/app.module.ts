@@ -31,6 +31,9 @@ import {ParcelGivenComponent} from "./parcel-given/parcel-given.component";
 import {AllParcelRequestsComponent} from "./all-parcel-requests/all-parcel-requests.component";
 import {ReceiverActionComponent} from "./receiver-action/receiver-action.component";
 import {AllReceiverRequestsComponent} from "./all-receiver-requests/all-receiver-requests.component";
+import {ProviderSidebarComponent} from "./provider-sidebar/provider-sidebar.component";
+import {SenderSidebarComponent} from "./sender-sidebar/sender-sidebar.component";
+import {ReceiverSidebarComponent} from "./receiver-sidebar/receiver-sidebar.component";
 
 
 
@@ -70,7 +73,10 @@ type StoreType = {
     ParcelGivenComponent,
     AllParcelRequestsComponent,
     ReceiverActionComponent,
-    AllReceiverRequestsComponent  
+    AllReceiverRequestsComponent,
+    ProviderSidebarComponent,
+    SenderSidebarComponent,
+    ReceiverSidebarComponent  
   ],
   imports: [ // import Angular's modules
     BrowserModule,

@@ -29,18 +29,12 @@ export class AppComponent {
   status: string;
   mode = 'Observable';
   selection: any;
-  actionClicked = false;
-  proposalClicked= false;
   constructor(private userCRUDService: UserCRUDService, public appState: AppState) {
     this.profile = JSON.parse(localStorage.getItem('profile'));
   }
   lock = new Auth0Lock('0CKZr9nRkW4Yp8XSlFbJhkqzJOEBLzsf', 'abhilashshrivastava.auth0.com');
   jwtHelper = new JwtHelper();
   
-  toggleActionClicked(){
-    this.actionClicked = !this.actionClicked;
-  }
-
   openNav() {
     document.getElementById("mySidenav").style.width = "350px";
     document.getElementById("main").style.marginLeft = "350px";
@@ -51,8 +45,6 @@ export class AppComponent {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main").style.marginLeft= "0";
     document.body.style.backgroundColor = "white";
-    this.actionClicked = false;
-    this.proposalClicked = false;
   }
 
   logout() {

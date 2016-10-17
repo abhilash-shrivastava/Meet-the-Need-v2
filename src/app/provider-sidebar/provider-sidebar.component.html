@@ -1,0 +1,21 @@
+<div>
+    <a routerLink="/service-provider" routerLinkActive="active">New Service Proposal</a>
+    <a (click)="toggleActionClicked()">Need Your Action</a>
+    <ul [hidden]="!actionClicked">
+        <li><a routerLink="/accept-parcel" routerLinkActive="active">Accept Parcel Request</a></li>
+        <li><a routerLink="/parcel-receiving" routerLinkActive="active">Parcel Receiving Pending</a></li>
+        <li><a routerLink="/parcel-delivery" routerLinkActive="active">Parcel Delivery Pending</a></li>
+    </ul>
+    <a routerLink="/all-service-requests" routerLinkActive="active" (click)="toggleFilter()">See All Service Proposal</a>
+</div>
+<div [hidden]="!requestsClicked">
+    <a (click)="toggleFiltersClicked()">Filters</a>
+    <ul [hidden]="!filtersClicked">
+        <li><a>Journey Date</a></li>
+        <li><a>Cities</a></li>
+        <li><a>Journey Type</a></li>
+        <li><a>Route</a></li>
+        <li><a>Item Description</a></li>
+        <li><a>Status</a></li>
+    </ul>
+</div>
