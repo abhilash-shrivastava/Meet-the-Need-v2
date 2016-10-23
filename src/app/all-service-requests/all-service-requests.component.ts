@@ -32,6 +32,7 @@ export class AllServiceRequestsComponent{
     deliveryAddress:any;
     destinationAddress:any;
     status:any;
+    
 
     constructor(private requestsService: RequestsService,
                 private panel: Panel) {

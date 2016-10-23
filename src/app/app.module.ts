@@ -34,6 +34,7 @@ import {AllReceiverRequestsComponent} from "./all-receiver-requests/all-receiver
 import {ProviderSidebarComponent} from "./provider-sidebar/provider-sidebar.component";
 import {SenderSidebarComponent} from "./sender-sidebar/sender-sidebar.component";
 import {ReceiverSidebarComponent} from "./receiver-sidebar/receiver-sidebar.component";
+import {CheckboxFilterPipe} from "./pipes/checkbox-filter.pipe";
 
 
 
@@ -76,7 +77,8 @@ type StoreType = {
     AllReceiverRequestsComponent,
     ProviderSidebarComponent,
     SenderSidebarComponent,
-    ReceiverSidebarComponent  
+    ReceiverSidebarComponent,
+    CheckboxFilterPipe  
   ],
   imports: [ // import Angular's modules
     BrowserModule,
