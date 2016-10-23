@@ -8,14 +8,14 @@
         <li><a routerLink="/parcel-receiving" routerLinkActive="active">Parcel Receiving Pending</a></li>
         <li><a routerLink="/parcel-delivery" routerLinkActive="active">Parcel Delivery Pending</a></li>
     </ul>
-    <a (click)="toggleFilter()">See All Service Proposal</a>
+    <a routerLink="/all-service-requests" routerLinkActive="active" (click)="toggleFilter()">See All Service Proposal</a>
 </div>
 <div [hidden]="!requestsClicked">
     <a (click)="toggleFiltersClicked()">Filters</a>
     <ul [hidden]="!filtersClicked">
         <li><a (click)="toggleJourneyDate()">Journey Date</a></li>
         <ul [hidden]="!journeyDateClicked" *ngFor="let request of assignedServiceRequests">
-            <input type="checkbox" #jd> {{request.serviceProvider.journeyDate}}<br>
+            <input type="checkbox" [(ngModel)]="request.checked" (ngModelChange)="updateResults(request)"> {{request.serviceProvider.journeyDate}}<br>
         </ul>
         <li><a>Cities</a></li>
         <li><a>Journey Type</a></li>
@@ -28,7 +28,7 @@
 
 <main [hidden]="!showAllRequestClicked" id="main" *ngIf="loggedIn()">
     <div [hidden]="!showDetails">
-        <ul *ngFor="let request of assignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
+        <ul *ngFor="let request of filteredRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <div>
                 <h3>
                     <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"

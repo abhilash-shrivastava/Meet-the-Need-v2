@@ -7,6 +7,8 @@ import {Panel} from "../profile/panel";
 import {tokenNotExpired} from "angular2-jwt/angular2-jwt";
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {PaginationService} from "ng2-pagination/index";
+import { ActivatedRoute, Router, Params } from '@angular/router';
+
 
 
 @Component({
@@ -24,6 +26,7 @@ export class ProviderSidebarComponent {
     requestsClicked = false;
     filtersClicked = false;
     assignedServiceRequests:any;
+    filteredRequests= [];
     journeyDateClicked = false;
     showDetails = false;
     id: any;
@@ -48,7 +51,7 @@ export class ProviderSidebarComponent {
       document.body.style.backgroundColor = "white";
     }
 
-    constructor(private requestsService: RequestsService,
+    constructor(private requestsService: RequestsService, private route: ActivatedRoute, private router: Router,
                 private panel: Panel) {
     }
 
@@ -59,6 +62,18 @@ export class ProviderSidebarComponent {
         this.getAssignedServiceRequests(this.profile);
         this.openNav();
     }
+    
+    updateResults(request: any){
+        if (request.checked){
+            this.filteredRequests.push(request);
+        } else {
+            var index = this.filteredRequests.indexOf(request);
+            if (index > -1) {
+                this.filteredRequests.splice(index, 1);
+            }
+        }
+    }
+    
     onStatusChangeClick(parcelId){
         this.changeParcelStatus({email: this.profile.email, parcelId: parcelId});
     }
@@ -143,6 +158,7 @@ export class ProviderSidebarComponent {
         this.journeyDateClicked = !this.journeyDateClicked;
     }
     toggleFiltersClicked(){
+        this.router.navigate([''], { relativeTo: this.route });
         this.filtersClicked = !this.filtersClicked;
     }
     toggleActionClicked(){
