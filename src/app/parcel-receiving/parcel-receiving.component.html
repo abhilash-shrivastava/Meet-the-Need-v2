@@ -36,6 +36,8 @@
                             <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
                             <h4>{{mapAddress}}</h4>
                             <div id="{{request._id}}" class="map"></div>
+                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected</button>
+                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Collected From Sender'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Delivered</button>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-approve" (click)="onStatusChangeClick(request._id)">Approve</button>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-reject" (click)="onRejectClick(request._id, 'Service')">Reject</button>
                         </div>

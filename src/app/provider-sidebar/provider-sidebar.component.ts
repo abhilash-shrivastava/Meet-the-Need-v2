@@ -28,6 +28,7 @@ export class ProviderSidebarComponent {
     assignedServiceRequests:any;
     journeyDates = [];
     currentCities = [];
+    destinationCities = [];
     filteredRequests= [];
     journeyDateClicked = false;
     citiesClicked = false;
@@ -66,6 +67,65 @@ export class ProviderSidebarComponent {
         this.profile = JSON.parse(localStorage.getItem('profile'));
         this.getAssignedServiceRequests(this.profile);
         this.openNav();
+    }
+    
+    updateResultsByDeliveryCities(city: any){
+        var temp = JSON.parse(JSON.stringify(this.filteredRequests));
+        if (city.checked){
+            for (var index in this.assignedServiceRequests){
+                if (this.assignedServiceRequests[index].serviceProvider.destinationCity === city.destinationCity){
+                    if (temp.length >0){
+                        var match;
+                        for (var i in temp){
+                            if (temp[i].req._id === this.assignedServiceRequests[index]._id){
+                                match = temp[i];
+                            }
+                        }
+                        if (match){
+                            match.cnt += 1;
+                            for (var j in this.filteredRequests){
+                                if (match.req._id === this.filteredRequests[j].req._id){
+                                    this.filteredRequests.splice(parseInt(j), 1);
+                                }
+                            }
+                            this.filteredRequests.push(match);
+                        }else {
+                            this.filteredRequests.push({'req' :this.assignedServiceRequests[index], 'cnt' : 1});
+                        }
+                    }else {
+                        this.filteredRequests.push({'req' :this.assignedServiceRequests[index], 'cnt' : 1});
+                    }
+                }
+            }
+        }else {
+            for (var index in temp){
+                if (temp[index].req.serviceProvider.destinationCity === city.destinationCity){
+                    if (temp[index].cnt > 1){
+                        var match1;
+                        for (var i in this.filteredRequests){
+                            if (temp[index].req._id === this.filteredRequests[i].req._id){
+                                match1 = temp[index];
+                            }
+                        }
+                        if (match1){
+                            match1.cnt -= 1;
+                            for (var j in this.filteredRequests){
+                                if (match1.req._id === this.filteredRequests[j].req._id){
+                                    this.filteredRequests.splice(parseInt(j), 1);
+                                }
+                            }
+                            this.filteredRequests.push(match1);
+                        }
+                    }else {
+                        for (var i in this.filteredRequests){
+                            if (temp[index].req._id === this.filteredRequests[i].req._id){
+                                this.filteredRequests.splice(parseInt(i), 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
   
   updateResultsByCurrentCities(city: any){
@@ -229,6 +289,7 @@ export class ProviderSidebarComponent {
                         this.showDetails = true;
                         this.getJourneyDate();
                         this.getCurrentCities();
+                        this.getDestinationCities();
                     }else{
                         this.showDetails = false;
                         console.log(this.showDetails);
@@ -325,6 +386,21 @@ export class ProviderSidebarComponent {
           this.currentCities.push({'currentCity':temp[index]});
         }
       }
+    }
+    
+    getDestinationCities(){
+        var temp = [];
+        for(var index in this.assignedServiceRequests){
+            if (temp.indexOf(this.assignedServiceRequests[index].serviceProvider.destinationCity) <0){
+                temp.push(this.assignedServiceRequests[index].serviceProvider.destinationCity);
+            }
+        }
+        for (var index in temp){
+            var i = temp.indexOf(temp[index]);
+            if (i > -1) {
+                this.destinationCities.push({'destinationCity':temp[index]});
+            }
+        }
     }
   
     loggedIn() {

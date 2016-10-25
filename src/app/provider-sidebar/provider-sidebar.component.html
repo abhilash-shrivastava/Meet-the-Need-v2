@@ -23,7 +23,10 @@
             <ul [hidden]="!currentCitiesClicked" *ngFor="let city of currentCities">
                 <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByCurrentCities(city)"> {{city.currentCity}}<br>
             </ul>
-            <li><a (click)="toggleDeliveryCities()">Delivery Cities</a></li>
+            <li><a (click)="toggleDeliveryCities()">Destination Cities</a></li>
+            <ul [hidden]="!deliveryCitiesClicked" *ngFor="let city of destinationCities">
+                <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByDeliveryCities(city)"> {{city.destinationCity}}<br>
+            </ul>
         </ul>
         <!--<ul [hidden]="!citiesClicked" *ngFor="let request of assignedServiceRequests">-->
             <!--<input type="checkbox" [(ngModel)]="request.checked" (ngModelChange)="updateResults(request)"> {{request.serviceProvider.journeyDate}}<br>-->
@@ -62,20 +65,20 @@
                             <li>Sender Email : <b>{{request.req.senderEmail}}</b></li>
                             <li>Sender Contact Number :   <b>{{request.req.senderPhone}}</b></li>
                             <li>Sender Address : <b>{{request.req.currentAddreddaddressLine1}}</b></li>
-                            <li *ngIf = "request.currentAddreddaddressLine2"> <b>{{request.req.currentAddreddaddressLine2}}</b></li>
+                            <li *ngIf = "request.req.currentAddreddaddressLine2"> <b>{{request.req.currentAddreddaddressLine2}}</b></li>
                             <li>City : <b>{{request.req.currentCity}}</b></li>
                             <h4>Receiver Details</h4>
                             <li>Receiver Name : <b>{{request.req.receiverName}}</b></li>
                             <li>Receiver Email : <b>{{request.req.receiverEmail}}</b></li>
                             <li>Receiver Contact Number :  <b>{{request.req.receiverPhone}}</b></li>
                             <li>Receiver Address : <b>{{request.req.deliveryAddreddaddressLine1}}</b></li>
-                            <li *ngIf = "request.deliveryAddreddaddressLine2"> <b>{{request.req.deliveryAddreddaddressLine2}}</b></li>
+                            <li *ngIf = "request.req.deliveryAddreddaddressLine2"> <b>{{request.req.deliveryAddreddaddressLine2}}</b></li>
                             <li>City : <b>{{request.req.deliveryCity}}</b></li>
-                            <li *ngIf = "request.status" >Parcel Status :  <b>{{request.req.status}}</b></li>
+                            <li *ngIf = "request.req.status" >Parcel Status :  <b>{{request.req.status}}</b></li>
                             <h4>{{mapAddress}}</h4>
                             <div id="{{request._id}}" style="height: 50%; width: 100%;"></div>
-                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-approve" (click)="onStatusChangeClick(request._id)">Approve</button>
-                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-reject" (click)="onRejectClick(request._id, 'Service')">Reject</button>
+                            <button *ngIf = "request.req.status" [hidden] = "request.req.status !== 'Pending Approval At Service Provider'" class="button-approve" (click)="onStatusChangeClick(request.req._id)">Approve</button>
+                            <button *ngIf = "request.req.status" [hidden] = "request.req.status !== 'Pending Approval At Service Provider'" class="button-reject" (click)="onRejectClick(request.req._id, 'Service')">Reject</button>
                         </div>
                     </panel>
                 </h3>
