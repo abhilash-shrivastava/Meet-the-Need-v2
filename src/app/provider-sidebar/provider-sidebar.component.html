@@ -14,10 +14,20 @@
     <a (click)="toggleFiltersClicked()">Filters</a>
     <ul [hidden]="!filtersClicked">
         <li><a (click)="toggleJourneyDate()">Journey Date</a></li>
-        <ul [hidden]="!journeyDateClicked" *ngFor="let request of assignedServiceRequests">
-            <input type="checkbox" [(ngModel)]="request.checked" (ngModelChange)="updateResults(request)"> {{request.serviceProvider.journeyDate}}<br>
+        <ul [hidden]="!journeyDateClicked" *ngFor="let date of journeyDates">
+            <input type="checkbox" [(ngModel)]="date.checked" (ngModelChange)="updateResultsByDate(date)"> {{date.journeyDate}}<br>
         </ul>
-        <li><a>Cities</a></li>
+        <li><a (click)="toggleCities()">Cities</a></li>
+        <ul [hidden]="!citiesClicked">
+            <li><a (click)="toggleCurrentCities()">Current Cities</a></li>
+            <ul [hidden]="!currentCitiesClicked" *ngFor="let city of currentCities">
+                <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByCurrentCities(city)"> {{city.currentCity}}<br>
+            </ul>
+            <li><a (click)="toggleDeliveryCities()">Delivery Cities</a></li>
+        </ul>
+        <!--<ul [hidden]="!citiesClicked" *ngFor="let request of assignedServiceRequests">-->
+            <!--<input type="checkbox" [(ngModel)]="request.checked" (ngModelChange)="updateResults(request)"> {{request.serviceProvider.journeyDate}}<br>-->
+        <!--</ul>-->
         <li><a>Journey Type</a></li>
         <li><a>Route</a></li>
         <li><a>Item Description</a></li>
@@ -31,37 +41,37 @@
         <ul *ngFor="let request of filteredRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <div>
                 <h3>
-                    <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
-                           (click)="mapLoadAssignedService(request._id, request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
-                       + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity
-                       + ' ' + request.serviceProvider.currentState + ' ' + request.serviceProvider.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
-                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, request.serviceProvider.destinationAddreddaddressLine1 + ' ' + request.serviceProvider.destinationAddreddaddressLine2 + ' ' + request.serviceProvider.destinationCity
-                       + ' ' + request.serviceProvider.destinationState + ' ' + request.serviceProvider.destinationZip,  request.status)" >
+                    <panel [title]="request.req.serviceProvider.journeyDate + '-' +request.req.currentCity + '-' + request.req.deliveryCity"
+                           (click)="mapLoadAssignedService(request.req._id, request.req.currentAddreddaddressLine1 + ' ' + request.req.currentAddreddaddressLine2 + ' ' + request.req.currentCity
+                       + ' ' + request.req.currentState + ' ' + request.req.currentZip, request.req.serviceProvider.currentAddreddaddressLine1 + ' ' + request.req.serviceProvider.currentAddreddaddressLine2 + ' ' + request.req.serviceProvider.currentCity
+                       + ' ' + request.req.serviceProvider.currentState + ' ' + request.req.serviceProvider.currentZip, request.req.deliveryAddreddaddressLine1 + ' ' + request.req.deliveryAddreddaddressLine2 + ' ' + request.req.deliveryCity
+                       + ' ' + request.req.deliveryState + ' ' + request.req.deliveryZip, request.req.serviceProvider.destinationAddreddaddressLine1 + ' ' + request.req.serviceProvider.destinationAddreddaddressLine2 + ' ' + request.req.serviceProvider.destinationCity
+                       + ' ' + request.req.serviceProvider.destinationState + ' ' + request.req.serviceProvider.destinationZip,  request.req.status)" >
                         <div class="form-style-10" >
                             <h3>Delivery Service Details:</h3>
-                            <h4 >{{request.serviceProvider.journeyDate}}-{{request.currentCity}}-{{request.deliveryCity}}</h4>
-                            <li>Journey Date:   <b>{{request.serviceProvider.journeyDate}}</b></li>
+                            <h4 >{{request.req.serviceProvider.journeyDate}}-{{request.req.currentCity}}-{{request.req.deliveryCity}}</h4>
+                            <li>Journey Date:   <b>{{request.req.serviceProvider.journeyDate}}</b></li>
                             <h4>Parcel Details:</h4>
-                            <li>Parcel Description : <b>{{request.parcelDisclosure}}</b></li>
-                            <li>Parcel Weight Capacity :  <b>{{request.parcelWeight}}</b> pound</li>
-                            <li>Parcel Height Dimension : <b>{{request.parcelHeight}}</b> cm.</li>
-                            <li>Parcel length Dimension : <b>{{request.parcelLength}}</b> cm.</li>
-                            <li>Parcel Width Dimension :  <b>{{request.parcelWidth}}</b> cm.</li>
+                            <li>Parcel Description : <b>{{request.req.parcelDisclosure}}</b></li>
+                            <li>Parcel Weight Capacity :  <b>{{request.req.parcelWeight}}</b> pound</li>
+                            <li>Parcel Height Dimension : <b>{{request.req.parcelHeight}}</b> cm.</li>
+                            <li>Parcel length Dimension : <b>{{request.req.parcelLength}}</b> cm.</li>
+                            <li>Parcel Width Dimension :  <b>{{request.req.parcelWidth}}</b> cm.</li>
                             <h4>Sender Details</h4>
-                            <li>Sender Name : <b>{{request.senderName}}</b></li>
-                            <li>Sender Email : <b>{{request.senderEmail}}</b></li>
-                            <li>Sender Contact Number :   <b>{{request.senderPhone}}</b></li>
-                            <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
-                            <li *ngIf = "request.currentAddreddaddressLine2"> <b>{{request.currentAddreddaddressLine2}}</b></li>
-                            <li>City : <b>{{request.currentCity}}</b></li>
+                            <li>Sender Name : <b>{{request.req.senderName}}</b></li>
+                            <li>Sender Email : <b>{{request.req.senderEmail}}</b></li>
+                            <li>Sender Contact Number :   <b>{{request.req.senderPhone}}</b></li>
+                            <li>Sender Address : <b>{{request.req.currentAddreddaddressLine1}}</b></li>
+                            <li *ngIf = "request.currentAddreddaddressLine2"> <b>{{request.req.currentAddreddaddressLine2}}</b></li>
+                            <li>City : <b>{{request.req.currentCity}}</b></li>
                             <h4>Receiver Details</h4>
-                            <li>Receiver Name : <b>{{request.receiverName}}</b></li>
-                            <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>
-                            <li>Receiver Contact Number :  <b>{{request.receiverPhone}}</b></li>
-                            <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
-                            <li *ngIf = "request.deliveryAddreddaddressLine2"> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
-                            <li>City : <b>{{request.deliveryCity}}</b></li>
-                            <li *ngIf = "request.status" >Parcel Status :  <b>{{request.status}}</b></li>
+                            <li>Receiver Name : <b>{{request.req.receiverName}}</b></li>
+                            <li>Receiver Email : <b>{{request.req.receiverEmail}}</b></li>
+                            <li>Receiver Contact Number :  <b>{{request.req.receiverPhone}}</b></li>
+                            <li>Receiver Address : <b>{{request.req.deliveryAddreddaddressLine1}}</b></li>
+                            <li *ngIf = "request.deliveryAddreddaddressLine2"> <b>{{request.req.deliveryAddreddaddressLine2}}</b></li>
+                            <li>City : <b>{{request.req.deliveryCity}}</b></li>
+                            <li *ngIf = "request.status" >Parcel Status :  <b>{{request.req.status}}</b></li>
                             <h4>{{mapAddress}}</h4>
                             <div id="{{request._id}}" style="height: 50%; width: 100%;"></div>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-approve" (click)="onStatusChangeClick(request._id)">Approve</button>

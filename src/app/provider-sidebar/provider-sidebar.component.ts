@@ -26,8 +26,13 @@ export class ProviderSidebarComponent {
     requestsClicked = false;
     filtersClicked = false;
     assignedServiceRequests:any;
+    journeyDates = [];
+    currentCities = [];
     filteredRequests= [];
     journeyDateClicked = false;
+    citiesClicked = false;
+    currentCitiesClicked = false;
+    deliveryCitiesClicked = false;
     showDetails = false;
     id: any;
     mapAddress:any;
@@ -62,17 +67,126 @@ export class ProviderSidebarComponent {
         this.getAssignedServiceRequests(this.profile);
         this.openNav();
     }
-    
-    updateResults(request: any){
-        if (request.checked){
-            this.filteredRequests.push(request);
-        } else {
-            var index = this.filteredRequests.indexOf(request);
-            if (index > -1) {
-                this.filteredRequests.splice(index, 1);
+  
+  updateResultsByCurrentCities(city: any){
+  
+    var temp = JSON.parse(JSON.stringify(this.filteredRequests));
+    if (city.checked){
+      for (var index in this.assignedServiceRequests){
+        if (this.assignedServiceRequests[index].serviceProvider.currentCity === city.currentCity){
+          if (temp.length >0){
+            var match;
+            for (var i in temp){
+              if (temp[i].req._id === this.assignedServiceRequests[index]._id){
+                match = temp[i];
+              }
             }
+            if (match){
+              match.cnt += 1;
+              for (var j in this.filteredRequests){
+                if (match.req._id === this.filteredRequests[j].req._id){
+                  this.filteredRequests.splice(parseInt(j), 1);
+                }
+              }
+              this.filteredRequests.push(match);
+            }else {
+              this.filteredRequests.push({'req' :this.assignedServiceRequests[index], 'cnt' : 1});
+            }
+          }else {
+            this.filteredRequests.push({'req' :this.assignedServiceRequests[index], 'cnt' : 1});
+          }
         }
+      }
+    }else {
+      for (var index in temp){
+        if (temp[index].req.serviceProvider.currentCity === city.currentCity){
+          if (temp[index].cnt > 1){
+            var match1;
+            for (var i in this.filteredRequests){
+              if (temp[index].req._id === this.filteredRequests[i].req._id){
+                match1 = temp[index];
+              }
+            }
+            if (match1){
+              match1.cnt -= 1;
+              for (var j in this.filteredRequests){
+                if (match1.req._id === this.filteredRequests[j].req._id){
+                  this.filteredRequests.splice(parseInt(j), 1);
+                }
+              }
+              this.filteredRequests.push(match1);
+            }
+          }else {
+            for (var i in this.filteredRequests){
+              if (temp[index].req._id === this.filteredRequests[i].req._id){
+                this.filteredRequests.splice(parseInt(i), 1);
+              }
+            }
+          }
+        }
+      }
     }
+  }
+  
+  updateResultsByDate(date: any){
+  
+    var temp = JSON.parse(JSON.stringify(this.filteredRequests));
+    if (date.checked){
+      for (var index in this.assignedServiceRequests){
+        if (this.assignedServiceRequests[index].serviceProvider.journeyDate === date.journeyDate){
+          if (temp.length >0){
+            var match;
+            for (var i in temp){
+              if (temp[i].req._id === this.assignedServiceRequests[index]._id){
+                match = temp[i];
+              }
+            }
+            if (match){
+              match.cnt += 1;
+              for (var j in this.filteredRequests){
+                if (match.req._id === this.filteredRequests[j].req._id){
+                  this.filteredRequests.splice(parseInt(j), 1);
+                }
+              }
+              this.filteredRequests.push(match);
+            }else {
+              this.filteredRequests.push({'req' :this.assignedServiceRequests[index], 'cnt' : 1});
+            }
+          }else {
+            this.filteredRequests.push({'req' :this.assignedServiceRequests[index], 'cnt' : 1});
+          }
+        }
+      }
+    }else {
+      for (var index in temp){
+        if (temp[index].req.serviceProvider.journeyDate === date.journeyDate){
+          if (temp[index].cnt > 1){
+            var match1;
+            for (var i in this.filteredRequests){
+              if (temp[index].req._id === this.filteredRequests[i].req._id){
+                match1 = temp[index];
+              }
+            }
+            if (match1){
+              match1.cnt -= 1;
+              for (var j in this.filteredRequests){
+                if (match1.req._id === this.filteredRequests[j].req._id){
+                  this.filteredRequests.splice(parseInt(j), 1);
+                }
+              }
+              this.filteredRequests.push(match1);
+            }
+          }else {
+            for (var i in this.filteredRequests){
+              if (temp[index].req._id === this.filteredRequests[i].req._id){
+                this.filteredRequests.splice(parseInt(i), 1);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
     
     onStatusChangeClick(parcelId){
         this.changeParcelStatus({email: this.profile.email, parcelId: parcelId});
@@ -113,6 +227,8 @@ export class ProviderSidebarComponent {
                     console.log(this.assignedServiceRequests);
                     if(this.assignedServiceRequests.length > 0){
                         this.showDetails = true;
+                        this.getJourneyDate();
+                        this.getCurrentCities();
                     }else{
                         this.showDetails = false;
                         console.log(this.showDetails);
@@ -157,6 +273,17 @@ export class ProviderSidebarComponent {
     toggleJourneyDate(){
         this.journeyDateClicked = !this.journeyDateClicked;
     }
+    toggleCities(){
+        this.citiesClicked = !this.citiesClicked;
+    }
+    toggleCurrentCities(){
+        this.currentCitiesClicked = !this.currentCitiesClicked;
+    }
+    
+    toggleDeliveryCities(){
+        this.deliveryCitiesClicked = !this.deliveryCitiesClicked;
+    }
+    
     toggleFiltersClicked(){
         this.router.navigate([''], { relativeTo: this.route });
         this.filtersClicked = !this.filtersClicked;
@@ -170,6 +297,36 @@ export class ProviderSidebarComponent {
         this.requestsClicked = !this.requestsClicked;
     }
 
+    getJourneyDate(){
+      var temp = [];
+      for(var index in this.assignedServiceRequests){
+        if (temp.indexOf(this.assignedServiceRequests[index].serviceProvider.journeyDate) <0){
+          temp.push(this.assignedServiceRequests[index].serviceProvider.journeyDate);
+        }  
+      }
+      for (var index in temp){
+        var i = temp.indexOf(temp[index]);
+        if (i > -1) {
+          this.journeyDates.push({'journeyDate':temp[index]});
+        }
+      }
+    }
+  
+    getCurrentCities(){
+      var temp = [];
+      for(var index in this.assignedServiceRequests){
+        if (temp.indexOf(this.assignedServiceRequests[index].serviceProvider.currentCity) <0){
+          temp.push(this.assignedServiceRequests[index].serviceProvider.currentCity);
+        }
+      }
+      for (var index in temp){
+        var i = temp.indexOf(temp[index]);
+        if (i > -1) {
+          this.currentCities.push({'currentCity':temp[index]});
+        }
+      }
+    }
+  
     loggedIn() {
         return tokenNotExpired();
     }
