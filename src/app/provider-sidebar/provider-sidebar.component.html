@@ -1,14 +1,14 @@
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
 <div>
-    <a routerLink="/service-provider" routerLinkActive="active">New Service Proposal</a>
-    <a (click)="toggleActionClicked()">Need Your Action</a>
+    <a routerLink="/service-provider" routerLinkActive="active" (click)="filtersClicked = false">New Service Proposal</a>
+    <a (click)="toggleActionClicked()" (click)="filtersClicked = false">Need Your Action</a>
     <ul [hidden]="!actionClicked">
-        <li><a routerLink="/accept-parcel" routerLinkActive="active">Accept Parcel Request</a></li>
-        <li><a routerLink="/parcel-receiving" routerLinkActive="active">Parcel Receiving Pending</a></li>
-        <li><a routerLink="/parcel-delivery" routerLinkActive="active">Parcel Delivery Pending</a></li>
+        <li><a routerLink="/accept-parcel" routerLinkActive="active" (click)="filtersClicked = false">Accept Parcel Request</a></li>
+        <li><a routerLink="/parcel-receiving" routerLinkActive="active" (click)="filtersClicked = false">Parcel Receiving Pending</a></li>
+        <li><a routerLink="/parcel-delivery" routerLinkActive="active" (click)="filtersClicked = false">Parcel Delivery Pending</a></li>
     </ul>
-    <a routerLink="/all-service-requests" routerLinkActive="active" (click)="toggleFilter()">See All Service Proposal</a>
+    <a routerLink="/all-service-requests" routerLinkActive="active" (click)="toggleFilter(); filtersClicked = false">See All Service Proposal</a>
 </div>
 <div [hidden]="!requestsClicked">
     <a (click)="toggleFiltersClicked()">Filters</a>
@@ -23,23 +23,26 @@
             <ul [hidden]="!currentCitiesClicked" *ngFor="let city of currentCities">
                 <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByCurrentCities(city)"> {{city.currentCity}}<br>
             </ul>
-            <li><a (click)="toggleDeliveryCities()">Destination Cities</a></li>
-            <ul [hidden]="!deliveryCitiesClicked" *ngFor="let city of destinationCities">
-                <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByDeliveryCities(city)"> {{city.destinationCity}}<br>
+            <li><a (click)="toggleDestinationCities()">Destination Cities</a></li>
+            <ul [hidden]="!destinationCitiesClicked" *ngFor="let city of destinationCities">
+                <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByDestinationCities(city)"> {{city.destinationCity}}<br>
             </ul>
         </ul>
-        <!--<ul [hidden]="!citiesClicked" *ngFor="let request of assignedServiceRequests">-->
-            <!--<input type="checkbox" [(ngModel)]="request.checked" (ngModelChange)="updateResults(request)"> {{request.serviceProvider.journeyDate}}<br>-->
-        <!--</ul>-->
+        <li><a (click)="toggleItemDescription()">Item Descriptions</a></li>
+        <ul [hidden]="!itemDescriptionClicked" *ngFor="let description of itemDescriptions">
+            <input type="checkbox" [(ngModel)]="description.checked" (ngModelChange)="updateResultsByItemDescription(description)"> {{description.parcelDisclosure}}<br>
+        </ul>
+        <li><a (click)="toggleStatus()">Status</a></li>
+        <ul [hidden]="!statusClicked" *ngFor="let status of parcelStatus">
+            <input type="checkbox" [(ngModel)]="status.checked" (ngModelChange)="updateResultsByParcelStatus(status)"> {{status.status}}<br>
+        </ul>
         <li><a>Journey Type</a></li>
         <li><a>Route</a></li>
-        <li><a>Item Description</a></li>
-        <li><a>Status</a></li>
     </ul>
 </div>
 </div>
 
-<main [hidden]="!showAllRequestClicked" id="main" *ngIf="loggedIn()">
+<main [hidden]="!showAllRequestClicked || !filtersClicked" id="main" *ngIf="loggedIn()">
     <div [hidden]="!showDetails">
         <ul *ngFor="let request of filteredRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <div>
