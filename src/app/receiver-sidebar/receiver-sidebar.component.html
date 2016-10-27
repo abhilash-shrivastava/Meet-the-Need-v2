@@ -11,9 +11,9 @@
     <div [hidden]="!requestsClicked">
         <a (click)="toggleFiltersClicked()">Filters</a>
         <ul [hidden]="!filtersClicked">
-            <li><a (click)="toggleJourneyDate()">Journey Date</a></li>
-            <ul [hidden]="!journeyDateClicked" *ngFor="let date of journeyDates">
-                <input type="checkbox" [(ngModel)]="date.checked" (ngModelChange)="updateResultsByDate(date)"> {{date.journeyDate}}<br>
+            <li><a (click)="toggleDispatchDate()">Dispatch Date</a></li>
+            <ul [hidden]="!dispatchDateClicked" *ngFor="let date of dispatchDates">
+                <input type="checkbox" [(ngModel)]="date.checked" (ngModelChange)="updateResultsByDate(date)"> {{date.dispatchDate}}<br>
             </ul>
             <li><a (click)="toggleCities()">Cities</a></li>
             <ul [hidden]="!citiesClicked">

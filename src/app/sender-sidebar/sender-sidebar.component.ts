@@ -26,13 +26,13 @@ export class SenderSidebarComponent {
     profile: any;
     parcelRequests: any;
     errorMessage: string;
-    journeyDates = [];
+    dispatchDates = [];
     currentCities = [];
     deliveryCities = [];
     filteredRequests= [];
     itemDescriptions = [];
     parcelStatus = [];
-    journeyDateClicked = false;
+    dispatchDateClicked = false;
     citiesClicked = false;
     currentCitiesClicked = false;
     deliveryCitiesClicked = false;
@@ -305,7 +305,7 @@ export class SenderSidebarComponent {
         var temp = JSON.parse(JSON.stringify(this.filteredRequests));
         if (date.checked){
             for (var index in this.parcelRequests){
-                if (this.parcelRequests[index].serviceProvider.journeyDate === date.journeyDate){
+                if (this.parcelRequests[index].serviceProvider.journeyDate === date.dispatchDate){
                     if (temp.length >0){
                         var match;
                         for (var i in temp){
@@ -331,7 +331,7 @@ export class SenderSidebarComponent {
             }
         }else {
             for (var index in temp){
-                if (temp[index].req.serviceProvider.journeyDate === date.journeyDate){
+                if (temp[index].req.serviceProvider.journeyDate === date.dispatchDate){
                     if (temp[index].cnt > 1){
                         var match1;
                         for (var i in this.filteredRequests){
@@ -416,7 +416,7 @@ export class SenderSidebarComponent {
                     this.parcelRequests = data;
                     if(this.parcelRequests.length > 0){
                         this.showDetails = true;
-                        this.getJourneyDate();
+                        this.getDispatchDates();
                         this.getCurrentCities();
                         this.getDeliveryCities();
                         this.getItemDescriptions();
@@ -461,8 +461,8 @@ export class SenderSidebarComponent {
             );
     }
     
-    toggleJourneyDate(){
-        this.journeyDateClicked = !this.journeyDateClicked;
+    toggleDispatchDate(){
+        this.dispatchDateClicked = !this.dispatchDateClicked;
     }
     toggleCities(){
         this.citiesClicked = !this.citiesClicked;
@@ -496,7 +496,7 @@ export class SenderSidebarComponent {
         this.requestsClicked = !this.requestsClicked;
     }
     
-    getJourneyDate(){
+    getDispatchDates(){
         var temp = [];
         for(var index in this.parcelRequests){
             if (temp.indexOf(this.parcelRequests[index].serviceProvider.journeyDate) <0){
@@ -506,7 +506,7 @@ export class SenderSidebarComponent {
         for (var index in temp){
             var i = temp.indexOf(temp[index]);
             if (i > -1) {
-                this.journeyDates.push({'journeyDate':temp[index]});
+                this.dispatchDates.push({'dispatchDate':temp[index]});
             }
         }
     }
