@@ -24,15 +24,16 @@
 </div>
 <!--<div id="mySidenav" class="sidenav">-->
     <!--<a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>-->
-    <!--<div *ngIf="selection == 'sender'">-->
-        <!--<sender-sidebar></sender-sidebar>-->
-    <!--</div>-->
-    <!--<div *ngIf="selection == 'receiver'">-->
-        <!--<receiver-sidebar></receiver-sidebar>-->
-    <!--</div>-->
+
 <!--</div>-->
-<div *ngIf="selection == 'provider'">
-    <provider-sidebar></provider-sidebar>
+<div *ngIf="selection == 'provider'" >
+    <provider-sidebar [selection]="selection" (sidebarChange)="selectionChange($event);"></provider-sidebar>
+</div>
+<div *ngIf="selection == 'sender'">
+    <sender-sidebar [selection]="selection" (sidebarChange)="selectionChange($event);"></sender-sidebar>
+</div>
+<div *ngIf="selection == 'receiver'">
+    <receiver-sidebar [selection]="selection" (sidebarChange)="selectionChange($event);"></receiver-sidebar>
 </div>
 <router-outlet></router-outlet>
 </body>

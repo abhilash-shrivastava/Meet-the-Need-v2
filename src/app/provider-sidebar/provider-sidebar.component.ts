@@ -1,7 +1,7 @@
 /**
  * Created by Abhi on 10/17/16.
  */
-import {Component, Input} from '@angular/core'
+import {Component, Input, EventEmitter, Output} from '@angular/core'
 import {RequestsService} from "../services/request.service";
 import {Panel} from "../profile/panel";
 import {tokenNotExpired} from "angular2-jwt/angular2-jwt";
@@ -47,9 +47,14 @@ export class ProviderSidebarComponent {
     destinationAddress:any;
     status:any;
     showAllRequestClicked = false;
+  
+  
+    @Input('selection') selection: string;
+    @Output() sidebarChange = new EventEmitter();
 
 
-    openNav() {
+
+  openNav() {
       document.getElementById("mySidenav").style.width = "350px";
       document.getElementById("main").style.marginLeft = "350px";
       document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
@@ -59,6 +64,10 @@ export class ProviderSidebarComponent {
       document.getElementById("mySidenav").style.width = "0";
       document.getElementById("main").style.marginLeft= "0";
       document.body.style.backgroundColor = "white";
+      this.selection='';
+      this.sidebarChange.emit({
+        value: this.selection
+      })
     }
 
     constructor(private requestsService: RequestsService, private route: ActivatedRoute, private router: Router,
@@ -71,6 +80,7 @@ export class ProviderSidebarComponent {
         this.profile = JSON.parse(localStorage.getItem('profile'));
         this.getAssignedServiceRequests(this.profile);
         this.openNav();
+      console.log(this.selection);
     }
     
     updateResultsByParcelStatus(status: any){

@@ -1,4 +1,4 @@
-<div id="mySidenav" class="sidenav">
+<div id="mySidenav" class="sidenav" [hidden]="!loggedIn()">
     <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
 <div>
     <a routerLink="/service-provider" routerLinkActive="active" (click)="filtersClicked = false">New Service Proposal</a>
@@ -36,8 +36,8 @@
         <ul [hidden]="!statusClicked" *ngFor="let status of parcelStatus">
             <input type="checkbox" [(ngModel)]="status.checked" (ngModelChange)="updateResultsByParcelStatus(status)"> {{status.status}}<br>
         </ul>
-        <li><a>Journey Type</a></li>
-        <li><a>Route</a></li>
+        <!--<li><a>Journey Type</a></li>-->
+        <!--<li><a>Route</a></li>-->
     </ul>
 </div>
 </div>
