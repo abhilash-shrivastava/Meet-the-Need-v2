@@ -54,7 +54,22 @@ export class ServiceProviderComponent {
     };
     
     onSubmit() {
-        console.log(this.returnTrip);
+        var intermediateStops = [];
+        var orderListElements = document.getElementsByTagName('OL')[0];
+        if (orderListElements.getElementsByTagName("LI").length >0){
+            var listElements = orderListElements.getElementsByTagName("LI");
+            for (var index=0; index < listElements.length; index++){
+                var citydetails = listElements[index].innerHTML.split(', ', 2);
+                var cityObject ={};
+                cityObject['index'] = index;
+                cityObject['city'] = citydetails[0];
+                citydetails = citydetails[1].split(' ');
+                cityObject['state'] = citydetails[0];
+                cityObject['pickUpDate'] = citydetails[2];
+                intermediateStops.push(cityObject);
+            }
+        }
+        this.model['itineraryCitiesToDestination'] = intermediateStops;
         this.isLoading = true;
         this.submitted = true;
         if (this.profile["id"] != null){
@@ -290,7 +305,7 @@ export class ServiceProviderComponent {
     }
     
     addItineraryToDestination(){
-        this.itineraryToDestination = {};
+        // this.itineraryToDestination = {};
         let place = this.itineraryCityToDestinationAutocomplete.getPlace();
         // Get each component of the address from the place details
         // and fill the corresponding field on the form.

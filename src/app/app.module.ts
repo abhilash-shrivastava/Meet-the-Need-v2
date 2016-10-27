@@ -35,6 +35,8 @@ import {ProviderSidebarComponent} from "./provider-sidebar/provider-sidebar.comp
 import {SenderSidebarComponent} from "./sender-sidebar/sender-sidebar.component";
 import {ReceiverSidebarComponent} from "./receiver-sidebar/receiver-sidebar.component";
 import {CheckboxFilterPipe} from "./pipes/checkbox-filter.pipe";
+import {DndModule} from 'ng2-dnd';
+
 
 
 
@@ -84,7 +86,8 @@ type StoreType = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES)
+    RouterModule.forRoot(ROUTES),
+    DndModule.forRoot()
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

@@ -45,9 +45,20 @@
                 </div>
                 <div *ngIf = "model.itineraryCitiesToDestination" class="inner-wrap">
                     <h4>Travel Itinerary to Destination Trip</h4>
-                    <ul *ngFor="let city of model.itineraryCitiesToDestination">
-                        <li >{{city.city}}, {{city.state}} - {{city.pickupDate}}</li>
-                    </ul>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    Drag and drop to change the order
+                                </div>
+                                <div class="panel-body">
+                                    <ol class="list-group" dnd-sortable-container [sortableData]="model.itineraryCitiesToDestination">
+                                        <li *ngFor="let city of model.itineraryCitiesToDestination; let i = index; " class="list-group-item" dnd-sortable [sortableIndex]="i">{{city.city}}, {{city.state}}  {{city.pickupDate}}</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
 
