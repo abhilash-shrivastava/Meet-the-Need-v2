@@ -37,6 +37,7 @@
                 <label>City <input type = "text" [(ngModel)]="model.currentCity" required [ngModelOptions]="{standalone: true}"></label>
                 <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" [ngModelOptions]="{standalone: true}"></label>
             </div>
+            <input [hidden] = "true" type="submit" [disabled]="!currentAddress.form.valid"/>
         </form>
 
         <div class="section"><span>3</span>Enter Delivery Address</div>
@@ -53,6 +54,7 @@
                 <label>City <input type = "text" [(ngModel)]="model.deliveryCity" required [ngModelOptions]="{standalone: true}"></label>
                 <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.deliveryZip" [ngModelOptions]="{standalone: true}"></label>
             </div>
+            <input [hidden] = "true" type="submit" [disabled]="!deliveryAddress.form.valid"/>
         </form>
 
         <div class="section"><span>4</span>Parcel Details</div>
