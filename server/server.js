@@ -367,7 +367,7 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
       })
     }
   })
-}
+};
 
 var getParcelSenderList = function (serviceDetails,  sendResponse) {
   responseToSender = [];
@@ -400,7 +400,33 @@ var getParcelSenderList = function (serviceDetails,  sendResponse) {
     }else {
       cursorone.each(function(err, sender){
         if (sender !== null){
-          responseToSender.push(sender);
+          if (sender.currentCity === serviceDetails.currentCity){
+            if (sender.deliveryCity === serviceDetails.destinationCity){
+              responseToSender.push(sender);
+            }else {
+              for (var i in serviceDetails.itineraryCitiesToDestination){
+                if (serviceDetails.itineraryCitiesToDestination[i].city === sender.deliveryCity){
+                    responseToSender.push(sender);
+                }
+              }
+            }
+          }else {
+            for (var index in serviceDetails.itineraryCitiesToDestination){
+              if (serviceDetails.itineraryCitiesToDestination[index].city === sender.currentCity){
+                if (serviceDetails.destinationCity === sender.deliveryCity){
+                  responseToSender.push(sender);
+                }else {
+                  for (var i in serviceDetails.itineraryCitiesToDestination){
+                    if (serviceDetails.itineraryCitiesToDestination[i].city === sender.deliveryCity){
+                      if (serviceDetails.itineraryCitiesToDestination[index].index <= serviceDetails.itineraryCitiesToDestination[i].index){
+                        responseToSender.push(sender);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
           count--;
           if (count === 0){
             sendResponse(responseToSender);
@@ -410,7 +436,7 @@ var getParcelSenderList = function (serviceDetails,  sendResponse) {
       })
     }
   })
-}
+};
 
 var sendRaisedEmailToSender = function (sender) {
 
