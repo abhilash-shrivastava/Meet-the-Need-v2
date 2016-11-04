@@ -298,3 +298,17 @@ div button:focus {
 .panel-heading {
     color: black !important;
 }
+
+.deleteCross {
+    background: black;
+    color: white;
+    padding: 0px 5px;
+}
+
+:hover .deleteCross {
+    opacity: 0.5;
+}
+
+h2 {
+    color: black;
+}

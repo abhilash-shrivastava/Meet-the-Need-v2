@@ -115,6 +115,7 @@ export class ServiceProviderComponent {
         this.submitted = false;
         this.parcelOrderSelected= false;
         this.isLoading =false;
+        this.model.itineraryCitiesToDestination = [];
     }
 
     ngOnInit(): void {
@@ -143,6 +144,10 @@ export class ServiceProviderComponent {
         //     this.model["_id"] = id;
         // }
         this.getServiceProviderDetails(this.profile);
+    }
+
+    deleteCity(i:any){
+        this.model.itineraryCitiesToDestination.splice(i,1);
     }
 
     addSenderDistanceAndDuration(requests: any){

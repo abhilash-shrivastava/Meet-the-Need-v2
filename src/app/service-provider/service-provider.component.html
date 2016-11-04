@@ -34,7 +34,7 @@
                 <input [hidden] = "true" type="submit" [disabled]="!currentAddress.form.valid"/>
             </form>
 
-            <div  class="section"><span>3</span>Enter Itinerary Cities to Destination</div>
+            <div  class="section"><span>3</span>Enter Intermediate Stops</div>
 
             <form >
                 <div>
@@ -53,7 +53,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <ol class="list-group" dnd-sortable-container [sortableData]="model.itineraryCitiesToDestination">
-                                        <li *ngFor="let city of model.itineraryCitiesToDestination; let i = index; " class="list-group-item" dnd-sortable [sortableIndex]="i">{{city.city}}, {{city.state}}  {{city.pickupDate}}</li>
+                                        <li *ngFor="let city of model.itineraryCitiesToDestination; let i = index; " class="list-group-item" dnd-sortable [sortableIndex]="i">{{city.city}}, {{city.state}}  {{city.pickupDate}} <span id="i" (click)="deleteCity(i)" class="deleteCross"> x </span></li>
                                     </ol>
                                 </div>
                             </div>
@@ -136,8 +136,7 @@
             <li>Sender Name : {{request.senderName}}</li>
             <li>Sender Email : {{request.senderEmail}}</li>
             <li>Sender Contact Number :   {{request.senderPhone}}</li>
-            <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
-            <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
+            <li>Sender Address : <b>{{request.currentAddreddaddressLine1}} {{request.currentAddreddaddressLine2}}</b></li>
             <li>City : {{request.currentCity}}</li>
             <b><i>Distance and Time Required to Reach Sender from Current Address</i></b>
             <li *ngIf="request.SenderDistanceAndDuration">Distance : {{request.SenderDistanceAndDuration.distance}}</li>
@@ -146,8 +145,7 @@
             <li>Receiver Name : {{request.receiverName}}</li>
             <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>
             <li>Receiver Contact Number :  <b>{{request.receiverPhone}}</b></li>
-            <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
-            <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
+            <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}} {{request.deliveryAddreddaddressLine2}}</b></li>
             <li>City : {{request.deliveryCity}}</li>
             <b><i>Distance and Time Required to Reach Receiver from Destination Address</i></b>
             <li *ngIf="request.ReceiverDistanceAndDuration">Distance : {{request.ReceiverDistanceAndDuration.distance}}</li>
@@ -172,15 +170,13 @@
                 <li>Sender Name : {{request.senderName}}</li>
                 <li>Sender Email : {{request.senderEmail}}</li>
                 <li>Sender Contact Number :   {{request.senderPhone}}</li>
-                <li>Sender Address : <b>{{request.currentAddreddaddressLine1}}</b></li>
-                <li> <b>{{request.currentAddreddaddressLine2}}</b></li>
+                <li>Sender Address : <b>{{request.currentAddreddaddressLine1}} {{request.currentAddreddaddressLine2}}</b></li>
                 <li>City : {{request.currentCity}}</li>
                 <h4>Receiver Details</h4>
                 <li>Receiver Name : {{request.receiverName}}</li>
                 <li>Receiver Email : <b>{{request.receiverEmail}}</b></li>
                 <li>Receiver Contact Number :  <b>{{request.receiverPhone}}</b></li>
-                <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}}</b></li>
-                <li> <b>{{request.deliveryAddreddaddressLine2}}</b></li>
+                <li>Receiver Address : <b>{{request.deliveryAddreddaddressLine1}} {{request.deliveryAddreddaddressLine2}}</b></li>
                 <li>City : {{request.deliveryCity}}</li>
                 <button class="resubmit-button" (click)="initializeFlag()">Submit Another Request</button>
             </ul>
