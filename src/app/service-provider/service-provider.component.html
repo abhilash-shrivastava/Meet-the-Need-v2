@@ -38,7 +38,7 @@
 
             <form >
                 <div>
-                    <input id="itinerarycitytodestinationautocomplete" [(ngModel)]="searchAddress" placeholder="Add City in Destination Itinerary" type="text" [ngModelOptions]="{standalone: true}">
+                    <input id="itinerarycitytodestinationautocomplete" [(ngModel)]="searchAddress" placeholder="Add Intermediate City to Destination" type="text" [ngModelOptions]="{standalone: true}">
                 </div>
                 <div>
                     <label>Parcel Pickup Date<input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToDestination.pickupDate" (change)="addItineraryToDestination()"  #date [ngModelOptions]="{standalone: true}"/></label>
@@ -61,6 +61,10 @@
                     </div>
                 </div>
             </form>
+            <span >
+             <input type="checkbox" name="field7" [(ngModel)]="nearByCities">Do you want to look for near by Cities also?.
+            </span>
+            <label *ngIf="nearByCities">Enter Radius<input type="number" [(ngModel)]="radius" [ngModelOptions]="{standalone: true}"></label>
 
             <div class="section"><span>4</span>Enter Destination Address</div>
 

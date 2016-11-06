@@ -131,6 +131,22 @@ export class Panel {
             }
         });
     }
+  
+  geocodeAddress(city) {
+    this.geocoder = new google.maps.Geocoder();
+    this.geocoder.geocode({'address': city}, (results, status) => {
+      if (status === 'OK') {
+        let lat = results[0].geometry.location.lat();
+        let lng = results[0].geometry.location.lng();
+        return {
+          lat: lat,
+          lng: lng
+        }
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
 
     showSteps(directionResult, markerArray, stepDisplay, map) {
         // For each step, place a marker, and add the text to the marker's infowindow.

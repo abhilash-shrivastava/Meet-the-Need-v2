@@ -8,13 +8,14 @@ import { ServiceProviderCRUDService } from './../services/service-provider-crud.
 import {tokenNotExpired} from 'angular2-jwt';
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {Panel} from "../profile/panel";
+import {GeoByteService} from "../services/geobyte.service";
 
 
 @Component({
     selector: 'service-provider',
     templateUrl: './service-provider.component.html',
     styleUrls: ['./service-provider.component.css'],
-    providers: [ ServiceProviderCRUDService, Panel, GoogleApiService ],
+    providers: [ ServiceProviderCRUDService, Panel, GoogleApiService, GeoByteService ],
 })
 
 export class ServiceProviderComponent {
@@ -43,7 +44,8 @@ export class ServiceProviderComponent {
     itineraryToDestination ={};
     itineraryToCurrent ={};
     searchAddress : any;
-    returnTrip = false;
+    nearByCities: any;
+    radius: number;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -56,7 +58,7 @@ export class ServiceProviderComponent {
     onSubmit() {
         var intermediateStops = [];
         var orderListElements = document.getElementsByTagName('OL')[0];
-        if (orderListElements.getElementsByTagName("LI").length >0){
+        if (orderListElements){
             var listElements = orderListElements.getElementsByTagName("LI");
             for (var index=0; index < listElements.length; index++){
                 var citydetails = listElements[index].innerHTML.split(', ', 2);
@@ -94,13 +96,18 @@ export class ServiceProviderComponent {
                 this.model['destinationCity'] =  this.model['destinationCity'] + " ";
             }
         }
+      if (this.nearByCities){
+        this.getNearByCities(this.model.currentCityLat, this.model.currentCityLng, this.radius);
+      }else {
         if (this.model !== null){
-            this.saveServiceProviderDetails(this.model);
+          this.model.nearByCitiesArray = [];
+          this.saveServiceProviderDetails(this.model);
         }
+      }
     }
     error: any;
     status: string;
-    constructor(private panel: Panel,
+    constructor(private panel: Panel, private geoByteService: GeoByteService,
                 private googleApi:GoogleApiService,
         private serviceProviderCRUDService: ServiceProviderCRUDService) {
     }
@@ -257,7 +264,7 @@ export class ServiceProviderComponent {
 
     }
     circle: any;
-    geolocation: any
+    geolocation: any;
     geolocate(addressType : string) {
         if (addressType == "Current Address"){
             this.isCurrentAddressLoading = true;
@@ -270,6 +277,8 @@ export class ServiceProviderComponent {
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
+              this.model.currentCityLat = position.coords.latitude;
+              this.model.currentCityLng = position.coords.longitude;
                 this.geolocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
@@ -290,6 +299,7 @@ export class ServiceProviderComponent {
 
             });
         }
+      // console.log(this.panel.geocodeAddress(this.model.currentCity));
     }
 
     itineraryCity() {
@@ -397,7 +407,29 @@ export class ServiceProviderComponent {
             );
 
     }
-
+  
+  getNearByCities(lat:any, lng:any, radius:any){
+    if (!lat || !lng || !radius) { return; }
+    this.geoByteService.getNearByCities(lat, lng, radius)
+      .subscribe(
+        data  => {
+          this.getCities(data);
+          if (this.model !== null){
+            this.saveServiceProviderDetails(this.model);
+          }
+        },
+        error =>  this.errorMessage = <any>error
+      );
+    
+  }
+  
+  getCities(data: any){
+    this.model.nearByCitiesArray = [];
+    for (var index in data){
+      this.model.nearByCitiesArray.push(data[index][1]);
+    }
+  }
+  
     selectParcelOrder(senderData){
         if (!senderData) { return; }
         //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable

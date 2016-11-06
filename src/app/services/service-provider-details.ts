@@ -41,4 +41,7 @@ export class ServiceProviderDetails{
     destinationZip: string;
     itineraryCitiesToDestination : any;
     itineraryCitiesToCurrent : any;
+    currentCityLat: any;
+    currentCityLng: any;
+    nearByCitiesArray: any;
 }

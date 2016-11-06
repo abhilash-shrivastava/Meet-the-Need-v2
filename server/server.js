@@ -387,7 +387,7 @@ var getParcelSenderList = function (serviceDetails,  sendResponse) {
     }
   }
   var cursorone = db.collection('parcelSender')
-      .find( {$and: [{$or: [{ "currentCity": serviceDetails.currentCity} , { "currentCity": { $in: connectingCitiesToDestination}}]}, {$or: [{ "deliveryCity": serviceDetails.destinationCity} ,{ "deliveryCity": { $in: connectingCitiesToDestination}}]}, {"parcelWeight": { $lte: (serviceDetails.maxParcelWeight)}}, {"parcelHeight": { $lte: (serviceDetails.maxParcelHeight)}}, {"parcelLength": { $lte: (serviceDetails.maxParcelLength)}}, {"parcelWidth": { $lte: (serviceDetails.maxParcelWidth)}}, {"startDeliveryDate" : {$lte: serviceDetails.journeyDate}}, {"endDeliveryDate" : {$gte: serviceDetails.journeyDate}}]}).sort({parcelWeight: -1})
+      .find( {$and: [{$or: [{ "currentCity": serviceDetails.currentCity} , { "currentCity": { $in: connectingCitiesToDestination}}, { "currentCity": { $in: serviceDetails.nearByCitiesArray}}]}, {$or: [{ "deliveryCity": serviceDetails.destinationCity} ,{ "deliveryCity": { $in: connectingCitiesToDestination}}]}, {"parcelWeight": { $lte: (serviceDetails.maxParcelWeight)}}, {"parcelHeight": { $lte: (serviceDetails.maxParcelHeight)}}, {"parcelLength": { $lte: (serviceDetails.maxParcelLength)}}, {"parcelWidth": { $lte: (serviceDetails.maxParcelWidth)}}, {"startDeliveryDate" : {$lte: serviceDetails.journeyDate}}, {"endDeliveryDate" : {$gte: serviceDetails.journeyDate}}]}).sort({parcelWeight: -1})
   cursorone.count(function (e, count) {
     if (count === 0) {
       db.collection('serviceProvider').save(serviceDetails, function(err, result){
@@ -399,8 +399,8 @@ var getParcelSenderList = function (serviceDetails,  sendResponse) {
     })
     }else {
       cursorone.each(function(err, sender){
-        if (sender !== null){
-          if (sender.currentCity === serviceDetails.currentCity){
+        if (sender !== null && sender !== undefined){
+          if (sender.currentCity === serviceDetails.currentCity || serviceDetails.nearByCitiesArray.indexOf(sender.currentCity) >= 0){
             if (sender.deliveryCity === serviceDetails.destinationCity){
               responseToSender.push(sender);
             }else {
