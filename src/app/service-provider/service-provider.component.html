@@ -64,7 +64,7 @@
             <span >
              <input type="checkbox" name="field7" [(ngModel)]="nearByCities">Do you want to look for near by Cities also?.
             </span>
-            <label *ngIf="nearByCities">Enter Radius<input type="number" [(ngModel)]="radius" [ngModelOptions]="{standalone: true}"></label>
+            <label *ngIf="nearByCities">Enter Radius<input type="number" [(ngModel)]="radius" placeholder="Radius of the near by cities in miles" [ngModelOptions]="{standalone: true}"></label>
 
             <div class="section"><span>4</span>Enter Destination Address</div>
 

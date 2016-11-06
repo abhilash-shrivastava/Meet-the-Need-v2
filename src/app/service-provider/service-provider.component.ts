@@ -97,7 +97,7 @@ export class ServiceProviderComponent {
             }
         }
       if (this.nearByCities){
-        this.getNearByCities(this.model.currentCityLat, this.model.currentCityLng, this.radius);
+        this.getNearByCities(this.model.currentCityLat, this.model.currentCityLng, this.radius*1.6);
       }else {
         if (this.model !== null){
           this.model.nearByCitiesArray = [];
