@@ -1,7 +1,7 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, JsonpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 
@@ -80,14 +80,15 @@ type StoreType = {
     ProviderSidebarComponent,
     SenderSidebarComponent,
     ReceiverSidebarComponent,
-    CheckboxFilterPipe  
+    CheckboxFilterPipe,
   ],
   imports: [ // import Angular's modules
     BrowserModule,
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES),
-    DndModule.forRoot()
+    DndModule.forRoot(),
+    JsonpModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

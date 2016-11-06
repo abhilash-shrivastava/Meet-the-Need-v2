@@ -1,7 +1,7 @@
 /**
  * Created by Abhi on 7/28/16.
  */
-import {Component, Output, EventEmitter} from '@angular/core';
+import {Component} from '@angular/core';
 import {GoogleApiService} from "../services/googleAPIService.service";
 
 
@@ -22,7 +22,7 @@ import {GoogleApiService} from "../services/googleAPIService.service";
     <div style="background: #0273D4; color: white; padding: 20px; width: 80%;" (click)="toggle()">{{title}}  </div>
     <div  [hidden]="!opened"><ng-content></ng-content></div>
   </div>`,
-    inputs: ['title'],
+    inputs: ['title']
 })
 export class Panel {
     opened: Boolean = false;
@@ -104,9 +104,20 @@ export class Panel {
         });
         return coordinates;
     }
-
-
-
+  
+  // geocodeAddress(city, callback) {
+  //   this.geocoder = new google.maps.Geocoder();
+  //   this.geocoder.geocode({'address': city}, (results, status) => {
+  //     if (status === 'OK') {
+  //       let lat = results[0].geometry.location.lat();
+  //       let lng = results[0].geometry.location.lng();
+  //       callback(lat, lng, 100);
+  //     } else {
+  //       alert('Geocode was not successful for the following reason: ' + status);
+  //     }
+  //   });
+  // }
+  
     calculateAndDisplayRoute(directionsDisplay, directionsService,
                              markerArray, stepDisplay, map, address1: any, address2: any) {
         // First, remove any existing markers from the map.
