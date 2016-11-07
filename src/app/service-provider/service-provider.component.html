@@ -10,78 +10,124 @@
     <div class="form-style-10">
         <h1>Details Needed<span>Please provide the following details to offer parcel service!</span></h1>
         <form (ngSubmit) = "onSubmit()" #serviceProviderDetailsForm="ngForm">
-            <div class="section"><span>1</span>General Information</div>
-            <div class="inner-wrap">
-                <label>Your Full Name <input type="text" placeholder="Name" [(ngModel)]="model.name" required ngControl="name" [ngModelOptions]="{standalone: true}"/>
-                </label>
-                <label>Phone Number <input type="text" placeholder="(123)-456-7890" [(ngModel)]="model.phone" required [ngModelOptions]="{standalone: true}"/></label>
+            <div [hidden]="segment !== 1">
+                <div class="section"><span>{{segment}}</span>General Information</div>
+                <div class="inner-wrap">
+                    <label>Your Full Name <input type="text" placeholder="Name" [(ngModel)]="model.name" required ngControl="name" [ngModelOptions]="{standalone: true}"/>
+                    </label>
+                    <label>Phone Number <input type="text" placeholder="(123)-456-7890" [(ngModel)]="model.phone" required [ngModelOptions]="{standalone: true}"/></label>
+                </div>
+                <button type="button" class="btn btn-primary pull-right" (click)="segment=2">Next</button>
+            </div>
+            <div [hidden]="segment !== 2">
+                <div class="section"><span>{{segment}}</span>Enter Current Address</div>
+                <form (ngSubmit) = "geolocate('Current Address')" #currentAddress="ngForm">
+                    <div>
+                        <input id="currentaddressautocomplete"  placeholder="Enter your address" type="text">
+                    </div>
+                    <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
+                    <div *ngIf = "model.currentCity" class="inner-wrap" >
+                        <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" [ngModelOptions]="{standalone: true}"></label>
+                        <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddreddaddressLine2" [ngModelOptions]="{standalone: true}"></label>
+                        <label>State <input type="text" [(ngModel)]="model.currentState" required [ngModelOptions]="{standalone: true}"></label>
+                        <label>City <input type = "text" [(ngModel)]="model.currentCity" required [ngModelOptions]="{standalone: true}"></label>
+                        <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" [ngModelOptions]="{standalone: true}"></label>
+                    </div>
+                    <input [hidden] = "true" type="submit" [disabled]="!currentAddress.form.valid"/>
+                </form>
+                <button type="button" class="btn btn-primary pull-left" (click)="segment=1">Previous</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="segment=3">Next</button>
             </div>
 
-            <div class="section"><span>2</span>Enter Current Address
-            </div>
-            <form (ngSubmit) = "geolocate('Current Address')" #currentAddress="ngForm">
-                <div>
-                    <input id="currentaddressautocomplete"  placeholder="Enter your address" type="text">
-                </div>
-                <div *ngIf="loggedIn()" [hidden] = "!isCurrentAddressLoading" class="loader">Loading...</div>
-                <div *ngIf = "model.currentCity" class="inner-wrap" >
-                    <label>Address line 1 <input type="text" [(ngModel)]="model.currentAddreddaddressLine1" [ngModelOptions]="{standalone: true}"></label>
-                    <label>Address line 2 <input type="text" [(ngModel)]="model.currentAddreddaddressLine2" [ngModelOptions]="{standalone: true}"></label>
-                    <label>State <input type="text" [(ngModel)]="model.currentState" required [ngModelOptions]="{standalone: true}"></label>
-                    <label>City <input type = "text" [(ngModel)]="model.currentCity" required [ngModelOptions]="{standalone: true}"></label>
-                    <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.currentZip" [ngModelOptions]="{standalone: true}"></label>
-                </div>
-                <input [hidden] = "true" type="submit" [disabled]="!currentAddress.form.valid"/>
-            </form>
+            <div [hidden]="segment !== 3">
+                <div  class="section"><span>{{segment}}</span>Enter Intermediate Stops</div>
 
-            <div  class="section"><span>3</span>Enter Intermediate Stops</div>
-
-            <form >
-                <div>
-                    <input id="itinerarycitytodestinationautocomplete" [(ngModel)]="searchAddress" placeholder="Add Intermediate City to Destination" type="text" [ngModelOptions]="{standalone: true}">
-                </div>
-                <div>
-                    <label>Parcel Pickup Date<input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToDestination.pickupDate" (change)="addItineraryToDestination()"  #date [ngModelOptions]="{standalone: true}"/></label>
-                </div>
-                <div *ngIf = "model.itineraryCitiesToDestination" class="inner-wrap">
-                    <h4>Travel Itinerary to Destination Trip</h4>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <div class="panel panel-success">
-                                <div class="panel-heading">
-                                    Drag and drop to change the order
-                                </div>
-                                <div class="panel-body">
-                                    <ol class="list-group" dnd-sortable-container [sortableData]="model.itineraryCitiesToDestination">
-                                        <li *ngFor="let city of model.itineraryCitiesToDestination; let i = index; " class="list-group-item" dnd-sortable [sortableIndex]="i">{{city.city}}, {{city.state}}  {{city.pickupDate}} <span id="i" (click)="deleteCity(i)" class="deleteCross"> x </span></li>
-                                    </ol>
+                <form >
+                    <div>
+                        <input id="itinerarycitytodestinationautocomplete" [(ngModel)]="searchAddress" placeholder="Add Intermediate City to Destination" type="text" [ngModelOptions]="{standalone: true}">
+                    </div>
+                    <div>
+                        <label>Parcel Pickup Date<input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="itineraryToDestination.pickupDate" (change)="addItineraryToDestination()"  #date [ngModelOptions]="{standalone: true}"/></label>
+                    </div>
+                    <div *ngIf = "model.itineraryCitiesToDestination" class="inner-wrap">
+                        <h4>Travel Itinerary to Destination Trip</h4>
+                        <div class="row">
+                            <div >
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        Drag and drop to change the order
+                                    </div>
+                                    <div class="panel-body">
+                                        <ol class="list-group" dnd-sortable-container [sortableData]="model.itineraryCitiesToDestination">
+                                            <li *ngFor="let city of model.itineraryCitiesToDestination; let i = index; " class="list-group-item" dnd-sortable [sortableIndex]="i">{{city.city}}, {{city.state}}  {{city.pickupDate}} <span id="i" (click)="deleteCity(i)" class="deleteCross"> x </span></li>
+                                        </ol>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
-            <span >
-             <input type="checkbox" name="field7" [(ngModel)]="nearByCities">Do you want to look for near by Cities also?.
-            </span>
-            <label *ngIf="nearByCities">Enter Radius<input type="number" [(ngModel)]="radius" placeholder="Radius of the near by cities in miles" [ngModelOptions]="{standalone: true}"></label>
-
-            <div class="section"><span>4</span>Enter Destination Address</div>
-
-            <form (ngSubmit) = "geolocate('Destination Address')" #destinationAddress="ngForm">
+                </form>
                 <div>
-                    <input id="destinationaddressautocomplete"  placeholder="Enter your address" type="text">
+                    <span class="privacy-policy">
+                    <input type="checkbox" name="field7" [(ngModel)]="nearByCities"><b > Do you want to look for near by Cities also?</b>
+                    </span>
                 </div>
-                <div *ngIf="loggedIn()" [hidden] = "!isDestinationAddressLoading" class="loader">Loading...</div>
-                <div  *ngIf = "model.destinationCity" class="inner-wrap">
-                    <label>Address line 1 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine1" [ngModelOptions]="{standalone: true}"></label>
-                    <label>Address line 2 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine2" [ngModelOptions]="{standalone: true}"></label>
-                    <label>State <input type="text" [(ngModel)]="model.destinationState" required [ngModelOptions]="{standalone: true}"></label>
-                    <label>City <input type = "text" [(ngModel)]="model.destinationCity" required [ngModelOptions]="{standalone: true}"></label>
-                    <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.destinationZip" [ngModelOptions]="{standalone: true}"></label>
+                <div *ngIf="nearByCities" class="inner-wrap">
+                    <label >Enter Radius<input type="number" [(ngModel)]="radius" placeholder="Radius of the near by cities in miles" [ngModelOptions]="{standalone: true}"></label>
+                    <br>
                 </div>
-                <input [hidden] = "true" type="submit" [disabled]="!destinationAddress.form.valid"/>
-            </form>
+                <button type="button" class="btn btn-primary pull-left" (click)="segment=2">Previous</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="segment=4">Next</button>
+            </div>
+
+            <div [hidden]="segment !== 4">
+                <div class="section"><span>{{segment}}</span>Enter Destination Address</div>
+
+                <form (ngSubmit) = "geolocate('Destination Address')" #destinationAddress="ngForm">
+                    <div>
+                        <input id="destinationaddressautocomplete"  placeholder="Enter your address" type="text">
+                    </div>
+                    <div *ngIf="loggedIn()" [hidden] = "!isDestinationAddressLoading" class="loader">Loading...</div>
+                    <div  *ngIf = "model.destinationCity" class="inner-wrap">
+                        <label>Address line 1 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine1" [ngModelOptions]="{standalone: true}"></label>
+                        <label>Address line 2 <input type="text" [(ngModel)]="model.destinationAddreddaddressLine2" [ngModelOptions]="{standalone: true}"></label>
+                        <label>State <input type="text" [(ngModel)]="model.destinationState" required [ngModelOptions]="{standalone: true}"></label>
+                        <label>City <input type = "text" [(ngModel)]="model.destinationCity" required [ngModelOptions]="{standalone: true}"></label>
+                        <label>Zip <input type="number" placeholder="12345" [(ngModel)]="model.destinationZip" [ngModelOptions]="{standalone: true}"></label>
+                    </div>
+                    <input [hidden] = "true" type="submit" [disabled]="!destinationAddress.form.valid"/>
+                </form>
+                <button type="button" class="btn btn-primary pull-left" (click)="segment=3">Previous</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="segment=5">Next</button>
+            </div>
+
+            <div [hidden]="segment !== 5">
+                <div class="section"><span>{{segment}}</span>Date &amp; Time</div>
+                <div class="inner-wrap">
+                    <label>Journey Date <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.journeyDate" required [ngModelOptions]="{standalone: true}"/></label>
+                    <label>Availability Time</label>
+                    <label>From  <input type="time" name="time" placeholder="Hrs:Mins" [(ngModel)]="model.availabilityFrom" required [ngModelOptions]="{standalone: true}"/></label>
+                    <label>To  <input type="time" name="time"  placeholder="Hrs:Mins" [(ngModel)]="model.availabilityTo" required [ngModelOptions]="{standalone: true}"/></label>
+                </div>
+                <button type="button" class="btn btn-primary pull-left" (click)="segment=4">Previous</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="segment=6">Next</button>
+            </div>
+
+            <div [hidden]="segment !== 6">
+                <div class="section"><span>{{segment}}</span>Parcel Carrying Capacity</div>
+                <div class="inner-wrap">
+                    <label>Max. Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.maxParcelWeight" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>Max Parcel Dimensions </label>
+                    <label>Height (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelHeight" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>Length (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelLength" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>Width (approx.) <input type="number"  placeholder="in cm" [(ngModel)]="model.maxParcelWidth" required [ngModelOptions]="{standalone: true}"></label>
+                </div>
+
+                <div class="submit-button pull-right">
+                    <input type="submit" name="Submit"/>
+                </div>
+                <button type="button" class="btn btn-primary pull-left" (click)="segment=5">Previous</button>
+            </div>
 
             <!--<input [(ngModel)] = "returnTrip" type="checkbox" name="field7" [ngModelOptions]="{standalone: true}"><b>Look parcel request for return trip.</b>-->
 
@@ -102,30 +148,6 @@
                     <!--</ul>-->
                 <!--</div>-->
             <!--</form>-->
-
-            <div class="section"><span>6</span>Date &amp; Time</div>
-            <div class="inner-wrap">
-                <label>Journey Date <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.journeyDate" required [ngModelOptions]="{standalone: true}"/></label>
-                <label>Availability Time</label>
-                <label>From  <input type="time" name="time" placeholder="Hrs:Mins" [(ngModel)]="model.availabilityFrom" required [ngModelOptions]="{standalone: true}"/></label>
-                <label>To  <input type="time" name="time"  placeholder="Hrs:Mins" [(ngModel)]="model.availabilityTo" required [ngModelOptions]="{standalone: true}"/></label>
-            </div>
-
-            <div class="section"><span>7</span>Parcel Carrying Capacity</div>
-            <div class="inner-wrap">
-                <label>Max. Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.maxParcelWeight" required [ngModelOptions]="{standalone: true}"></label>
-                <label>Max Parcel Dimensions </label>
-                <label>Height (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelHeight" required [ngModelOptions]="{standalone: true}"></label>
-                <label>Length (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelLength" required [ngModelOptions]="{standalone: true}"></label>
-                <label>Width (approx.) <input type="number"  placeholder="in cm" [(ngModel)]="model.maxParcelWidth" required [ngModelOptions]="{standalone: true}"></label>
-            </div>
-
-            <div class="submit-button">
-                <input type="submit" name="Submit"/>
-     <span class="privacy-policy">
-     <input type="checkbox" name="field7">You agree to our Terms and Policy.
-     </span>
-            </div>
         </form>
     </div>
 </div>

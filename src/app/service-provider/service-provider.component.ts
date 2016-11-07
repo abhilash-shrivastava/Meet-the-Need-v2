@@ -46,6 +46,7 @@ export class ServiceProviderComponent {
     searchAddress : any;
     nearByCities: any;
     radius: number;
+    segment = 1;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',

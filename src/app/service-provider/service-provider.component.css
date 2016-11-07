@@ -99,6 +99,7 @@
     -moz-box-sizing: border-box;
     width: 100%;
     padding: 8px;
+    color: black;
     border-radius: 6px;
     -webkit-border-radius:6px;
     -moz-border-radius:6px;
@@ -154,12 +155,24 @@
     box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
 }
 .form-style-10 .privacy-policy{
-    float: right;
     width: 250px;
     font: 12px Arial, Helvetica, sans-serif;
     color: #4D4D4D;
     margin-top: 10px;
     text-align: right;
+}
+
+.btn .btn-primary :hover {
+    background: #2A6881 !important;
+    color: white !important;
+    -moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28) !important;
+    -webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28) !important;
+    box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28) !important;
+}
+
+.form-style-10 button {
+    background: #0273D4 !important;
+    padding: 8px 20px 8px 20px !important;
 }
 
 .resubmit-button {
