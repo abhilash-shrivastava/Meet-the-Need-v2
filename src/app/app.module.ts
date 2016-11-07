@@ -80,7 +80,7 @@ type StoreType = {
     ProviderSidebarComponent,
     SenderSidebarComponent,
     ReceiverSidebarComponent,
-    CheckboxFilterPipe,
+    CheckboxFilterPipe,  
   ],
   imports: [ // import Angular's modules
     BrowserModule,

@@ -44,7 +44,8 @@ export class ServiceProviderComponent {
     itineraryToDestination ={};
     itineraryToCurrent ={};
     searchAddress : any;
-    geocoder: any;
+    nearByCities: any;
+    radius: number;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -95,7 +96,14 @@ export class ServiceProviderComponent {
                 this.model['destinationCity'] =  this.model['destinationCity'] + " ";
             }
         }
-        this.geocodeAddress(this.model.currentCity);
+      if (this.nearByCities){
+        this.getNearByCities(this.model.currentCityLat, this.model.currentCityLng, this.radius*1.6);
+      }else {
+        if (this.model !== null){
+          this.model.nearByCitiesArray = [];
+          this.saveServiceProviderDetails(this.model);
+        }
+      }
     }
     error: any;
     status: string;
@@ -256,7 +264,7 @@ export class ServiceProviderComponent {
 
     }
     circle: any;
-    geolocation: any
+    geolocation: any;
     geolocate(addressType : string) {
         if (addressType == "Current Address"){
             this.isCurrentAddressLoading = true;
@@ -269,6 +277,8 @@ export class ServiceProviderComponent {
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
+              this.model.currentCityLat = position.coords.latitude;
+              this.model.currentCityLng = position.coords.longitude;
                 this.geolocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
@@ -289,6 +299,7 @@ export class ServiceProviderComponent {
 
             });
         }
+      // console.log(this.panel.geocodeAddress(this.model.currentCity));
     }
 
     itineraryCity() {
@@ -394,7 +405,6 @@ export class ServiceProviderComponent {
             );
 
     }
-
   getNearByCities(lat:any, lng:any, radius:any){
     if (!lat || !lng || !radius) { return; }
     this.geoByteService.getNearByCities(lat, lng, radius)
@@ -407,29 +417,17 @@ export class ServiceProviderComponent {
         },
         error =>  this.errorMessage = <any>error
       );
-
-  }
-
-  getCities(data: any){
-    for (var index in data){
-      this.model.itineraryCitiesToDestination.push(data[index][1]);
-    }
-  }
-
-  geocodeAddress(city) {
-    this.geocoder = new google.maps.Geocoder();
-    this.geocoder.geocode({'address': city}, (results, status) => {
-      if (status === 'OK') {
-        let lat = results[0].geometry.location.lat();
-        let lng = results[0].geometry.location.lng();
-        this.getNearByCities(lat, lng, 100);
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });
+    
   }
   
-  selectParcelOrder(senderData){
+  getCities(data: any){
+    this.model.nearByCitiesArray = [];
+    for (var index in data){
+      this.model.nearByCitiesArray.push(data[index][1]);
+    }
+  }
+  
+    selectParcelOrder(senderData){
         if (!senderData) { return; }
         //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
         this.serviceProviderCRUDService.selectParcelOrder(senderData)
