@@ -47,6 +47,18 @@ export class ServiceProviderComponent {
     nearByCities: any;
     radius: number;
     segment = 1;
+    disabled1 = true;
+    disabled2 = false;
+    disabled3 = false;
+    disabled4 = false;
+    disabled5 = false;
+    disabled6 = false;
+    class1 = 'btn btn-primary btn-circle';
+    class2 = 'btn btn-default btn-circle';
+    class3 = 'btn btn-default btn-circle';
+    class4 = 'btn btn-default btn-circle';
+    class5 = 'btn btn-default btn-circle';
+    class6 = 'btn btn-default btn-circle';
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
