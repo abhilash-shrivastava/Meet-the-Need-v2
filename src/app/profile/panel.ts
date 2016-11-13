@@ -214,7 +214,9 @@ export class Panel {
           this.destinationAddressMarker = marker;
         }
         if (addressType === "Intermediate Stop"){
-          this.intermediateStopsMarkers.push(marker);
+          this.intermediateStopsMarkers.push({address : address,
+          marker: marker
+          });
         }
         this.map.setCenter(latlng);
         // this.map.panTo(latlng);
@@ -223,8 +225,12 @@ export class Panel {
       }
     });
   }
-  deleteMarkerFromIntermediateStops(index){
-    this.intermediateStopsMarkers[index].setMap(null);
-    this.intermediateStopsMarkers.splice(index,1);
+  deleteMarkerFromIntermediateStops(intermediateStop){
+    for(var index in  this.intermediateStopsMarkers){
+      if (this.intermediateStopsMarkers[index].address === intermediateStop.city+ ' ' + intermediateStop.state){
+        this.intermediateStopsMarkers[index].marker.setMap(null);
+        this.intermediateStopsMarkers.splice(parseInt(index),1);
+      }
+    }
   }
 }
