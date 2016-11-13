@@ -372,3 +372,15 @@ body {
 .container p {
     color: black;
 }
+
+#map {
+    height: 100%;
+}
+#map-div {
+    width:450px;
+    height:450px;
+    padding:30px;
+    margin:40px auto;
+    background: #FFF;
+    border-radius: 10px;
+}

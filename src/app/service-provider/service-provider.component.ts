@@ -205,6 +205,7 @@ export class ServiceProviderComponent {
             this.model.currentCity = "";
             this.model.currentState ="";
             this.model.currentZip = "";
+            var completeCurrentAddress="" 
 
             // Get each component of the address from the place details
             // and fill the corresponding field on the form.
@@ -215,17 +216,23 @@ export class ServiceProviderComponent {
                         let val = place.address_components[i][this.componentForm[addressType]];
                         if (addressType == 'street_number') {
                             this.model.currentAddreddaddressLine1 = val;
+                            completeCurrentAddress = val;
                         } else if (addressType == 'route') {
                             this.model.currentAddreddaddressLine2 = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'locality') {
                             this.model.currentCity = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'administrative_area_level_1') {
                             this.model.currentState = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'postal_code') {
                             this.model.currentZip = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         }
                     }
                 }
+              this.panel.placeMarkerAndPanTo(completeCurrentAddress, 'map')
                 if (place.address_components.length > 0){
                     setTimeout(() => {
                         this.isCurrentAddressLoading = false;
