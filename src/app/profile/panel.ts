@@ -170,38 +170,53 @@ export class Panel {
             stepDisplay.open(map, marker);
         });
     }
-
-    placeMarkerAndPanTo(address, id) {
-      this.geocoder = new google.maps.Geocoder();
-      this.geocoder.geocode({'address': address}, (results, status) => {
-        if (status === 'OK') {
-          let lat = results[0].geometry.location.lat();
-          let lng = results[0].geometry.location.lng();
-          let latlng = {
-            lat: lat,
-            lng: lng
-          };
-          if (!this.map){
-            this.map = new google.maps.Map(document.getElementById(id), {
-              zoom: 13,
-              center: latlng
-            }); 
-          }
-          var infowindow = new google.maps.InfoWindow({
-            content: '<p style="color:black;">'+address+'</p>'
+  
+  currentAddressMarker: any;
+  destinationAddressMarker : any;
+  placeMarkerAndPanTo(address, id, addressType) {
+    this.geocoder = new google.maps.Geocoder();
+    this.geocoder.geocode({'address': address}, (results, status) => {
+      if (status === 'OK') {
+        let lat = results[0].geometry.location.lat();
+        let lng = results[0].geometry.location.lng();
+        let latlng = {
+          lat: lat,
+          lng: lng
+        };
+        if (!this.map){
+          this.map = new google.maps.Map(document.getElementById(id), {
+            zoom: 13,
+            center: latlng
           });
-          var marker = new google.maps.Marker({
-            position: latlng,
-            animation: google.maps.Animation.DROP,
-            map: this.map
-          });
-          marker.addListener('click', function() {
-            infowindow.open(this.map, marker);
-          });
-          this.map.panTo(latlng);
-        } else {
-          alert('Geocode was not successful for the following reason: ' + status);
         }
-      });
-    }
+        var infowindow = new google.maps.InfoWindow({
+          content: '<p style="color:black;">'+address+'</p>'
+        });
+        var marker = new google.maps.Marker({
+          position: latlng,
+          animation: google.maps.Animation.DROP,
+          map: this.map
+        });
+        marker.addListener('click', function() {
+          infowindow.open(this.map, marker);
+        });
+        if (addressType === "Current Address") {
+          if (this.currentAddressMarker){
+            this.currentAddressMarker.setMap(null);
+          }
+          this.currentAddressMarker = marker;
+        }
+        if (addressType === "Destination Address") {
+          if (this.destinationAddressMarker){
+            this.destinationAddressMarker.setMap(null);
+          }
+          this.destinationAddressMarker = marker;
+        }
+        this.map.setCenter(latlng);
+        // this.map.panTo(latlng);
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
 }

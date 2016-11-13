@@ -232,12 +232,12 @@ export class ServiceProviderComponent {
                         }
                     }
                 }
-              this.panel.placeMarkerAndPanTo(completeCurrentAddress, 'map')
                 if (place.address_components.length > 0){
                     setTimeout(() => {
                         this.isCurrentAddressLoading = false;
                         this.fetchingCurrentAddress = true;
                         place['address_components'] = null;
+                        this.panel.placeMarkerAndPanTo(completeCurrentAddress, 'map', "Current Address")
                     }, 1);
                 }
             }
@@ -266,20 +266,20 @@ export class ServiceProviderComponent {
                           completeDestinationAddress = val;
                         } else if (addressType == 'route') {
                             this.model['destinationAddreddaddressLine2'] = val;
-                          completeDestinationAddress = completeCurrentAddress + ' ' + val;
+                          completeDestinationAddress = completeDestinationAddress + ' ' + val;
                         } else if (addressType == 'locality') {
                             this.model['destinationCity'] = val;
-                            completeDestinationAddress = completeCurrentAddress + ' ' + val;
+                            completeDestinationAddress = completeDestinationAddress + ' ' + val;
                         } else if (addressType == 'administrative_area_level_1') {
                             this.model['destinationState'] = val;
-                            completeDestinationAddress = completeCurrentAddress + ' ' + val;
+                            completeDestinationAddress = completeDestinationAddress + ' ' + val;
                         } else if (addressType == 'postal_code') {
                             this.model['destinationZip'] = val;
-                            completeDestinationAddress = completeCurrentAddress + ' ' + val;
+                            completeDestinationAddress = completeDestinationAddress + ' ' + val;
                         }
                     }
                 }
-              this.panel.placeMarkerAndPanTo(completeDestinationAddress, 'map')
+              this.panel.placeMarkerAndPanTo(completeDestinationAddress, 'map', "Destination Address");
               if (place.address_components.length > 0){
                     setTimeout(() => {
                         this.isDestinationAddressLoading = false;
@@ -349,7 +349,8 @@ export class ServiceProviderComponent {
     
     addItineraryToDestination(){
         // this.itineraryToDestination = {};
-        let place = this.itineraryCityToDestinationAutocomplete.getPlace();
+      var intermediateStop=""
+      let place = this.itineraryCityToDestinationAutocomplete.getPlace();
         // Get each component of the address from the place details
         // and fill the corresponding field on the form.
         if (place != null && place.address_components != null) {
@@ -359,15 +360,19 @@ export class ServiceProviderComponent {
                     let val = place.address_components[i][this.componentForm[addressType]];
                     if (addressType == 'locality') {
                         this.itineraryToDestination['city'] = val;
+                        intermediateStop = val;
                     } else if (addressType == 'administrative_area_level_1') {
                         this.itineraryToDestination['state'] = val;
+                        intermediateStop = intermediateStop + ' ' +val;
                     } else if (addressType == 'postal_code') {
                         this.itineraryToDestination['zip'] = val;
+                      intermediateStop = intermediateStop + ' ' +val;
                     }
                 }
             }
             this.itineraryCityToDestinationArray.push(this.itineraryToDestination);
             this.model.itineraryCitiesToDestination = this.itineraryCityToDestinationArray;
+            this.panel.placeMarkerAndPanTo(intermediateStop, 'map', "Intermediate Stop")
             if (place.address_components.length > 0){
                 setTimeout(() => {
                     place['address_components'] = null;
