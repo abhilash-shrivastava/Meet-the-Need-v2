@@ -212,6 +212,7 @@ export class Panel {
             this.destinationAddressMarker.setMap(null);
           }
           this.destinationAddressMarker = marker;
+          this.map.setZoom(5);
         }
         if (addressType === "Intermediate Stop"){
           this.intermediateStopsMarkers.push({address : address,

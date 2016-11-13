@@ -155,19 +155,17 @@ export class ServiceProviderComponent {
             this.itineraryCityToCurrentAutocomplete = new google.maps.places.Autocomplete(
                 /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('itinerarycitytocurrentautocomplete')),
                 {types: ['geocode']});
+          this.profile = JSON.parse(localStorage.getItem('profile'));
+          // let id = this.routeParams.get('id');
+          // if (id != null){
+          //     this.profile["id"] = id;
+          //     this.model["_id"] = id;
+          // }
+          this.getServiceProviderDetails(this.profile);
         });
-        
-        this.profile = JSON.parse(localStorage.getItem('profile'));
-        // let id = this.routeParams.get('id');
-        // if (id != null){
-        //     this.profile["id"] = id;
-        //     this.model["_id"] = id;
-        // }
-        this.getServiceProviderDetails(this.profile);
     }
   
     onRadiusChange(radius){
-      console.log(radius);
       this.panel.circleNearByCities(this.model.currentCityLat, this.model.currentCityLng,radius);
     }
 
@@ -508,8 +506,14 @@ export class ServiceProviderComponent {
                         delete this.data[0]['_id']
                         this.model = this.data[0];
                     }
-                    this.model.itineraryCitiesToDestination="";
-                    this.model.itineraryCitiesToCurrent="";
+                  var completeCurrentAddress = this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' +  this.model.currentCity + ' ' + this.model.currentState + ' ' + this.model.currentZip;
+                  this.panel.placeMarkerAndPanTo(completeCurrentAddress, 'map', "Current Address");
+                  var completeDestinationAddress = this.model.destinationAddreddaddressLine1 + ' ' + this.model.destinationAddreddaddressLine2 + ' ' +  this.model.destinationCity + ' ' + this.model.destinationState + ' ' + this.model.destinationZip;
+                  this.panel.placeMarkerAndPanTo(completeDestinationAddress, 'map', "Destination Address");
+                  for (var index in this.model.itineraryCitiesToDestination){
+                    var intermediateStop = this.model.itineraryCitiesToDestination[index].city + ' ' + this.model.itineraryCitiesToDestination[index].state;
+                    this.panel.placeMarkerAndPanTo(intermediateStop, 'map', "Intermediate Stop")
+                  }
                 },
                 error =>  this.errorMessage = <any>error
             );
