@@ -168,6 +168,7 @@ export class ServiceProviderComponent {
 
     deleteCity(i:any){
         this.model.itineraryCitiesToDestination.splice(i,1);
+        this.panel.deleteMarkerFromIntermediateStops(i);
     }
 
     addSenderDistanceAndDuration(requests: any){

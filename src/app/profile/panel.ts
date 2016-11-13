@@ -173,6 +173,7 @@ export class Panel {
   
   currentAddressMarker: any;
   destinationAddressMarker : any;
+  intermediateStopsMarkers = [];
   placeMarkerAndPanTo(address, id, addressType) {
     this.geocoder = new google.maps.Geocoder();
     this.geocoder.geocode({'address': address}, (results, status) => {
@@ -212,11 +213,18 @@ export class Panel {
           }
           this.destinationAddressMarker = marker;
         }
+        if (addressType === "Intermediate Stop"){
+          this.intermediateStopsMarkers.push(marker);
+        }
         this.map.setCenter(latlng);
         // this.map.panTo(latlng);
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
       }
     });
+  }
+  deleteMarkerFromIntermediateStops(index){
+    this.intermediateStopsMarkers[index].setMap(null);
+    this.intermediateStopsMarkers.splice(index,1);
   }
 }
