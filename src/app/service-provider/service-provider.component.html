@@ -102,7 +102,7 @@
                     </span>
                     </div>
                     <div *ngIf="nearByCities" class="inner-wrap">
-                        <label >Enter Radius<input type="number" [(ngModel)]="radius" placeholder="Radius of the near by cities in miles" [ngModelOptions]="{standalone: true}"></label>
+                        <label >Enter Radius<input type="number" [(ngModel)]="radius" placeholder="Radius of the near by cities in miles" (ngModelChange)="onRadiusChange(radius)" [ngModelOptions]="{standalone: true}"></label>
                         <br>
                     </div>
                     <button type="button" class="btn btn-primary pull-left" (click)="segment=2; class3='btn btn-default btn-circle'">Previous</button>

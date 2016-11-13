@@ -165,6 +165,11 @@ export class ServiceProviderComponent {
         // }
         this.getServiceProviderDetails(this.profile);
     }
+  
+    onRadiusChange(radius){
+      console.log(radius);
+      this.panel.circleNearByCities(this.model.currentCityLat, this.model.currentCityLng,radius);
+    }
 
     deleteCity(i:any){
       this.panel.deleteMarkerFromIntermediateStops(this.model.itineraryCitiesToDestination[i]);

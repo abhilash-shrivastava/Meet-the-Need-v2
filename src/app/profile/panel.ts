@@ -233,4 +233,30 @@ export class Panel {
       }
     }
   }
+
+  cityCircle : any;
+  circleNearByCities(late, lngo, radius){
+    let lat : number;
+    let lng : number;
+    lat = late;
+    lng = lngo;
+    let latlng = this.map.LatLng;
+    latlng = {
+      lat: lat,
+      lng: lng
+    };
+    if (this.cityCircle){
+      this.cityCircle.setMap(null);
+    }
+    this.cityCircle = new google.maps.Circle({
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+      map: this.map,
+      center: latlng,
+      radius: radius*1609.34
+    });
+  }
 }
