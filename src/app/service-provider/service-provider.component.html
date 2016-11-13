@@ -179,7 +179,7 @@
                 <!--</form>-->
             </form>
         </div>
-        <div id="map-div"><div id="map"></div></div>
+        <div [hidden]="segment ===1" id="map-div"><div id="map"></div></div>
     </div>
     </div>
 <div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading || parcelOrderSelected">

@@ -251,8 +251,10 @@ export class ServiceProviderComponent {
             this.model['destinationCity'] = "";
             this.model['destinationState'] ="";
             this.model['destinationZip'] = "";
-
-            // Get each component of the address from the place details
+            var completeDestinationAddress=""
+  
+  
+          // Get each component of the address from the place details
             // and fill the corresponding field on the form.
             if (place != null && place.address_components != null) {
                 for (let i = 0; i < place.address_components.length; i++) {
@@ -261,18 +263,24 @@ export class ServiceProviderComponent {
                         let val = place.address_components[i][this.componentForm[addressType]];
                         if (addressType == 'street_number') {
                             this.model['destinationAddreddaddressLine1'] = val;
+                          completeDestinationAddress = val;
                         } else if (addressType == 'route') {
                             this.model['destinationAddreddaddressLine2'] = val;
+                          completeDestinationAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'locality') {
                             this.model['destinationCity'] = val;
+                            completeDestinationAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'administrative_area_level_1') {
                             this.model['destinationState'] = val;
+                            completeDestinationAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'postal_code') {
                             this.model['destinationZip'] = val;
+                            completeDestinationAddress = completeCurrentAddress + ' ' + val;
                         }
                     }
                 }
-                if (place.address_components.length > 0){
+              this.panel.placeMarkerAndPanTo(completeDestinationAddress, 'map')
+              if (place.address_components.length > 0){
                     setTimeout(() => {
                         this.isDestinationAddressLoading = false;
                         this.fetchingDestinationAddress = true;
