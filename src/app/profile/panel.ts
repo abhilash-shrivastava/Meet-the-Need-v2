@@ -181,4 +181,94 @@ export class Panel {
             stepDisplay.open(map, marker);
         });
     }
+  
+  currentAddressMarker: any;
+  destinationAddressMarker : any;
+  intermediateStopsMarkers = [];
+  placeMarkerAndPanTo(address, id, addressType) {
+    this.geocoder = new google.maps.Geocoder();
+    this.geocoder.geocode({'address': address}, (results, status) => {
+      if (status === 'OK') {
+        let lat = results[0].geometry.location.lat();
+        let lng = results[0].geometry.location.lng();
+        let latlng = {
+          lat: lat,
+          lng: lng
+        };
+        if (!this.map){
+          this.map = new google.maps.Map(document.getElementById(id), {
+            zoom: 13,
+            center: latlng
+          });
+        }
+        var infowindow = new google.maps.InfoWindow({
+          content: '<p style="color:black;">'+address+'</p>'
+        });
+        var marker = new google.maps.Marker({
+          position: latlng,
+          animation: google.maps.Animation.DROP,
+          map: this.map
+        });
+        marker.addListener('click', function() {
+          infowindow.open(this.map, marker);
+        });
+        if (addressType === "Current Address") {
+          if (this.currentAddressMarker){
+            this.currentAddressMarker.setMap(null);
+          }
+          this.currentAddressMarker = marker;
+        }
+        if (addressType === "Destination Address") {
+          if (this.destinationAddressMarker){
+            this.destinationAddressMarker.setMap(null);
+          }
+          this.destinationAddressMarker = marker;
+          this.map.setZoom(5);
+        }
+        if (addressType === "Intermediate Stop"){
+          this.intermediateStopsMarkers.push({address : address,
+          marker: marker
+          });
+        }
+        this.map.setCenter(latlng);
+        // this.map.panTo(latlng);
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
+  deleteMarkerFromIntermediateStops(intermediateStop){
+    for(var index in  this.intermediateStopsMarkers){
+      if (this.intermediateStopsMarkers[index].address === intermediateStop.city+ ' ' + intermediateStop.state){
+        this.intermediateStopsMarkers[index].marker.setMap(null);
+        this.intermediateStopsMarkers.splice(parseInt(index),1);
+      }
+    }
+  }
+
+  cityCircle : any;
+  circleNearByCities(late, lngo, radius){
+    let lat : number;
+    let lng : number;
+    lat = late;
+    lng = lngo;
+    let latlng = this.map.LatLng;
+    latlng = {
+      lat: lat,
+      lng: lng
+    };
+    if (this.cityCircle){
+      this.cityCircle.setMap(null);
+    }
+    this.cityCircle = new google.maps.Circle({
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+      map: this.map,
+      center: latlng,
+      radius: radius*1609.34
+    });
+  }
 }

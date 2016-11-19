@@ -46,6 +46,19 @@ export class ServiceProviderComponent {
     searchAddress : any;
     nearByCities: any;
     radius: number;
+    segment = 1;
+    disabled1 = true;
+    disabled2 = false;
+    disabled3 = false;
+    disabled4 = false;
+    disabled5 = false;
+    disabled6 = false;
+    class1 = 'btn btn-primary btn-circle';
+    class2 = 'btn btn-default btn-circle';
+    class3 = 'btn btn-default btn-circle';
+    class4 = 'btn btn-default btn-circle';
+    class5 = 'btn btn-default btn-circle';
+    class6 = 'btn btn-default btn-circle';
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -142,19 +155,23 @@ export class ServiceProviderComponent {
             this.itineraryCityToCurrentAutocomplete = new google.maps.places.Autocomplete(
                 /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('itinerarycitytocurrentautocomplete')),
                 {types: ['geocode']});
+          this.profile = JSON.parse(localStorage.getItem('profile'));
+          // let id = this.routeParams.get('id');
+          // if (id != null){
+          //     this.profile["id"] = id;
+          //     this.model["_id"] = id;
+          // }
+          this.getServiceProviderDetails(this.profile);
         });
-        
-        this.profile = JSON.parse(localStorage.getItem('profile'));
-        // let id = this.routeParams.get('id');
-        // if (id != null){
-        //     this.profile["id"] = id;
-        //     this.model["_id"] = id;
-        // }
-        this.getServiceProviderDetails(this.profile);
+    }
+  
+    onRadiusChange(radius){
+      this.panel.circleNearByCities(this.model.currentCityLat, this.model.currentCityLng,radius);
     }
 
     deleteCity(i:any){
-        this.model.itineraryCitiesToDestination.splice(i,1);
+      this.panel.deleteMarkerFromIntermediateStops(this.model.itineraryCitiesToDestination[i]);
+      this.model.itineraryCitiesToDestination.splice(i,1);
     }
 
     addSenderDistanceAndDuration(requests: any){
@@ -192,6 +209,7 @@ export class ServiceProviderComponent {
             this.model.currentCity = "";
             this.model.currentState ="";
             this.model.currentZip = "";
+            var completeCurrentAddress="" 
 
             // Get each component of the address from the place details
             // and fill the corresponding field on the form.
@@ -202,14 +220,19 @@ export class ServiceProviderComponent {
                         let val = place.address_components[i][this.componentForm[addressType]];
                         if (addressType == 'street_number') {
                             this.model.currentAddreddaddressLine1 = val;
+                            completeCurrentAddress = val;
                         } else if (addressType == 'route') {
                             this.model.currentAddreddaddressLine2 = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'locality') {
                             this.model.currentCity = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'administrative_area_level_1') {
                             this.model.currentState = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'postal_code') {
                             this.model.currentZip = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         }
                     }
                 }
@@ -218,6 +241,7 @@ export class ServiceProviderComponent {
                         this.isCurrentAddressLoading = false;
                         this.fetchingCurrentAddress = true;
                         place['address_components'] = null;
+                        this.panel.placeMarkerAndPanTo(completeCurrentAddress, 'map', "Current Address")
                     }, 1);
                 }
             }
@@ -231,8 +255,10 @@ export class ServiceProviderComponent {
             this.model['destinationCity'] = "";
             this.model['destinationState'] ="";
             this.model['destinationZip'] = "";
-
-            // Get each component of the address from the place details
+            var completeDestinationAddress=""
+  
+  
+          // Get each component of the address from the place details
             // and fill the corresponding field on the form.
             if (place != null && place.address_components != null) {
                 for (let i = 0; i < place.address_components.length; i++) {
@@ -241,18 +267,24 @@ export class ServiceProviderComponent {
                         let val = place.address_components[i][this.componentForm[addressType]];
                         if (addressType == 'street_number') {
                             this.model['destinationAddreddaddressLine1'] = val;
+                          completeDestinationAddress = val;
                         } else if (addressType == 'route') {
                             this.model['destinationAddreddaddressLine2'] = val;
+                          completeDestinationAddress = completeDestinationAddress + ' ' + val;
                         } else if (addressType == 'locality') {
                             this.model['destinationCity'] = val;
+                            completeDestinationAddress = completeDestinationAddress + ' ' + val;
                         } else if (addressType == 'administrative_area_level_1') {
                             this.model['destinationState'] = val;
+                            completeDestinationAddress = completeDestinationAddress + ' ' + val;
                         } else if (addressType == 'postal_code') {
                             this.model['destinationZip'] = val;
+                            completeDestinationAddress = completeDestinationAddress + ' ' + val;
                         }
                     }
                 }
-                if (place.address_components.length > 0){
+              this.panel.placeMarkerAndPanTo(completeDestinationAddress, 'map', "Destination Address");
+              if (place.address_components.length > 0){
                     setTimeout(() => {
                         this.isDestinationAddressLoading = false;
                         this.fetchingDestinationAddress = true;
@@ -321,7 +353,8 @@ export class ServiceProviderComponent {
     
     addItineraryToDestination(){
         // this.itineraryToDestination = {};
-        let place = this.itineraryCityToDestinationAutocomplete.getPlace();
+      var intermediateStop=""
+      let place = this.itineraryCityToDestinationAutocomplete.getPlace();
         // Get each component of the address from the place details
         // and fill the corresponding field on the form.
         if (place != null && place.address_components != null) {
@@ -331,15 +364,19 @@ export class ServiceProviderComponent {
                     let val = place.address_components[i][this.componentForm[addressType]];
                     if (addressType == 'locality') {
                         this.itineraryToDestination['city'] = val;
+                        intermediateStop = val;
                     } else if (addressType == 'administrative_area_level_1') {
                         this.itineraryToDestination['state'] = val;
+                        intermediateStop = intermediateStop + ' ' +val;
                     } else if (addressType == 'postal_code') {
                         this.itineraryToDestination['zip'] = val;
+                      intermediateStop = intermediateStop + ' ' +val;
                     }
                 }
             }
             this.itineraryCityToDestinationArray.push(this.itineraryToDestination);
             this.model.itineraryCitiesToDestination = this.itineraryCityToDestinationArray;
+            this.panel.placeMarkerAndPanTo(intermediateStop, 'map', "Intermediate Stop")
             if (place.address_components.length > 0){
                 setTimeout(() => {
                     place['address_components'] = null;
@@ -466,8 +503,14 @@ export class ServiceProviderComponent {
                         delete this.data[0]['_id']
                         this.model = this.data[0];
                     }
-                    this.model.itineraryCitiesToDestination="";
-                    this.model.itineraryCitiesToCurrent="";
+                  var completeCurrentAddress = this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' +  this.model.currentCity + ' ' + this.model.currentState + ' ' + this.model.currentZip;
+                  this.panel.placeMarkerAndPanTo(completeCurrentAddress, 'map', "Current Address");
+                  var completeDestinationAddress = this.model.destinationAddreddaddressLine1 + ' ' + this.model.destinationAddreddaddressLine2 + ' ' +  this.model.destinationCity + ' ' + this.model.destinationState + ' ' + this.model.destinationZip;
+                  this.panel.placeMarkerAndPanTo(completeDestinationAddress, 'map', "Destination Address");
+                  for (var index in this.model.itineraryCitiesToDestination){
+                    var intermediateStop = this.model.itineraryCitiesToDestination[index].city + ' ' + this.model.itineraryCitiesToDestination[index].state;
+                    this.panel.placeMarkerAndPanTo(intermediateStop, 'map', "Intermediate Stop")
+                  }
                 },
                 error =>  this.errorMessage = <any>error
             );
