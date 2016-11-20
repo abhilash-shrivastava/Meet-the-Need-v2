@@ -15,13 +15,21 @@
             <a class="reset"*ngIf="!loggedIn()" (click)="resetPassword()">Reset Password</a>
         </nav>
     </div>
-    <nav *ngIf="loggedIn()" class="signed-in">
-        <button *ngIf="loggedIn()" (click)="selection='provider'" class="button-section">Service Provider</button>
-        <button *ngIf="loggedIn()" (click)="selection='sender'" class="button-section">Parcel Sender</button>
-        <button *ngIf="loggedIn()" (click)="selection='receiver'" class="button-section">Parcel Receiver</button>
-        <button *ngIf="loggedIn()" (click)="logout()" class="button-section">Logout</button>
-        <label>{{profile.name}}</label>
-        <img src="{{profile.picture}}" style="width: 50px" />
+    <nav class="navbar navbar-inverse" *ngIf="loggedIn()">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li ><a *ngIf="loggedIn()" (click)="selection='provider'" >Service Provider</a></li>
+                    <li><a *ngIf="loggedIn()" (click)="selection='sender'" >Parcel Sender</a></li>
+                    <li><a *ngIf="loggedIn()" (click)="selection='receiver'" >Parcel Receiver</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><img src="{{profile.picture}}" style="width: 50px" /></li>
+                    <li><a>{{profile.name}}</a></li>
+                    <li><a *ngIf="loggedIn()" (click)="logout()" >Logout</a></li>
+                </ul>
+            </div>
+        </div>
     </nav>
     <div class="fullscreen-bg">
         <video class="fullscreen-bg__video" width="100%" height="100%" loop muted autoplay>

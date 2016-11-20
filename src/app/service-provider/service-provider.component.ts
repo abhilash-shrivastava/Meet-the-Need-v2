@@ -309,8 +309,6 @@ export class ServiceProviderComponent {
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
-              this.model.currentCityLat = position.coords.latitude;
-              this.model.currentCityLng = position.coords.longitude;
                 this.geolocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude

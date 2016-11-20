@@ -8,31 +8,31 @@
 <div *ngIf="loggedIn()" [hidden] = "!isLoading" class="loader">Loading...</div>
 <div *ngIf="loggedIn()" [hidden]="submitted || isLoading || parcelOrderSelected">
     <div class="container">
-        <div class="stepwizard col-md-offset-3">
+        <div class="stepwizard col-md-offset-3 ">
             <div class="stepwizard-row setup-panel">
                 <div class="stepwizard-step">
                     <a (click)="segment=1" type="button" [class]="class1" >1</a>
-                    <p>General Information</p>
+                    <p style="background-color: white">General Information</p>
                 </div>
                 <div class="stepwizard-step">
                     <a (click)="segment=2; class2='btn btn-primary btn-circle'" type="button" [class]="class2" >2</a>
-                    <p>Current Address</p>
+                    <p style="background-color: white">Current Address</p>
                 </div>
                 <div class="stepwizard-step">
                     <a (click)="segment=3; class3='btn btn-primary btn-circle'" type="button" [class]="class3" >3</a>
-                    <p>Intermediate Stops</p>
+                    <p style="background-color: white">Intermediate Stops</p>
                 </div>
                 <div class="stepwizard-step">
                     <a (click)="segment=4; class4='btn btn-primary btn-circle'" type="button" [class]="class4" >4</a>
-                    <p>Destination Address</p>
+                    <p style="background-color: white">Destination Address</p>
                 </div>
                 <div class="stepwizard-step">
                     <a (click)="segment=5; class5='btn btn-primary btn-circle'" type="button" [class]="class5" >5</a>
-                    <p>Date &amp; Time</p>
+                    <p style="background-color: white">Date &amp; Time</p>
                 </div>
                 <div class="stepwizard-step">
                     <a (click)="segment=6; class6='btn btn-primary btn-circle'" type="button" [class]="class6" >6</a>
-                    <p>Parcel Carrying Capacity</p>
+                    <p style="background-color: white">Parcel Carrying Capacity</p>
                 </div>
             </div>
         </div>
