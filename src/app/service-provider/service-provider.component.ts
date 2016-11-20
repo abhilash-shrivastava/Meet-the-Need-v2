@@ -59,6 +59,7 @@ export class ServiceProviderComponent {
     class4 = 'btn btn-default btn-circle';
     class5 = 'btn btn-default btn-circle';
     class6 = 'btn btn-default btn-circle';
+    geocoder: any;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -236,6 +237,16 @@ export class ServiceProviderComponent {
                         }
                     }
                 }
+              this.geocoder = new google.maps.Geocoder();
+              this.geocoder.geocode({'address': completeCurrentAddress}, (results, status) => {
+                if (status === 'OK') {
+                  this.model.currentCityLat = results[0].geometry.location.lat();
+                  this.model.currentCityLng = results[0].geometry.location.lng();
+      
+                } else {
+                  alert('Geocode was not successful for the following reason: ' + status);
+                }
+              });
                 if (place.address_components.length > 0){
                     setTimeout(() => {
                         this.isCurrentAddressLoading = false;
