@@ -1,7 +1,7 @@
 .form-style-10{
     width:450px;
     padding:30px;
-    margin:40px auto;
+    margin-left: 30%;
     background: #FFF;
     color: black;
     border-radius: 10px;
@@ -377,10 +377,13 @@ body {
     height: 100%;
 }
 #map-div {
-    width:450px;
-    height:450px;
-    padding:30px;
-    margin:40px auto;
+    width: 340px;
+    height: 400px;
+    padding: 30px;
+    margin-left: 8px;
     background: #FFF;
     border-radius: 10px;
 }
+
+div.inline { float:left; }
+.clearBoth { clear:both; }

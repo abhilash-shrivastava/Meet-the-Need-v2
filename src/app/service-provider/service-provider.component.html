@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-style-10">
+        <div class="form-style-10 inline">
             <h1>Details Needed<span>Please provide the following details to offer parcel service!</span></h1>
             <form (ngSubmit) = "onSubmit()" #serviceProviderDetailsForm="ngForm">
                 <div [hidden]="segment !== 1">
@@ -179,7 +179,7 @@
                 <!--</form>-->
             </form>
         </div>
-        <div *ngIf="model" id="map-div"><div id="map"></div></div>
+        <div class="inline" *ngIf="model" id="map-div"><div id="map"></div></div>
     </div>
     </div>
 <div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading || parcelOrderSelected">
