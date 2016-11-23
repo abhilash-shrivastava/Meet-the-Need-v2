@@ -1,43 +1,59 @@
 <div id="mySidenav" class="sidenav" [hidden]="!loggedIn()">
-    <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
 <div>
-    <a routerLink="/service-provider" routerLinkActive="active" (click)="filtersClicked = false">New Service Proposal</a>
-    <a (click)="toggleActionClicked()" (click)="filtersClicked = false">Need Your Action</a>
-    <ul [hidden]="!actionClicked">
-        <li><a routerLink="/accept-parcel" routerLinkActive="active" (click)="filtersClicked = false">Accept Parcel Request</a></li>
-        <li><a routerLink="/parcel-receiving" routerLinkActive="active" (click)="filtersClicked = false">Parcel Receiving Pending</a></li>
-        <li><a routerLink="/parcel-delivery" routerLinkActive="active" (click)="filtersClicked = false">Parcel Delivery Pending</a></li>
-    </ul>
-    <a routerLink="/all-service-requests" routerLinkActive="active" (click)="toggleFilter(); filtersClicked = false">See All Service Proposal</a>
-</div>
-<div [hidden]="!requestsClicked">
-    <a (click)="toggleFiltersClicked()">Filters</a>
-    <ul [hidden]="!filtersClicked">
-        <li><a (click)="toggleJourneyDate()">Journey Date</a></li>
-        <ul [hidden]="!journeyDateClicked" *ngFor="let date of journeyDates">
-            <input type="checkbox" [(ngModel)]="date.checked" (ngModelChange)="updateResultsByDate(date)"> {{date.journeyDate}}<br>
-        </ul>
-        <li><a (click)="toggleCities()">Cities</a></li>
-        <ul [hidden]="!citiesClicked">
-            <li><a (click)="toggleCurrentCities()">Current Cities</a></li>
-            <ul [hidden]="!currentCitiesClicked" *ngFor="let city of currentCities">
-                <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByCurrentCities(city)"> {{city.currentCity}}<br>
+    <ul class="sidebar-nav">
+        <li>
+            <a >Service Provider</a>
+            <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+        </li>
+        <li>
+            <a routerLink="/service-provider" routerLinkActive="active" (click)="filtersClicked = false">New Service Proposal</a>
+        </li>
+        <li class="dropdown">
+            <a (click)="toggleActionClicked()" (click)="filtersClicked = false" class="dropdown-toggle" data-toggle="dropdown">Need Your Action <span class="caret"></span></a>
+            <ul [hidden]="!actionClicked" class="dropdown-list">
+                <li></li>
+                <li><a routerLink="/accept-parcel" routerLinkActive="active" (click)="filtersClicked = false">Accept Parcel Request</a></li>
+                <li><a routerLink="/parcel-receiving" routerLinkActive="active" (click)="filtersClicked = false">Parcel Receiving Pending</a></li>
+                <li><a routerLink="/parcel-delivery" routerLinkActive="active" (click)="filtersClicked = false">Parcel Delivery Pending</a></li>
             </ul>
-            <li><a (click)="toggleDestinationCities()">Destination Cities</a></li>
-            <ul [hidden]="!destinationCitiesClicked" *ngFor="let city of destinationCities">
-                <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByDestinationCities(city)"> {{city.destinationCity}}<br>
-            </ul>
-        </ul>
-        <li><a (click)="toggleItemDescription()">Item Descriptions</a></li>
-        <ul [hidden]="!itemDescriptionClicked" *ngFor="let description of itemDescriptions">
-            <input type="checkbox" [(ngModel)]="description.checked" (ngModelChange)="updateResultsByItemDescription(description)"> {{description.parcelDisclosure}}<br>
-        </ul>
-        <li><a (click)="toggleStatus()">Status</a></li>
-        <ul [hidden]="!statusClicked" *ngFor="let status of parcelStatus">
-            <input type="checkbox" [(ngModel)]="status.checked" (ngModelChange)="updateResultsByParcelStatus(status)"> {{status.status}}<br>
-        </ul>
-        <!--<li><a>Journey Type</a></li>-->
-        <!--<li><a>Route</a></li>-->
+        </li>
+        <li>
+            <a routerLink="/all-service-requests" routerLinkActive="active" (click)="toggleFilter(); filtersClicked = false">See All Service Proposal</a>
+        </li>
+        <li>
+            <div [hidden]="!requestsClicked">
+                <a (click)="toggleFiltersClicked()">Filters <span class="caret"></span></a>
+                <ul [hidden]="!filtersClicked" class="dropdown-list">
+                    <li></li>
+                    <li><a (click)="toggleJourneyDate()">Journey Date</a></li>
+                    <ul [hidden]="!journeyDateClicked" *ngFor="let date of journeyDates" class="filter-checkbox">
+                        <input type="checkbox" [(ngModel)]="date.checked" (ngModelChange)="updateResultsByDate(date)"> {{date.journeyDate}}<br>
+                    </ul>
+                    <li><a (click)="toggleCities()">Cities</a></li>
+                    <ul [hidden]="!citiesClicked">
+                        <li></li>
+                        <li><a (click)="toggleCurrentCities()">Current Cities</a></li>
+                        <ul [hidden]="!currentCitiesClicked" *ngFor="let city of currentCities" class="filter-checkbox">
+                            <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByCurrentCities(city)"> {{city.currentCity}}<br>
+                        </ul>
+                        <li><a (click)="toggleDestinationCities()">Destination Cities</a></li>
+                        <ul [hidden]="!destinationCitiesClicked" *ngFor="let city of destinationCities" class="filter-checkbox">
+                            <input type="checkbox" [(ngModel)]="city.checked" (ngModelChange)="updateResultsByDestinationCities(city)"> {{city.destinationCity}}<br>
+                        </ul>
+                    </ul>
+                    <li><a (click)="toggleItemDescription()">Item Descriptions</a></li>
+                    <ul [hidden]="!itemDescriptionClicked" *ngFor="let description of itemDescriptions" class="filter-checkbox">
+                        <input type="checkbox" [(ngModel)]="description.checked" (ngModelChange)="updateResultsByItemDescription(description)"> {{description.parcelDisclosure}}<br>
+                    </ul>
+                    <li><a (click)="toggleStatus()">Status</a></li>
+                    <ul [hidden]="!statusClicked" *ngFor="let status of parcelStatus" class="filter-checkbox">
+                        <input type="checkbox" [(ngModel)]="status.checked" (ngModelChange)="updateResultsByParcelStatus(status)"> {{status.status}}<br>
+                    </ul>
+                    <!--<li><a>Journey Type</a></li>-->
+                    <!--<li><a>Route</a></li>-->
+                </ul>
+            </div>
+        </li>
     </ul>
 </div>
 </div>
