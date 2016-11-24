@@ -9,12 +9,12 @@
     <h1>{{title}}</h1>
     <div style="background-color: white">
         <nav class = "home">
-
             <a class="sign-in" *ngIf="!loggedIn()" (click)="signin()">Sign In</a>
             <a class="sign-up" *ngIf="!loggedIn()" (click)="signup()">Sign Up</a>
             <a class="reset"*ngIf="!loggedIn()" (click)="resetPassword()">Reset Password</a>
         </nav>
     </div>
+    <div class="simple-panel"></div>
     <nav class="navbar navbar-inverse" *ngIf="loggedIn()">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="myNavbar">

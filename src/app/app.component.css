@@ -190,3 +190,12 @@ body {
         display: none;
     }
 }
+
+.simple-panel {
+    width: 250px !important;
+    height: 250px !important;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+    background-color: #cccccc;
+}
