@@ -197,5 +197,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     margin-top: 150px;
-    background-color: #cccccc;
+    background-image: url("./../assets/img/login-background.jpg");
+    border-style: inset;
+    border-width: 2px;
 }
