@@ -14,7 +14,7 @@
             <a class="reset"*ngIf="!loggedIn()" (click)="resetPassword()">Reset Password</a>
         </nav>
     </div>
-    <div class="simple-panel"></div>
+    <div *ngIf="!loggedIn()" class="simple-panel"></div>
     <nav class="navbar navbar-inverse" *ngIf="loggedIn()">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="myNavbar">
