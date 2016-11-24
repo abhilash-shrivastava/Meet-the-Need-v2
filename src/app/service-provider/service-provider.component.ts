@@ -60,6 +60,7 @@ export class ServiceProviderComponent {
     class5 = 'btn btn-default btn-circle';
     class6 = 'btn btn-default btn-circle';
     geocoder: any;
+    card_tab = 1;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',

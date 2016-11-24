@@ -14,7 +14,7 @@
 
 .form-style-10-assign{
     width:400px;
-    padding:30px;
+    padding:10px;
     margin:40px auto;
     background: #FFF;
     color: black;
@@ -52,7 +52,6 @@
 .form-style-10 h3{
     background: #0273D4;
     padding: 20px 30px 15px 30px;
-    margin: -30px -30px 30px -30px;
     border-radius: 10px 10px 0 0;
     -webkit-border-radius: 10px 10px 0 0;
     -moz-border-radius: 10px 10px 0 0;
@@ -324,6 +323,7 @@ div button:focus {
 
 h2 {
     color: black;
+    font-size: 25px;
 }
 
 body {
@@ -390,4 +390,19 @@ div.inline { float:left; }
 
 .form-style-10 ul {
     margin: 0px;
+}
+
+.card-header {
+    background-color: #f0ad4e !important;
+}
+
+.card-header a {
+    border-style: solid;
+    border-width: 1px;
+    border-color: black !important;
+}
+
+li {
+    width: 33.33% !important;
+    text-align: center;
 }
