@@ -402,7 +402,7 @@ div.inline { float:left; }
     border-color: black !important;
 }
 
-li {
+.card-header li {
     width: 33.33% !important;
     text-align: center;
 }
