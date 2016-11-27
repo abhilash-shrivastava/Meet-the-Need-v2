@@ -58,7 +58,6 @@ export class ProviderSidebarComponent {
   openNav() {
       document.getElementById("mySidenav").style.width = "280px";
       document.getElementById("main").style.marginLeft = "280px";
-      document.getElementById("main").style.marginLeft = "280px";
   }
 
     closeNav() {

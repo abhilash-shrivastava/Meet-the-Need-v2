@@ -362,8 +362,8 @@ export class SenderSidebarComponent {
     }
     
     openNav() {
-        document.getElementById("mySidenav").style.width = "350px";
-        document.getElementById("main").style.marginLeft = "350px";
+        document.getElementById("mySidenav").style.width = "280px";
+        document.getElementById("main").style.marginLeft = "280px";
         document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
     }
     
@@ -395,12 +395,12 @@ export class SenderSidebarComponent {
         this.destinationAddress = destinationAddress;
         
         
-        if (this.id !== id && (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender') ){
+        if (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender'){
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
             this.mapAddress = "Map Direction To Service Provider";
         }
-        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+        if (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider'){
             this.id = id;
             this.panel.initMap(this.id, this.deliveryAddress, this.destinationAddress);
             this.mapAddress = "Map Direction Between Service Provider and Receiver";
