@@ -47,6 +47,7 @@ export class ProviderSidebarComponent {
     destinationAddress:any;
     status:any;
     showAllRequestClicked = false;
+    card_tab=1;
   
   
     @Input('selection') selection: string;
@@ -57,7 +58,8 @@ export class ProviderSidebarComponent {
   openNav() {
       document.getElementById("mySidenav").style.width = "280px";
       document.getElementById("main").style.marginLeft = "280px";
-    }
+      document.getElementById("main").style.marginLeft = "280px";
+  }
 
     closeNav() {
       document.getElementById("mySidenav").style.width = "0";
@@ -396,12 +398,12 @@ export class ProviderSidebarComponent {
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
 
-        if (this.id !== id && (status === 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender')){
+        if (status === 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender'){
             this.id = id;
             this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
             this.mapAddress = "Map Direction To Parcel Sender";
         }
-        if (this.id !== id && (status === 'Parcel Given To Service Provider' || status ==='Parcel Collected From Sender' || status ==='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+        if (status === 'Parcel Given To Service Provider' || status ==='Parcel Collected From Sender' || status ==='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider'){
             this.id = id;
             this.panel.initMap(this.id, this.destinationAddress, this.deliveryAddress);
             this.mapAddress = "Map Direction To Receiver"

@@ -47,6 +47,7 @@ export class SenderSidebarComponent {
     deliveryAddress:any;
     destinationAddress:any;
     status:any;
+    card_tab =1;
     
     @Input('selection') selection: string;
     @Output() sidebarChange = new EventEmitter();

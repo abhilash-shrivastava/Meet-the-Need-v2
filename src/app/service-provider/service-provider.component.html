@@ -285,6 +285,7 @@
 </div>
 
 <div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!parcelOrderSelected || !submitted || isLoading">
+    <h1>Selected Request</h1>
     <h2>You have selected the following parcel request</h2>
     <div *ngIf="requests" >
             <ul *ngFor="let request of requests " class="form-style-10-assign">

@@ -32,8 +32,8 @@ export class AllServiceRequestsComponent{
     deliveryAddress:any;
     destinationAddress:any;
     status:any;
+    card_tab = 1;
     
-
     constructor(private requestsService: RequestsService,
                 private panel: Panel) {
     }

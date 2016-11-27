@@ -1,7 +1,7 @@
 /**
  * Created by Abhi on 7/28/16.
  */
-import {Component, Output, EventEmitter} from '@angular/core';
+import {Component} from '@angular/core';
 import {GoogleApiService} from "../services/googleAPIService.service";
 
 
@@ -19,7 +19,7 @@ import {GoogleApiService} from "../services/googleAPIService.service";
     ],
     template: `
   <div class="card" *ngIf="title">
-    <div style="background: #0273D4; color: white; padding: 20px; width: 80%;" (click)="toggle()">{{title}}  </div>
+    <div style="background: #0273D4; color: white; padding: 20px; width: 80%; margin-left: -70px;" (click)="toggle()">{{title}}  </div>
     <div  [hidden]="!opened"><ng-content></ng-content></div>
   </div>`,
     inputs: ['title'],
