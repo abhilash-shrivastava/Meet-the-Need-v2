@@ -260,3 +260,22 @@ div button:focus {
 #main {
     margin-left: 350px;
 }
+
+.form-style-10 ul {
+    margin: 0px;
+}
+
+.card-header {
+    background-color: #f0ad4e !important;
+}
+
+.card-header a {
+    border-style: solid;
+    border-width: 1px;
+    border-color: black !important;
+}
+
+.card-header li {
+    width: 33.33% !important;
+    text-align: center;
+}
