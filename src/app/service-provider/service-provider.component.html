@@ -179,7 +179,7 @@
                 <!--</form>-->
             </form>
         </div>
-        <div class="inline" *ngIf="model" id="map-div"><div id="map"></div></div>
+        <div class="inline" *ngIf="model.currentCity" id="map-div"><div id="map"></div></div>
     </div>
     </div>
 <div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading || parcelOrderSelected">

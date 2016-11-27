@@ -165,6 +165,7 @@ export class ServiceProviderComponent {
           // }
           this.getServiceProviderDetails(this.profile);
         });
+        console.log(this.model);
     }
   
     onRadiusChange(radius){

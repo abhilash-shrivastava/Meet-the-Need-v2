@@ -101,6 +101,8 @@
                             <div id="{{request._id}}" style="height: 400px; width: 100%;"></div>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-approve" (click)="onStatusChangeClick(request._id)">Approve</button>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Service Provider'" class="button-reject" (click)="onRejectClick(request._id, 'Service')">Reject</button>
+                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Collected From Sender'" class="button-approve" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Delivered To Receiver</button>
+                            <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="button-approve" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected From Sender</button>
                         </div>
                     </panel>
             </div>
