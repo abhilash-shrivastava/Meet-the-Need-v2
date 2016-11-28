@@ -341,8 +341,9 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
   if (parcelDetails._id != null){
     parcelDetails._id = ObjectId(parcelDetails._id);
   }
+  console.log(new Date().toISOString().split('T')[0]);
   var cursorone = db.collection('serviceProvider')
-    .find({$and: [ {$or:[{"currentCity": parcelDetails.currentCity}, {"itineraryCitiesToDestination.city": parcelDetails.currentCity}]}, {$or:[{"destinationCity": parcelDetails.deliveryCity}, {"itineraryCitiesToDestination.city": parcelDetails.deliveryCity}]}, {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }}, {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}}, {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}}, {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}}, {"journeyDate" : {$gte: [parcelDetails.startDeliveryDate, new Date().toISOString().split('T')[0]], $lte: parcelDetails.endDeliveryDate}}]}).sort({maxParcelWeight: + 1});
+    .find({$and: [ {$or:[{"currentCity": parcelDetails.currentCity}]}, {$or:[{"destinationCity": parcelDetails.deliveryCity}]}, {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }}, {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}}, {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}}, {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}}, {"journeyDate" : {$gte: parcelDetails.startDeliveryDate,  $lte: parcelDetails.endDeliveryDate}}, {"journeyDate" : {$gte: new Date().toISOString().split('T')[0]}}]}).sort({maxParcelWeight: + 1});
 
   cursorone.count(function (e, count) {
 
@@ -751,6 +752,9 @@ var updateRequest = function (data, callback) {
 
 var rejectRequest = function (data, callback) {
   db.collection('providerAssigned').findOne({"_id": ObjectId(data.requestId)}, function (err, request) {
+      if (request['_id']){
+        delete request['_id'];
+      }
       db.collection('serviceProvider').insertOne(
         request.serviceProvider,
         function(err, results) {

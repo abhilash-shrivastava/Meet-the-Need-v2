@@ -109,6 +109,7 @@ export class ParcelSenderComponent {
         this.submitted = false;
         this.serviceProviderSelected= false;
         this.isLoading =false;
+        this.requests = [];
     }
 
     ngOnInit(): void {

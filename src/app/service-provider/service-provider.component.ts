@@ -138,6 +138,7 @@ export class ServiceProviderComponent {
         this.parcelOrderSelected= false;
         this.isLoading =false;
         this.model.itineraryCitiesToDestination = [];
+        this.requests = [];
     }
 
     ngOnInit(): void {
@@ -212,7 +213,7 @@ export class ServiceProviderComponent {
             this.model.currentCity = "";
             this.model.currentState ="";
             this.model.currentZip = "";
-            var completeCurrentAddress="" 
+            var completeCurrentAddress=""
 
             // Get each component of the address from the place details
             // and fill the corresponding field on the form.
