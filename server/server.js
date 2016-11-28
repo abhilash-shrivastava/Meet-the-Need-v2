@@ -265,14 +265,15 @@ var assignParcelForApproval =  function (data, callback) {
   sendAssignedEmailToProvider(data, data.serviceProvider);
   sendAssignedEmailToSender (data, data.serviceProvider);
   sendAssignedEmailToReceiver(data, data.serviceProvider);
-  data.serviceProvider.maxParcelWeight -= data.serviceProvider.parcelWeight;
-  data.serviceProvider.maxParcelHeight -= data.serviceProvider.parcelHeight;
-  data.serviceProvider.maxParcelLength -= data.serviceProvider.parcelLength;
-  data.serviceProvider.maxParcelWidth -= data.serviceProvider.parcelWidth;
+  data.serviceProvider.maxParcelWeight -= data.parcelWeight;
+  data.serviceProvider.maxParcelHeight -= data.parcelHeight;
+  data.serviceProvider.maxParcelLength -= data.parcelLength;
+  data.serviceProvider.maxParcelWidth -= data.parcelWidth;
   if ((data.serviceProvider.maxParcelWeight < 1) || (data.serviceProvider.maxParcelHeight < 1) || (data.serviceProvider.maxParcelLength < 1) || (data.serviceProvider.maxParcelWidth < 1) ) {
     db.collection('serviceProvider').deleteOne(
-      { "_id": data.serviceProvider._id },
+      { "_id": ObjectId(data.serviceProvider._id) },
       function(err, results) {
+        if (err) return console.log(err);
         console.log("Deleted from serviceProvider");
         db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
           console.log('saved to serviceProvided');
@@ -280,10 +281,11 @@ var assignParcelForApproval =  function (data, callback) {
       });
   }else {
     db.collection('serviceProvider').updateOne(
-      { "_id": data.serviceProvider._id },
+      { "_id": ObjectId(data.serviceProvider._id) },
       {
         $set: { "maxParcelWeight": data.serviceProvider.maxParcelWeight, "maxParcelHeight": data.serviceProvider.maxParcelHeight, "maxParcelLength": data.serviceProvider.maxParcelLength, "maxParcelWidth": data.serviceProvider.maxParcelWidth },
       }, function(err, results) {
+        if (err) return console.log(err);
         console.log('updated serviceProvider');
         db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
           console.log('saved to serviceProvided');
@@ -308,14 +310,15 @@ var assignProviderForApproval =  function (data, callback) {
   sendAssignedEmailToProvider(data, data.serviceProvider);
   sendAssignedEmailToSender (data, data.serviceProvider);
   sendAssignedEmailToReceiver(data, data.serviceProvider);
-  data.serviceProvider.maxParcelWeight -= data.serviceProvider.parcelWeight;
-  data.serviceProvider.maxParcelHeight -= data.serviceProvider.parcelHeight;
-  data.serviceProvider.maxParcelLength -= data.serviceProvider.parcelLength;
-  data.serviceProvider.maxParcelWidth -= data.serviceProvider.parcelWidth;
+  data.serviceProvider.maxParcelWeight -= data.parcelWeight;
+  data.serviceProvider.maxParcelHeight -= data.parcelHeight;
+  data.serviceProvider.maxParcelLength -= data.parcelLength;
+  data.serviceProvider.maxParcelWidth -= data.parcelWidth;
   if ((data.serviceProvider.maxParcelWeight < 1) || (data.serviceProvider.maxParcelHeight < 1) || (data.serviceProvider.maxParcelLength < 1) || (data.serviceProvider.maxParcelWidth < 1) ) {
     db.collection('serviceProvider').deleteOne(
-      { "_id": data.serviceProvider._id },
+      { "_id": ObjectId(data.serviceProvider._id) },
       function(err, results) {
+        if (err) return console.log(err);
         console.log("Deleted from serviceProvider");
         db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
           console.log('saved to serviceProvided');
@@ -323,10 +326,11 @@ var assignProviderForApproval =  function (data, callback) {
       });
   }else {
     db.collection('serviceProvider').updateOne(
-      { "_id": data.serviceProvider._id },
+      { "_id": ObjectId(data.serviceProvider._id) },
       {
         $set: { "maxParcelWeight": data.serviceProvider.maxParcelWeight, "maxParcelHeight": data.serviceProvider.maxParcelHeight, "maxParcelLength": data.serviceProvider.maxParcelLength, "maxParcelWidth": data.serviceProvider.maxParcelWidth },
       }, function(err, results) {
+        if (err) return console.log(err);
         console.log('updated serviceProvider');
         db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
           console.log('saved to serviceProvided');
