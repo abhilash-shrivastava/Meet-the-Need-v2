@@ -146,18 +146,25 @@
         <h1>Found Matches</h1>
         <h2>Please select the service provider</h2>
         <ul *ngFor="let request of requests " class="form-style-10-assign">
-            <h3>Request Details:</h3>
-            <li>Journey Date:   {{request.journeyDate}}</li>
-            <h4>Service Provider Details:</h4>
-            <li>Name :  <b>{{request.name}}</b></li>
-            <li>Email Id : <b>{{request.email}}</b></li>
-            <li>Contact Number : <b>{{request.phone}}</b></li>
-            <li>Address :  <b>{{request.currentAddreddaddressLine1}}</b></li>
-            <li><b>{{request.currentAddreddaddressLine2}}</b></li>
-            <li>City : {{request.currentCity}}</li>
-            <b><i>Distance and Time Required to Reach Provider from Current Address</i></b>
-            <li *ngIf="request.ProviderDistanceAndDuration">Distance : {{request.ProviderDistanceAndDuration.distance}}</li>
-            <li *ngIf="request.ProviderDistanceAndDuration">Time Required: {{request.ProviderDistanceAndDuration.duration}}</li>
+            <h3>Proposal Details:</h3>
+            <div class="panel panel-success">
+                <div class="panel-heading">Personal Details :</div>
+                <div class="panel-body">
+                    <label>Name: {{request.name}}</label>
+                    <label>Email: {{request.email}}</label>
+                    <label>Contact Number: {{request.phone}}</label>
+                    <label>Journey Date: {{request.journeyDate}}</label>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading">Sender Address :</div>
+                <div class="panel-body">
+                    <label>{{request.currentAddreddaddressLine1}} {{request.currentAddreddaddressLine2}}</label>
+                    <label>City: {{request.currentCity}}</label>
+                    <label *ngIf="request.ProviderDistanceAndDuration">Distance (from Your Current Address): {{request.ProviderDistanceAndDuration.distance}}</label>
+                    <label *ngIf="request.ProviderDistanceAndDuration">Time: {{request.ProviderDistanceAndDuration.duration}}</label>
+                </div>
+            </div>
             <button class="resubmit-button" (click)="selectProvider(request)">Select</button>
         </ul>
     </div>
@@ -172,15 +179,25 @@
     <h2>You have selected the following service provider</h2>
     <div *ngIf="requests" >
         <ul *ngFor="let request of requests " class="form-style-10-assign">
-            <h3>Request Details:</h3>
-            <li>Journey Date:   {{request.journeyDate}}</li>
-            <h4>Service Provider Details:</h4>
-            <li>Name :  <b>{{request.name}}</b></li>
-            <li>Email Id : <b>{{request.email}}</b></li>
-            <li>Contact Number : <b>{{request.phone}}</b></li>
-            <li>Address :  <b>{{request.currentAddreddaddressLine1}}</b></li>
-            <li><b>{{request.currentAddreddaddressLine2}}</b></li>
-            <li>City : {{request.currentCity}}</li>
+            <h3>Proposal Details:</h3>
+            <div class="panel panel-success">
+                <div class="panel-heading">Personal Details :</div>
+                <div class="panel-body">
+                    <label>Name: {{request.name}}</label>
+                    <label>Email: {{request.email}}</label>
+                    <label>Contact Number: {{request.phone}}</label>
+                    <label>Journey Date: {{request.journeyDate}}</label>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading">Sender Address :</div>
+                <div class="panel-body">
+                    <label>{{request.currentAddreddaddressLine1}} {{request.currentAddreddaddressLine2}}</label>
+                    <label>City: {{request.currentCity}}</label>
+                    <label *ngIf="request.ProviderDistanceAndDuration">Distance (from Your Current Address): {{request.ProviderDistanceAndDuration.distance}}</label>
+                    <label *ngIf="request.ProviderDistanceAndDuration">Time: {{request.ProviderDistanceAndDuration.duration}}</label>
+                </div>
+            </div>
             <button class="resubmit-button" (click)="initializeFlag()">Send Another Parcel Request</button>
         </ul>
     </div>

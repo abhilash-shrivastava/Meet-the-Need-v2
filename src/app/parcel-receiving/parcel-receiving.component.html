@@ -3,7 +3,7 @@
         <ul *ngFor="let request of assignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <div>
                 <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
-                           (click)="mapLoadAssignedService(request._id, request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                           (click)="mapLoadAssignedService(request._id + 'parcel-receiving', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
                        + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity
                        + ' ' + request.serviceProvider.currentState + ' ' + request.serviceProvider.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
                        + ' ' + request.deliveryState + ' ' + request.deliveryZip, request.serviceProvider.destinationAddreddaddressLine1 + ' ' + request.serviceProvider.destinationAddreddaddressLine2 + ' ' + request.serviceProvider.destinationCity
@@ -98,7 +98,7 @@
                                 </div>
                             </div>
                             <h4>{{mapAddress}}</h4>
-                            <div id="{{request._id}}" style="height: 400px; width: 100%;"></div>
+                            <div id="{{request._id}}parcel-receiving" style="height: 400px; width: 100%;"></div>
                             <button *ngIf = "request.status" [hidden] = "request.status !== 'Parcel Given To Service Provider'" class="button-approve" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Collected From Sender</button>
                         </div>
                     </panel>

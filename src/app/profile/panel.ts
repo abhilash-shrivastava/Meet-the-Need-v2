@@ -10,7 +10,7 @@ import {GoogleApiService} from "../services/googleAPIService.service";
     styles: [`
     .hide {
       display: none;
-    },
+    }
     .list-title {
     background: #0273D4;
     color: white;

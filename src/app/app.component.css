@@ -201,3 +201,15 @@ body {
     border-style: inset;
     border-width: 2px;
 }
+
+div {
+    color: black;
+}
+
+h1 {
+    color: white !important;
+}
+
+li :first-child {
+    color: white;
+}

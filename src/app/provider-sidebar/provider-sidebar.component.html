@@ -63,7 +63,7 @@
         <ul *ngFor="let request of filteredRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <div>
                     <panel [title]="request.req.serviceProvider.journeyDate + '-' +request.req.currentCity + '-' + request.req.deliveryCity"
-                           (click)="mapLoadAssignedService(request.req._id, request.req.currentAddreddaddressLine1 + ' ' + request.req.currentAddreddaddressLine2 + ' ' + request.req.currentCity
+                           (click)="mapLoadAssignedService(request.req._id + 'provider-sidebar', request.req.currentAddreddaddressLine1 + ' ' + request.req.currentAddreddaddressLine2 + ' ' + request.req.currentCity
                        + ' ' + request.req.currentState + ' ' + request.req.currentZip, request.req.serviceProvider.currentAddreddaddressLine1 + ' ' + request.req.serviceProvider.currentAddreddaddressLine2 + ' ' + request.req.serviceProvider.currentCity
                        + ' ' + request.req.serviceProvider.currentState + ' ' + request.req.serviceProvider.currentZip, request.req.deliveryAddreddaddressLine1 + ' ' + request.req.deliveryAddreddaddressLine2 + ' ' + request.req.deliveryCity
                        + ' ' + request.req.deliveryState + ' ' + request.req.deliveryZip, request.req.serviceProvider.destinationAddreddaddressLine1 + ' ' + request.req.serviceProvider.destinationAddreddaddressLine2 + ' ' + request.req.serviceProvider.destinationCity
@@ -158,7 +158,7 @@
                                 </div>
                             </div>
                             <h4>{{mapAddress}}</h4>
-                            <div id="{{request.req._id}}" style="height: 400px; width: 100%;"></div>
+                            <div id="{{request.req._id}}provider-sidebar" style="height: 400px; width: 100%;"></div>
                             <button *ngIf = "request.req.status" [hidden] = "request.req.status !== 'Pending Approval At Service Provider'" class="button-approve" (click)="onStatusChangeClick(request.req._id)">Approve</button>
                             <button *ngIf = "request.req.status" [hidden] = "request.req.status !== 'Pending Approval At Service Provider'" class="button-reject" (click)="onRejectClick(request.req._id, 'Service')">Reject</button>
                         </div>
