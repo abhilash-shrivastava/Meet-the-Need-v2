@@ -22,7 +22,7 @@
             <li>
                 <div [hidden]="!requestsClicked">
                     <a (click)="toggleFiltersClicked()">Filters</a>
-                    <ul [hidden]="!filtersClicked">
+                    <ul [hidden]="!filtersClicked" class="dropdown-list">
                         <li></li>
                         <li><a (click)="toggleDispatchDate()">Dispatch Date</a></li>
                         <ul [hidden]="!dispatchDateClicked" *ngFor="let date of dispatchDates" class="filter-checkbox">
@@ -238,6 +238,10 @@
         <pagination-controls class="centerAlignText" (pageChange)="p3 = $event" #api>
         </pagination-controls>
     </div>
-    <div [hidden]="showDetails" class="form-style-10"><h3>No Parcel Requests</h3></div>
+    <div [hidden]="showDetails" class="form-style-10">
+        <div class = "alert alert-info">
+            No Parcel Requests.
+        </div>
+    </div>
 </main>
 

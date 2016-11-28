@@ -278,8 +278,12 @@
         </ul>
     </div>
     <div *ngIf="requests" [hidden]="showDetails">
-        <h3>Service providing request submitted and No Suitable Parcel Order Match Found</h3>
-        <h2>Be patience, a parcel sender may request you.</h2>
+        <div class = "alert alert-info">
+            Service providing request submitted and No Suitable Parcel Order Match Found.
+        </div>
+        <div class = "alert alert-danger">
+            Be patience, a parcel sender may request you.
+        </div>
         <button class="resubmit-button" (click)="initializeFlag()">Submit Another Proposal</button>
     </div>
 </div>

@@ -169,9 +169,13 @@
         </ul>
     </div>
     <div *ngIf="requests" [hidden]="showDetails">
-        <h3>Parcel sending request submitted and No Suitable Service Provider Match Found</h3>
-        <h2>Be patience, a service provider may request you.</h2>
-        <button class="resubmit-button" (click)="initializeFlag()">Send Another Parcel Request</button>
+        <div class = "alert alert-info">
+            Parcel sending request submitted and No Suitable Service Provider Match Found.
+        </div>
+        <div class = "alert alert-danger">
+            Be patience, a service provider may request you.
+        </div>
+        <button class="resubmit-button" (click)="initializeFlag()">Submit Another Parcel Request</button>
     </div>
 </div>
 

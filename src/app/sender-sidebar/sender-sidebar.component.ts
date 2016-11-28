@@ -395,12 +395,12 @@ export class SenderSidebarComponent {
         this.destinationAddress = destinationAddress;
         
         
-        if (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender'){
+        if (this.id !== id && (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender')){
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
             this.mapAddress = "Map Direction To Service Provider";
         }
-        if (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider'){
+        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
             this.id = id;
             this.panel.initMap(this.id, this.deliveryAddress, this.destinationAddress);
             this.mapAddress = "Map Direction Between Service Provider and Receiver";
