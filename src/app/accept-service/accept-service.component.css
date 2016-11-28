@@ -240,7 +240,7 @@ div button:focus {
     background: #0273D4;
     color: white;
     position: relative;
-    left: 60%;
+    left: 50%;
     /* bring your own prefixes */
     transform: translate(-50%, -50%);
     margin: 30px;
