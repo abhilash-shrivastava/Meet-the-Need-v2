@@ -37,6 +37,21 @@ export class ParcelSenderComponent {
 
     currentAddressAutocomplete: any;
     deliveryAddressAutocomplete: any;
+    segment = 1;
+    disabled1 = true;
+    disabled2 = false;
+    disabled3 = false;
+    disabled4 = false;
+    disabled5 = false;
+    disabled6 = false;
+    class1 = 'btn btn-primary btn-circle';
+    class2 = 'btn btn-default btn-circle';
+    class3 = 'btn btn-default btn-circle';
+    class4 = 'btn btn-default btn-circle';
+    class5 = 'btn btn-default btn-circle';
+    class6 = 'btn btn-default btn-circle';
+    geocoder: any;
+    card_tab = 1;
     componentForm = {
         street_number: 'short_name',
         route: 'long_name',
@@ -107,15 +122,14 @@ export class ParcelSenderComponent {
             this.deliveryAddressAutocomplete = new google.maps.places.Autocomplete(
                 /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('deliveryaddressautocomplete')),
                 {types: ['geocode']});
+            this.profile = JSON.parse(localStorage.getItem('profile'));
+            // let id = this.routeParams.get('id');
+            // if (id != null){
+            //     this.profile["id"] = id;
+            //     this.model["_id"] = id;
+            // }
+            this.getParcelSenderDetails(this.profile);
         });
-
-        this.profile = JSON.parse(localStorage.getItem('profile'));
-        // let id = this.routeParams.get('id');
-        // if (id != null){
-        //     this.profile["id"] = id;
-        //     this.model["_id"] = id;
-        // }
-        this.getParcelSenderDetails(this.profile);
     }
 
     addProviderDistanceAndDuration(requests: any){
@@ -140,7 +154,8 @@ export class ParcelSenderComponent {
             this.model.currentCity = "";
             this.model.currentState ="";
             this.model.currentZip = "";
-
+            var completeCurrentAddress=""
+    
             // Get each component of the address from the place details
             // and fill the corresponding field on the form.
             if (place != null && place.address_components != null) {
@@ -150,22 +165,37 @@ export class ParcelSenderComponent {
                         let val = place.address_components[i][this.componentForm[addressType]];
                         if (addressType == 'street_number') {
                             this.model.currentAddreddaddressLine1 = val;
+                            completeCurrentAddress = val;
                         } else if (addressType == 'route') {
                             this.model.currentAddreddaddressLine2 = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'locality') {
                             this.model.currentCity = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'administrative_area_level_1') {
                             this.model.currentState = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         } else if (addressType == 'postal_code') {
                             this.model.currentZip = val;
+                            completeCurrentAddress = completeCurrentAddress + ' ' + val;
                         }
                     }
                 }
+                this.geocoder = new google.maps.Geocoder();
+                this.geocoder.geocode({'address': completeCurrentAddress}, (results, status) => {
+                    if (status === 'OK') {
+                        this.model.currentCityLat = results[0].geometry.location.lat();
+                        this.model.currentCityLng = results[0].geometry.location.lng();
+                    } else {
+                        alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
                 if (place.address_components.length > 0){
                     setTimeout(() => {
                         this.isCurrentAddressLoading = false;
                         this.fetchingCurrentAddress = true;
                         place['address_components'] = null;
+                        this.panel.placeMarkerAndPanTo(completeCurrentAddress, 'map', "Current Address")
                     }, 1);
                 }
             }
@@ -179,7 +209,8 @@ export class ParcelSenderComponent {
             this.model.deliveryCity = "";
             this.model.deliveryState ="";
             this.model.deliveryZip = "";
-
+            var completeDeliveryAddress=""
+    
             // Get each component of the address from the place details
             // and fill the corresponding field on the form.
             if (place != null && place.address_components != null) {
@@ -189,17 +220,23 @@ export class ParcelSenderComponent {
                         let val = place.address_components[i][this.componentForm[addressType]];
                         if (addressType == 'street_number') {
                             this.model.deliveryAddreddaddressLine1 = val;
+                            completeDeliveryAddress = val;
                         } else if (addressType == 'route') {
                             this.model.deliveryAddreddaddressLine2 = val;
+                            completeDeliveryAddress = completeDeliveryAddress + ' ' + val;
                         } else if (addressType == 'locality') {
                             this.model.deliveryCity = val;
+                            completeDeliveryAddress = completeDeliveryAddress + ' ' + val;
                         } else if (addressType == 'administrative_area_level_1') {
                             this.model.deliveryState = val;
+                            completeDeliveryAddress = completeDeliveryAddress + ' ' + val;
                         } else if (addressType == 'postal_code') {
                             this.model.deliveryZip = val;
+                            completeDeliveryAddress = completeDeliveryAddress + ' ' + val;
                         }
                     }
                 }
+                this.panel.placeMarkerAndPanTo(completeDeliveryAddress, 'map', "Delivery Address");
                 if (place.address_components.length > 0){
                     setTimeout(() => {
                         this.isDeliveryAddressLoading = false;
@@ -313,6 +350,10 @@ export class ParcelSenderComponent {
                         delete this.data[0]['serviceProvider']
                     }
                     this.model = this.data[0];
+                    var completeCurrentAddress = this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' +  this.model.currentCity + ' ' + this.model.currentState + ' ' + this.model.currentZip;
+                    this.panel.placeMarkerAndPanTo(completeCurrentAddress, 'map', "Current Address");
+                    var completeDeliveryAddress = this.model.deliveryAddreddaddressLine1 + ' ' + this.model.deliveryAddreddaddressLine2 + ' ' +  this.model.deliveryCity + ' ' + this.model.deliveryState + ' ' + this.model.deliveryZip;
+                    this.panel.placeMarkerAndPanTo(completeDeliveryAddress, 'map', "Delivery Address");
                 },
                 error =>  this.errorMessage = <any>error
             );

@@ -173,6 +173,7 @@ export class Panel {
   
   currentAddressMarker: any;
   destinationAddressMarker : any;
+  deliveryAddressMarker: any;
   intermediateStopsMarkers = [];
   placeMarkerAndPanTo(address, id, addressType) {
     this.geocoder = new google.maps.Geocoder();
@@ -212,6 +213,13 @@ export class Panel {
             this.destinationAddressMarker.setMap(null);
           }
           this.destinationAddressMarker = marker;
+          this.map.setZoom(5);
+        }
+        if (addressType === "Delivery Address") {
+          if (this.deliveryAddressMarker){
+            this.deliveryAddressMarker.setMap(null);
+          }
+          this.deliveryAddressMarker = marker;
           this.map.setZoom(5);
         }
         if (addressType === "Intermediate Stop"){

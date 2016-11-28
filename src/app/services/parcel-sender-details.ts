@@ -37,4 +37,6 @@ export class ParcelSenderDetails{
     deliveryCity: string;
     deliveryState: string;
     deliveryZip: string;
+    currentCityLat: any;
+    currentCityLng: any;
 }
