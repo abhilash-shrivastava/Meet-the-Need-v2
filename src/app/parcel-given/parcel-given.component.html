@@ -1,7 +1,7 @@
 <main id="main" *ngIf="loggedIn()">
     <div [hidden]="!showDetails">
         <ul *ngFor="let request of parcelRequests | paginate: { itemsPerPage: 5, currentPage: p3 }" >
-                <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
+                <panel *ngIf = "request.status" [title]="request.serviceProvider.journeyDate + ': ' +request.currentCity + '-' + request.deliveryCity  + '-' + request.status"
                        (click)="mapLoadAssignedParcel(request._id + 'parcel-given', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
                        + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity
                        + ' ' + request.serviceProvider.currentState + ' ' + request.serviceProvider.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
@@ -9,8 +9,8 @@
                        + ' ' + request.serviceProvider.destinationState + ' ' + request.serviceProvider.destinationZip,  request.status)">
                     <div class="form-style-10">
                         <h3>Parcel Sending Details:</h3>
-                        <h4 *ngIf = "request.status">{{request.serviceProvider.journeyDate}}-{{request.currentCity}}-{{request.deliveryCity}}</h4>
-                        <h4 *ngIf = "!request.status">{{request.currentCity}}-{{request.deliveryCity}}</h4>                            <div class="card text-xs-center">
+                        <h4 *ngIf = "request.status">{{request.serviceProvider.journeyDate}}: {{request.currentCity}}-{{request.deliveryCity}}-{{request.status}}</h4>
+                        <div class="card text-xs-center">
                         <div class="card-header">
                             <ul class="nav nav-tabs card-header-tabs">
                                 <li class="nav-item">
@@ -98,82 +98,7 @@
                         </div>
                         <h4>{{mapAddress}}</h4>
                         <div id="{{request._id}}parcel-given" style="height: 400px; width: 100%;"></div>
-
                         <button [hidden] = "request.status !== 'Assigned To Service Provider'" class="button-section" (click)="onStatusChangeClick(request._id)">Change Status to Parcel Given</button>
-                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-approve" (click)="onStatusChangeClick(request._id)">Approve</button>
-                        <button *ngIf = "request.status" [hidden] = "request.status !== 'Pending Approval At Parcel Sender'" class="button-reject" (click)="onRejectClick(request._id, 'Parcel')">Reject</button>
-                    </div>
-                </panel>
-                <panel *ngIf = "!request.status" [title]="request.currentCity + '-' + request.deliveryCity">
-                    <div class="form-style-10">
-                        <h3>Parcel Sending Details:</h3>
-                        <h4 *ngIf = "request.status">{{request.serviceProvider.journeyDate}}-{{request.currentCity}}-{{request.deliveryCity}}</h4>
-                        <h4 *ngIf = "!request.status">{{request.currentCity}}-{{request.deliveryCity}}</h4>                            <div class="card text-xs-center">
-                        <div class="card-header">
-                            <ul class="nav nav-tabs card-header-tabs">
-                                <li class="nav-item">
-                                    <a class="nav-link active" (click)="card_tab=1">Parcel Details</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" (click)="card_tab=3">Receiver</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                        <div [hidden]="card_tab!==1">
-                            <div class="panel panel-success">
-                                <div class="panel-heading">Parcel Description :</div>
-                                <div class="panel-body"><label>{{request.parcelDisclosure}}</label></div>
-                            </div>
-                            <div class="panel panel-success">
-                                <div class="panel-heading">Parcel Dimensions :</div>
-                                <div class="panel-body">
-                                    <label>Weight: {{request.parcelWeight}} pounds</label>
-                                    <label>Height: {{request.parcelHeight}} cm.</label>
-                                    <label>Length:{{request.parcelLength}} cm.</label>
-                                    <label>Width: {{request.parcelWidth}} cm.</label>
-                                </div>
-                            </div>
-                            <div class="panel panel-success">
-                                <div class="panel-heading">Pick up location :</div>
-                                <div class="panel-body">
-                                    <label>{{request.currentAddreddaddressLine1}} {{request.currentAddreddaddressLine2}}</label>
-                                    <label>City: {{request.currentCity}}</label>
-                                    <label *ngIf="request.SenderDistanceAndDuration">Distance (from Your Current Address): {{request.SenderDistanceAndDuration.distance}}</label>
-                                    <label *ngIf="request.SenderDistanceAndDuration">Time: {{request.SenderDistanceAndDuration.duration}}</label>
-                                </div>
-                            </div>
-                            <div class="panel panel-success">
-                                <div class="panel-heading">Delivery location :</div>
-                                <div class="panel-body">
-                                    <label>{{request.deliveryAddreddaddressLine1}} {{request.deliveryAddreddaddressLine2}}</label>
-                                    <label>City: {{request.deliveryCity}}</label>
-                                    <label *ngIf="request.ReceiverDistanceAndDuration">Distance (from Your Destination Address): {{request.ReceiverDistanceAndDuration.distance}}</label>
-                                    <label *ngIf="request.ReceiverDistanceAndDuration">Time: {{request.ReceiverDistanceAndDuration.duration}}</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div [hidden]="card_tab!==3">
-                            <div class="panel panel-success">
-                                <div class="panel-heading">Personal Details :</div>
-                                <div class="panel-body">
-                                    <label>Name: {{request.receiverName}}</label>
-                                    <label>Email: {{request.receiverEmail}}</label>
-                                    <label>Contact Number: {{request.receiverPhone}}</label>
-                                </div>
-                            </div>
-                            <div class="panel panel-success">
-                                <div class="panel-heading">Receiver Address :</div>
-                                <div class="panel-body">
-                                    <label>{{request.deliveryAddreddaddressLine1}} {{request.deliveryAddreddaddressLine2}}</label>
-                                    <label>City: {{request.deliveryCity}}</label>
-                                    <label *ngIf="request.ReceiverDistanceAndDuration">Distance (from Your Destination Address): {{request.ReceiverDistanceAndDuration.distance}}</label>
-                                    <label *ngIf="request.ReceiverDistanceAndDuration">Time: {{request.ReceiverDistanceAndDuration.duration}}</label>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="button-cancel" (click)="onCancelClick(request._id, 'Parcel')">Cancel</button>
-                        <button class="button-update" (click)="onUpdateClick(request._id, 'Parcel')">Update</button>
                     </div>
                 </panel>
         </ul>

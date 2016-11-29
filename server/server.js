@@ -574,14 +574,15 @@ var assignedSenderRequest = function (data, callback) {
       if (request !== null) {
         assignedServiceRequests.push(request);
       }else {
-        var cursor2 = db.collection('parcelSender').find( { "senderEmail": data.email} );
-        cursor2.each(function(err, request){
-          if (request !== null) {
-            assignedServiceRequests.push(request);
-          }else {
-            callback(assignedServiceRequests)
-          }
-        });
+        // var cursor2 = db.collection('parcelSender').find( { "senderEmail": data.email} );
+        // cursor2.each(function(err, request){
+        //   if (request !== null) {
+        //     assignedServiceRequests.push(request);
+        //   }else {
+        //     callback(assignedServiceRequests)
+        //   }
+        // });
+        callback(assignedServiceRequests);
       }
     })
   }

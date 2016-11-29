@@ -2,7 +2,7 @@
     <div [hidden]="!showDetails">
         <ul *ngFor="let request of assignedServiceRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <div>
-                    <panel [title]="request.serviceProvider.journeyDate + '-' +request.currentCity + '-' + request.deliveryCity"
+                    <panel *ngIf = "request.status" [title]="request.serviceProvider.journeyDate + ': ' +request.currentCity + '-' + request.deliveryCity+ '-' + request.status"
                            (click)="mapLoadAssignedService(request._id + 'all-service-request', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
                        + ' ' + request.currentState + ' ' + request.currentZip, request.serviceProvider.currentAddreddaddressLine1 + ' ' + request.serviceProvider.currentAddreddaddressLine2 + ' ' + request.serviceProvider.currentCity
                        + ' ' + request.serviceProvider.currentState + ' ' + request.serviceProvider.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
@@ -10,7 +10,7 @@
                        + ' ' + request.serviceProvider.destinationState + ' ' + request.serviceProvider.destinationZip,  request.status)" >
                         <div class="form-style-10" >
                             <h3>Delivery Service Details:</h3>
-                            <h4 >{{request.serviceProvider.journeyDate}}-{{request.currentCity}}-{{request.deliveryCity}}</h4>
+                            <h4 >{{request.serviceProvider.journeyDate}}: {{request.currentCity}}-{{request.deliveryCity}}-{{request.status}}</h4>
                             <div class="card text-xs-center">
                                 <div class="card-header">
                                     <ul class="nav nav-tabs card-header-tabs">

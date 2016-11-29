@@ -60,7 +60,7 @@
 <main [hidden]="!showAllRequestClicked || !filtersClicked" id="main" *ngIf="loggedIn()">
     <div [hidden]="!showDetails">
         <ul *ngFor="let request of filteredRequests | paginate: { itemsPerPage: 5, currentPage: p3 }" >
-                <panel [title]="request.req.serviceProvider.journeyDate + '-' +request.req.currentCity + '-' + request.req.deliveryCity"
+                <panel *ngIf = "request.req.status" [title]="request.req.serviceProvider.journeyDate + ': ' +request.req.currentCity + '-' + request.req.deliveryCity + '-' + request.req.status"
                        (click)="mapLoadAssignedParcel(request.req._id, request.req.currentAddreddaddressLine1 + ' ' + request.req.currentAddreddaddressLine2 + ' ' + request.req.currentCity
                        + ' ' + request.req.currentState + ' ' + request.req.currentZip, request.req.serviceProvider.currentAddreddaddressLine1 + ' ' + request.req.serviceProvider.currentAddreddaddressLine2 + ' ' + request.req.serviceProvider.currentCity
                        + ' ' + request.req.serviceProvider.currentState + ' ' + request.req.serviceProvider.currentZip, request.req.deliveryAddreddaddressLine1 + ' ' + request.req.deliveryAddreddaddressLine2 + ' ' + request.req.deliveryCity
@@ -68,8 +68,8 @@
                        + ' ' + request.req.serviceProvider.destinationState + ' ' + request.req.serviceProvider.destinationZip,  request.req.status)">
                         <div class="form-style-10" >
                             <h3>Parcel Sending Details:</h3>
-                            <h4 *ngIf = "request.req.status">{{request.req.serviceProvider.journeyDate}}-{{request.req.currentCity}}-{{request.req.deliveryCity}}</h4>
-                            <h4 *ngIf = "!request.req.status">{{request.req.currentCity}}-{{request.req.deliveryCity}}</h4>                            <div class="card text-xs-center">
+                            <h4 *ngIf = "request.req.status">{{request.req.serviceProvider.journeyDate}}: {{request.req.currentCity}}-{{request.req.deliveryCity}}-{{request.req.status}}</h4>
+                            <div class="card text-xs-center">
                                 <div class="card-header">
                                     <ul class="nav nav-tabs card-header-tabs">
                                         <li class="nav-item">
@@ -162,11 +162,11 @@
                         <button *ngIf = "request.req.status" [hidden] = "request.req.status !== 'Pending Approval At Parcel Sender'" class="button-reject" (click)="onRejectClick(request.req._id, 'Parcel')">Reject</button>
                     </div>
                 </panel>
-                <panel *ngIf = "!request.req.status" [title]="request.req.currentCity + '-' + request.req.deliveryCity">
+                <panel *ngIf = "!request.req.status" [title]="request.req.currentCity + '-' + request.req.deliveryCity+ '-' + 'Unassigned'">
                     <div class="form-style-10" >
                         <h3>Parcel Sending Details:</h3>
                         <h4 *ngIf = "request.req.status">{{request.req.serviceProvider.journeyDate}}-{{request.req.currentCity}}-{{request.req.deliveryCity}}</h4>
-                        <h4 *ngIf = "!request.req.status">{{request.req.currentCity}}-{{request.req.deliveryCity}}</h4>                            <div class="card text-xs-center">
+                        <h4 *ngIf = "!request.req.status">{{request.req.currentCity}}-{{request.req.deliveryCity}}-Unassigned</h4>                            <div class="card text-xs-center">
                         <div class="card-header">
                             <ul class="nav nav-tabs card-header-tabs">
                                 <li class="nav-item">

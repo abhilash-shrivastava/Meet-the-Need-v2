@@ -62,7 +62,7 @@
     <div [hidden]="!showDetails">
         <ul *ngFor="let request of filteredRequests | paginate: { itemsPerPage: 5, currentPage: p2 }"  >
             <div>
-                    <panel [title]="request.req.serviceProvider.journeyDate + '-' +request.req.currentCity + '-' + request.req.deliveryCity"
+                    <panel *ngIf = "request.req.status" [title]="request.req.serviceProvider.journeyDate + '-' +request.req.currentCity + '-' + request.req.deliveryCity + '-' + request.req.status"
                            (click)="mapLoadAssignedService(request.req._id + 'provider-sidebar', request.req.currentAddreddaddressLine1 + ' ' + request.req.currentAddreddaddressLine2 + ' ' + request.req.currentCity
                        + ' ' + request.req.currentState + ' ' + request.req.currentZip, request.req.serviceProvider.currentAddreddaddressLine1 + ' ' + request.req.serviceProvider.currentAddreddaddressLine2 + ' ' + request.req.serviceProvider.currentCity
                        + ' ' + request.req.serviceProvider.currentState + ' ' + request.req.serviceProvider.currentZip, request.req.deliveryAddreddaddressLine1 + ' ' + request.req.deliveryAddreddaddressLine2 + ' ' + request.req.deliveryCity
@@ -70,7 +70,7 @@
                        + ' ' + request.req.serviceProvider.destinationState + ' ' + request.req.serviceProvider.destinationZip,  request.req.status)" >
                         <div class="form-style-10" >
                             <h3>Delivery Service Details:</h3>
-                            <h4 >{{request.req.serviceProvider.journeyDate}}-{{request.req.currentCity}}-{{request.req.deliveryCity}}</h4>
+                            <h4 >{{request.req.serviceProvider.journeyDate}}: {{request.req.currentCity}}-{{request.req.deliveryCity}}-{{request.req.status}}</h4>
                             <div class="card text-xs-center">
                                 <div class="card-header">
                                     <ul class="nav nav-tabs card-header-tabs">
