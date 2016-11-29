@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ParcelSenderCRUDService } from './../services/parcel-sender-crud.service';
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {Panel} from "../profile/panel";
+import {ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -52,6 +53,7 @@ export class ParcelSenderComponent {
     class6 = 'btn btn-default btn-circle';
     geocoder: any;
     card_tab = 1;
+    private sub: any;      // -> Subscriber
     componentForm = {
         street_number: 'short_name',
         route: 'long_name',
@@ -95,6 +97,7 @@ export class ParcelSenderComponent {
 
     status: string;
     constructor( private panel: Panel,
+                 public route: ActivatedRoute,
                  private googleApi:GoogleApiService,
         private parcelSenderCRUDService: ParcelSenderCRUDService) {
     }
@@ -124,11 +127,15 @@ export class ParcelSenderComponent {
                 /** @type {!HTMLInputElement} */(<HTMLInputElement>document.getElementById('deliveryaddressautocomplete')),
                 {types: ['geocode']});
             this.profile = JSON.parse(localStorage.getItem('profile'));
-            // let id = this.routeParams.get('id');
-            // if (id != null){
-            //     this.profile["id"] = id;
-            //     this.model["_id"] = id;
-            // }
+            // get URL parameters
+            this.sub = this.route
+              .params
+              .subscribe(params => {
+                  // Récupération des valeurs de l'URL
+                  this.profile["id"] = params['id'];
+                  this.model["_id"] = params['id'];
+                  console.log(this.profile.id);
+              });
             this.getParcelSenderDetails(this.profile);
         });
     }

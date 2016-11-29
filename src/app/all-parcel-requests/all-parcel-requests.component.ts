@@ -10,6 +10,7 @@ import {RequestsService} from "../services/request.service";
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {PaginationService} from "ng2-pagination/index";
 import {tokenNotExpired} from "angular2-jwt/angular2-jwt";
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -34,7 +35,7 @@ export class AllParcelRequestsComponent{
     status:any;
     card_tab = 1;
 
-    constructor(private requestsService: RequestsService,
+    constructor(private requestsService: RequestsService, private router: Router,
                 private panel: Panel) {
     }
 
@@ -52,6 +53,26 @@ export class AllParcelRequestsComponent{
     onRejectClick(requestId, requestType){
         if (confirm("Reject Request?")){
             this.rejectRequest({requestId: requestId, requestType: requestType});
+        }
+    }
+    
+    onCancelClick(requestId, requestType){
+        if (confirm("Cancel Request?")){
+            if (requestType == 'Service'){
+                this.cancelRequest({requestId: requestId, requestType: requestType})
+            }
+            if (requestType == 'Parcel'){
+                this.cancelRequest({requestId: requestId, requestType: requestType})
+            }
+        }
+    }
+    
+    onUpdateClick(requestId, requestType){
+        if (requestType == 'Service'){
+            this.router.navigate( ['service-provider', {id: requestId}] );
+        }
+        if (requestType == 'Parcel'){
+            this.router.navigate( ['parcel-sender', {id: requestId}] );
         }
     }
 
@@ -119,10 +140,26 @@ export class AllParcelRequestsComponent{
                 data  => {
                     this.res = data;
                     if (this.res.role == 'Service'){
-                        this.getAssignedSenderRequests(this.profile);                    }
+                        this.getAssignedSenderRequests(this.profile);
+                    }
                 },
                 error =>  this.errorMessage = <any>error
             );
+    }
+    
+    cancelRequest(data){
+        if (!data.requestId || !data.requestType) { return; }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.cancelRequest(data)
+          .subscribe(
+            data  => {
+                this.res = data;
+                if (this.res.role == 'Parcel'){
+                    this.getAssignedSenderRequests(this.profile);
+                }
+            },
+            error =>  this.errorMessage = <any>error
+          );
     }
 
     loggedIn() {

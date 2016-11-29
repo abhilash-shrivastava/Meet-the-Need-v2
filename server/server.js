@@ -569,12 +569,19 @@ var assignedSenderRequest = function (data, callback) {
       }
     })
   }else {
-    var cursor = db.collection('providerAssigned').find( { "senderEmail": data.email} );
-    cursor.each(function(err, request){
+    var cursor1 = db.collection('providerAssigned').find( { "senderEmail": data.email} );
+    cursor1.each(function(err, request){
       if (request !== null) {
         assignedServiceRequests.push(request);
       }else {
-        callback(assignedServiceRequests)
+        var cursor2 = db.collection('parcelSender').find( { "senderEmail": data.email} );
+        cursor2.each(function(err, request){
+          if (request !== null) {
+            assignedServiceRequests.push(request);
+          }else {
+            callback(assignedServiceRequests)
+          }
+        });
       }
     })
   }
