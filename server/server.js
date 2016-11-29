@@ -347,7 +347,7 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
   }
   console.log(new Date().toISOString().split('T')[0]);
   var cursorone = db.collection('serviceProvider')
-    .find({$and: [ {$or:[{"currentCity": parcelDetails.currentCity}]}, {$or:[{"destinationCity": parcelDetails.deliveryCity}]}, {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }}, {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}}, {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}}, {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}}, {"journeyDate" : {$gte: parcelDetails.startDeliveryDate,  $lte: parcelDetails.endDeliveryDate}}, {"journeyDate" : {$gte: new Date().toISOString().split('T')[0]}}]}).sort({maxParcelWeight: + 1});
+    .find({$and: [ {$or:[{"currentCity": parcelDetails.currentCity}, {"itineraryCitiesToDestination.city": parcelDetails.currentCity}]}, {$or:[{"destinationCity": parcelDetails.deliveryCity}, {"itineraryCitiesToDestination.city": parcelDetails.deliveryCity}]}, {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }}, {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}}, {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}}, {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}}, {"journeyDate" : {$gte: parcelDetails.startDeliveryDate,  $lte: parcelDetails.endDeliveryDate}}, {"journeyDate" : {$gte: new Date().toISOString().split('T')[0]}}]}).sort({maxParcelWeight: + 1});
 
   cursorone.count(function (e, count) {
 
@@ -361,7 +361,34 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
     })
     }else {
       cursorone.each(function(err, provider){
-        if (provider !== null){
+        if (provider !== null && provider !== undefined){
+            // if (provider.currentCity === parcelDetails.currentCity || parcelDetails.nearByCitiesArray.indexOf(sender.currentCity) >= 0){
+            //   if (sender.deliveryCity === parcelDetails.deliveryCity){
+            //     responseToSender.push(sender);
+            //   }else {
+            //     for (var i in parcelDetails.itineraryCitiesToDestination){
+            //       if (parcelDetails.itineraryCitiesToDestination[i].city === sender.deliveryCity){
+            //         responseToSender.push(sender);
+            //       }
+            //     }
+            //   }
+            // }else {
+            //   for (var index in parcelDetails.itineraryCitiesToDestination){
+            //     if (parcelDetails.itineraryCitiesToDestination[index].city === sender.currentCity){
+            //       if (parcelDetails.destinationCity === sender.deliveryCity){
+            //         responseToSender.push(sender);
+            //       }else {
+            //         for (var i in parcelDetails.itineraryCitiesToDestination){
+            //           if (parcelDetails.itineraryCitiesToDestination[i].city === sender.deliveryCity){
+            //             if (parcelDetails.itineraryCitiesToDestination[index].index <= parcelDetails.itineraryCitiesToDestination[i].index){
+            //               responseToSender.push(sender);
+            //             }
+            //           }
+            //         }
+            //       }
+            //     }
+            //   }
+            // }
           responseToSender.push(provider);
           count--;
           if (count === 0){
