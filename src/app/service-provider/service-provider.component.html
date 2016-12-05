@@ -186,7 +186,26 @@
     <div *ngIf="requests" [hidden]="!showDetails">
         <h1>Found Matches</h1>
         <h2>Please select the parcel order</h2>
-        <ul *ngFor="let request of requests " class="form-style-10-assign">
+    </div>
+    <div *ngIf="requests" [hidden]="showDetails">
+        <div class = "alert alert-info">
+            Service providing request submitted and No Suitable Parcel Order Match Found.
+        </div>
+        <div class = "alert alert-danger">
+            Be patience, a parcel sender may request you.
+        </div>
+        <button class="resubmit-button" (click)="initializeFlag()">Submit Another Proposal</button>
+    </div>
+</div>
+<div class="matches" *ngIf="requests" [hidden]="!submitted || isLoading || parcelOrderSelected">
+    <ul *ngFor="let request of requests ">
+        <panel [title]="model.journeyDate + ': ' +request.currentCity + '-' + request.deliveryCity+ '-' + request.parcelDisclosure"
+               (click)="mapLoadAssignedService(request._id + 'all-service-request', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                       + ' ' + request.currentState + ' ' + request.currentZip, model.currentAddreddaddressLine1 + ' ' + model.currentAddreddaddressLine2 + ' ' + model.currentCity
+                       + ' ' + model.currentState + ' ' + model.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
+                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, model.destinationAddreddaddressLine1 + ' ' + model.destinationAddreddaddressLine2 + ' ' + model.destinationCity
+                       + ' ' + model.destinationState + ' ' + model.destinationZip,  request.status)" >
+        <div class="form-style-10" style="margin-left: calc(-30% + -350px)">
             <h3>Request Details:</h3>
             <div class="card text-xs-center">
                 <div class="card-header">
@@ -274,18 +293,16 @@
                     </div>
                 </div>
             </div>
+            <h4>{{mapAddress}}</h4>
+            <div class="inline" id="{{request._id}}service-provider" style="height: 400px; width: 100%;"></div>
+
             <button class="resubmit-button" (click)="selectParcel(request)">Select</button>
-        </ul>
-    </div>
-    <div *ngIf="requests" [hidden]="showDetails">
-        <div class = "alert alert-info">
-            Service providing request submitted and No Suitable Parcel Order Match Found.
+
         </div>
-        <div class = "alert alert-danger">
-            Be patience, a parcel sender may request you.
-        </div>
-        <button class="resubmit-button" (click)="initializeFlag()">Submit Another Proposal</button>
-    </div>
+        </panel>
+    </ul>
+    <pagination-controls (pageChange)="p2 = $event" #api>
+    </pagination-controls>
 </div>
 
 <div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!parcelOrderSelected || !submitted || isLoading">

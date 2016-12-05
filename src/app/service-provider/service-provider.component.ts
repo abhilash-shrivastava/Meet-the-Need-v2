@@ -9,13 +9,14 @@ import {tokenNotExpired} from 'angular2-jwt';
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {Panel} from "../profile/panel";
 import {GeoByteService} from "../services/geobyte.service";
+import {PaginationService} from "ng2-pagination";
 
 
 @Component({
     selector: 'service-provider',
     templateUrl: './service-provider.component.html',
     styleUrls: ['./service-provider.component.css'],
-    providers: [ ServiceProviderCRUDService, Panel, GoogleApiService, GeoByteService ],
+    providers: [ ServiceProviderCRUDService, Panel, GoogleApiService, GeoByteService, PaginationService ],
 })
 
 export class ServiceProviderComponent {
@@ -47,6 +48,12 @@ export class ServiceProviderComponent {
     nearByCities: any;
     radius: number;
     segment = 1;
+    id: any;
+    mapAddress:any;
+    currentServiceAddress: any;
+    currentSenderAddress:any;
+    deliveryAddress:any;
+    destinationAddress:any;
     disabled1 = true;
     disabled2 = false;
     disabled3 = false;
@@ -126,8 +133,28 @@ export class ServiceProviderComponent {
                 private googleApi:GoogleApiService,
         private serviceProviderCRUDService: ServiceProviderCRUDService) {
     }
-
-    selectParcel(parcel){
+  
+    mapLoadAssignedService(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
+      
+      this.currentServiceAddress = currentServiceAddress;
+      this.currentSenderAddress = currentSenderAddress;
+      this.deliveryAddress = deliveryAddress;
+      this.destinationAddress = destinationAddress;
+      
+      // if (this.id !== id && (status === 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender')){
+      //   this.id = id;
+        this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
+        this.mapAddress = "Map Direction To Parcel Sender";
+      // }
+      // if (this.id !== id && (status === 'Parcel Given To Service Provider' || status ==='Parcel Collected From Sender' || status ==='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+      //   this.id = id;
+      //   this.panel.initMap(this.id, this.destinationAddress, this.deliveryAddress);
+      //   this.mapAddress = "Map Direction To Receiver"
+      // }
+    }
+  
+  
+  selectParcel(parcel){
         parcel['serviceProvider'] = this.model;
         this.parcelOrderSelected = true;
         this.selectParcelOrder(parcel)
