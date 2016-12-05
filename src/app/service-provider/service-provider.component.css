@@ -414,3 +414,13 @@ div.inline { float:left; }
 .match-content {
     margin-left: -5%;
 }
+
+.match{
+    display:flex;
+}
+.fixed{
+    width: 450px;
+}
+.flex-item{
+    flex-grow: 1;
+}

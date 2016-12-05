@@ -200,104 +200,108 @@
 <div class="matches" *ngIf="requests" [hidden]="!submitted || isLoading || parcelOrderSelected">
     <ul *ngFor="let request of requests ">
         <panel [title]="model.journeyDate + ': ' +request.currentCity + '-' + request.deliveryCity+ '-' + request.parcelDisclosure"
-               (click)="mapLoadAssignedService(request._id + 'all-service-request', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+               (click)="mapLoadAssignedService(request._id + 'service-provider', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
                        + ' ' + request.currentState + ' ' + request.currentZip, model.currentAddreddaddressLine1 + ' ' + model.currentAddreddaddressLine2 + ' ' + model.currentCity
                        + ' ' + model.currentState + ' ' + model.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
                        + ' ' + request.deliveryState + ' ' + request.deliveryZip, model.destinationAddreddaddressLine1 + ' ' + model.destinationAddreddaddressLine2 + ' ' + model.destinationCity
                        + ' ' + model.destinationState + ' ' + model.destinationZip,  request.status)" >
-        <div class="form-style-10 match-content">
-            <h3>Request Details:</h3>
-            <div class="card text-xs-center">
-                <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" (click)="card_tab=1">Parcel Details</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" (click)="card_tab=2">Sender</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" (click)="card_tab=3">Receiver</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div [hidden]="card_tab!==1">
-                <div class="panel panel-success">
-                    <div class="panel-heading">Parcel Description :</div>
-                    <div class="panel-body"><label>{{request.parcelDisclosure}}</label></div>
-                </div>
-                <div class="panel panel-success">
-                    <div class="panel-heading">Parcel Dimensions :</div>
-                    <div class="panel-body">
-                        <label>Weight: {{request.parcelWeight}} pounds</label>
-                        <label>Height: {{request.parcelHeight}} cm.</label>
-                        <label>Length:{{request.parcelLength}} cm.</label>
-                        <label>Width: {{request.parcelWidth}} cm.</label>
+        <div class="match">
+            <div class="form-style-10 match-content">
+                <h3>Request Details:</h3>
+                <div class="card text-xs-center">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" (click)="card_tab=1">Parcel Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" (click)="card_tab=2">Sender</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" (click)="card_tab=3">Receiver</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <div class="panel panel-success">
-                    <div class="panel-heading">Pick up location :</div>
-                    <div class="panel-body">
-                        <label>{{request.currentAddreddaddressLine1}} {{request.currentAddreddaddressLine2}}</label>
-                        <label>City: {{request.currentCity}}</label>
-                        <label *ngIf="request.SenderDistanceAndDuration">Distance (from Your Current Address): {{request.SenderDistanceAndDuration.distance}}</label>
-                        <label *ngIf="request.SenderDistanceAndDuration">Time: {{request.SenderDistanceAndDuration.duration}}</label>
+                <div [hidden]="card_tab!==1">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Parcel Description :</div>
+                        <div class="panel-body"><label>{{request.parcelDisclosure}}</label></div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Parcel Dimensions :</div>
+                        <div class="panel-body">
+                            <label>Weight: {{request.parcelWeight}} pounds</label>
+                            <label>Height: {{request.parcelHeight}} cm.</label>
+                            <label>Length:{{request.parcelLength}} cm.</label>
+                            <label>Width: {{request.parcelWidth}} cm.</label>
+                        </div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Pick up location :</div>
+                        <div class="panel-body">
+                            <label>{{request.currentAddreddaddressLine1}} {{request.currentAddreddaddressLine2}}</label>
+                            <label>City: {{request.currentCity}}</label>
+                            <label *ngIf="request.SenderDistanceAndDuration">Distance (from Your Current Address): {{request.SenderDistanceAndDuration.distance}}</label>
+                            <label *ngIf="request.SenderDistanceAndDuration">Time: {{request.SenderDistanceAndDuration.duration}}</label>
+                        </div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Delivery location :</div>
+                        <div class="panel-body">
+                            <label>{{request.deliveryAddreddaddressLine1}} {{request.deliveryAddreddaddressLine2}}</label>
+                            <label>City: {{request.deliveryCity}}</label>
+                            <label *ngIf="request.ReceiverDistanceAndDuration">Distance (from Your Destination Address): {{request.ReceiverDistanceAndDuration.distance}}</label>
+                            <label *ngIf="request.ReceiverDistanceAndDuration">Time: {{request.ReceiverDistanceAndDuration.duration}}</label>
+                        </div>
                     </div>
                 </div>
-                <div class="panel panel-success">
-                    <div class="panel-heading">Delivery location :</div>
-                    <div class="panel-body">
-                        <label>{{request.deliveryAddreddaddressLine1}} {{request.deliveryAddreddaddressLine2}}</label>
-                        <label>City: {{request.deliveryCity}}</label>
-                        <label *ngIf="request.ReceiverDistanceAndDuration">Distance (from Your Destination Address): {{request.ReceiverDistanceAndDuration.distance}}</label>
-                        <label *ngIf="request.ReceiverDistanceAndDuration">Time: {{request.ReceiverDistanceAndDuration.duration}}</label>
+                <div [hidden]="card_tab!==2">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Personal Details :</div>
+                        <div class="panel-body">
+                            <label>Name: {{request.senderName}}</label>
+                            <label>Email: {{request.senderEmail}}</label>
+                            <label>Contact Number: {{request.senderPhone}}</label>
+                        </div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Sender Address :</div>
+                        <div class="panel-body">
+                            <label>{{request.currentAddreddaddressLine1}} {{request.currentAddreddaddressLine2}}</label>
+                            <label>City: {{request.currentCity}}</label>
+                            <label *ngIf="request.SenderDistanceAndDuration">Distance (from Your Current Address): {{request.SenderDistanceAndDuration.distance}}</label>
+                            <label *ngIf="request.SenderDistanceAndDuration">Time: {{request.SenderDistanceAndDuration.duration}}</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div [hidden]="card_tab!==2">
-                <div class="panel panel-success">
-                    <div class="panel-heading">Personal Details :</div>
-                    <div class="panel-body">
-                        <label>Name: {{request.senderName}}</label>
-                        <label>Email: {{request.senderEmail}}</label>
-                        <label>Contact Number: {{request.senderPhone}}</label>
+                <div [hidden]="card_tab!==3">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Personal Details :</div>
+                        <div class="panel-body">
+                            <label>Name: {{request.receiverName}}</label>
+                            <label>Email: {{request.receiverEmail}}</label>
+                            <label>Contact Number: {{request.receiverPhone}}</label>
+                        </div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Receiver Address :</div>
+                        <div class="panel-body">
+                            <label>{{request.deliveryAddreddaddressLine1}} {{request.deliveryAddreddaddressLine2}}</label>
+                            <label>City: {{request.deliveryCity}}</label>
+                            <label *ngIf="request.ReceiverDistanceAndDuration">Distance (from Your Destination Address): {{request.ReceiverDistanceAndDuration.distance}}</label>
+                            <label *ngIf="request.ReceiverDistanceAndDuration">Time: {{request.ReceiverDistanceAndDuration.duration}}</label>
+                        </div>
                     </div>
                 </div>
-                <div class="panel panel-success">
-                    <div class="panel-heading">Sender Address :</div>
-                    <div class="panel-body">
-                        <label>{{request.currentAddreddaddressLine1}} {{request.currentAddreddaddressLine2}}</label>
-                        <label>City: {{request.currentCity}}</label>
-                        <label *ngIf="request.SenderDistanceAndDuration">Distance (from Your Current Address): {{request.SenderDistanceAndDuration.distance}}</label>
-                        <label *ngIf="request.SenderDistanceAndDuration">Time: {{request.SenderDistanceAndDuration.duration}}</label>
-                    </div>
-                </div>
-            </div>
-            <div [hidden]="card_tab!==3">
-                <div class="panel panel-success">
-                    <div class="panel-heading">Personal Details :</div>
-                    <div class="panel-body">
-                        <label>Name: {{request.receiverName}}</label>
-                        <label>Email: {{request.receiverEmail}}</label>
-                        <label>Contact Number: {{request.receiverPhone}}</label>
-                    </div>
-                </div>
-                <div class="panel panel-success">
-                    <div class="panel-heading">Receiver Address :</div>
-                    <div class="panel-body">
-                        <label>{{request.deliveryAddreddaddressLine1}} {{request.deliveryAddreddaddressLine2}}</label>
-                        <label>City: {{request.deliveryCity}}</label>
-                        <label *ngIf="request.ReceiverDistanceAndDuration">Distance (from Your Destination Address): {{request.ReceiverDistanceAndDuration.distance}}</label>
-                        <label *ngIf="request.ReceiverDistanceAndDuration">Time: {{request.ReceiverDistanceAndDuration.duration}}</label>
-                    </div>
-                </div>
-            </div>
-            <h4>{{mapAddress}}</h4>
-            <div class="inline" id="{{request._id}}service-provider" style="height: 400px; width: 100%;"></div>
+                <!--<h4>{{mapAddress}}</h4>-->
 
-            <button class="resubmit-button" (click)="selectParcel(request)">Select</button>
+                <button class="resubmit-button" (click)="selectParcel(request)">Select</button>
 
+            </div>
+            <div class="flex-item">
+                <div id="{{request._id}}service-provider" style="height: 400px; background-color: white; margin-right: 20%"></div>
+            </div>
         </div>
         </panel>
     </ul>
