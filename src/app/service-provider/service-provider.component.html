@@ -182,12 +182,11 @@
         <div class="inline" *ngIf="model.currentCity" id="map-div"><div id="map"></div></div>
     </div>
     </div>
-<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!submitted || isLoading || parcelOrderSelected">
-    <div *ngIf="requests" [hidden]="!showDetails">
-        <h1>Found Matches</h1>
-        <h2>Please select the parcel order</h2>
+<div  *ngIf="loggedIn()"  [hidden]="!submitted || isLoading || parcelOrderSelected">
+    <div id="wrapper" style="text-align: center" *ngIf="requests" [hidden]="!showDetails">
+        <div id="yourdiv" style="    display: inline-block; padding: 20px; background-color: #279636; width: 100%; font-size: 30px; color: white;">Matches</div>
     </div>
-    <div *ngIf="requests" [hidden]="showDetails">
+    <div class="form-style-10" *ngIf="requests" [hidden]="showDetails">
         <div class = "alert alert-info">
             Service providing request submitted and No Suitable Parcel Order Match Found.
         </div>
