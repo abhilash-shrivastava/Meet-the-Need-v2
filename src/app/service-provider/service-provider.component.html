@@ -197,14 +197,14 @@
         <button class="resubmit-button" (click)="initializeFlag()">Submit Another Proposal</button>
     </div>
 </div>
-<div class="matches" *ngIf="requests" [hidden]="!submitted || isLoading || parcelOrderSelected">
-    <ul *ngFor="let request of requests ">
+<div class="matches" [hidden]="!submitted || isLoading || parcelOrderSelected">
+    <ul *ngFor="let request of requests | paginate: { itemsPerPage: 5, currentPage: p2 } ">
         <panel [title]="model.journeyDate + ': ' +request.currentCity + '-' + request.deliveryCity+ '-' + request.parcelDisclosure"
                (click)="mapLoadAssignedService(request._id + 'service-provider', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
                        + ' ' + request.currentState + ' ' + request.currentZip, model.currentAddreddaddressLine1 + ' ' + model.currentAddreddaddressLine2 + ' ' + model.currentCity
                        + ' ' + model.currentState + ' ' + model.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
                        + ' ' + request.deliveryState + ' ' + request.deliveryZip, model.destinationAddreddaddressLine1 + ' ' + model.destinationAddreddaddressLine2 + ' ' + model.destinationCity
-                       + ' ' + model.destinationState + ' ' + model.destinationZip,  request.status)" >
+                       + ' ' + model.destinationState + ' ' + model.destinationZip, 'Title')" >
         <div class="match">
             <div class="form-style-10 match-content">
                 <h3>Request Details:</h3>
@@ -212,13 +212,25 @@
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" (click)="card_tab=1">Parcel Details</a>
+                                <a class="nav-link active" (click)="card_tab=1; mapLoadAssignedService(request._id + 'service-provider', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                       + ' ' + request.currentState + ' ' + request.currentZip, model.currentAddreddaddressLine1 + ' ' + model.currentAddreddaddressLine2 + ' ' + model.currentCity
+                       + ' ' + model.currentState + ' ' + model.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
+                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, model.destinationAddreddaddressLine1 + ' ' + model.destinationAddreddaddressLine2 + ' ' + model.destinationCity
+                       + ' ' + model.destinationState + ' ' + model.destinationZip, 'Sender')">Parcel Details</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" (click)="card_tab=2">Sender</a>
+                                <a class="nav-link" (click)="card_tab=2; mapLoadAssignedService(request._id + 'service-provider', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                       + ' ' + request.currentState + ' ' + request.currentZip, model.currentAddreddaddressLine1 + ' ' + model.currentAddreddaddressLine2 + ' ' + model.currentCity
+                       + ' ' + model.currentState + ' ' + model.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
+                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, model.destinationAddreddaddressLine1 + ' ' + model.destinationAddreddaddressLine2 + ' ' + model.destinationCity
+                       + ' ' + model.destinationState + ' ' + model.destinationZip, 'Sender')">Sender</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" (click)="card_tab=3">Receiver</a>
+                                <a class="nav-link" (click)="card_tab=3; mapLoadAssignedService(request._id + 'service-provider', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                       + ' ' + request.currentState + ' ' + request.currentZip, model.currentAddreddaddressLine1 + ' ' + model.currentAddreddaddressLine2 + ' ' + model.currentCity
+                       + ' ' + model.currentState + ' ' + model.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
+                       + ' ' + request.deliveryState + ' ' + request.deliveryZip, model.destinationAddreddaddressLine1 + ' ' + model.destinationAddreddaddressLine2 + ' ' + model.destinationCity
+                       + ' ' + model.destinationState + ' ' + model.destinationZip, 'Receiver')">Receiver</a>
                             </li>
                         </ul>
                     </div>
@@ -300,7 +312,7 @@
 
             </div>
             <div class="flex-item">
-                <div id="{{request._id}}service-provider" style="height: 400px; background-color: white; margin-right: 20%"></div>
+                <div id="{{request._id}}service-provider" style="height: 400px; background-color: white; margin-right: 20%; padding: 5px"></div>
             </div>
         </div>
         </panel>
