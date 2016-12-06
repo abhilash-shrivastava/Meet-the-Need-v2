@@ -196,7 +196,7 @@
         <button class="resubmit-button" (click)="initializeFlag()">Submit Another Proposal</button>
     </div>
 </div>
-<div class="matches" [hidden]="!submitted || isLoading || parcelOrderSelected">
+<div *ngIf="loggedIn()" class="matches" [hidden]="!submitted || isLoading || parcelOrderSelected">
     <ul *ngFor="let request of requests | paginate: { itemsPerPage: 5, currentPage: p2 } ">
         <panel [title]="model.journeyDate + ': ' +request.currentCity + '-' + request.deliveryCity+ '-' + request.parcelDisclosure"
                (click)="mapLoadAssignedService(request._id + 'service-provider', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
