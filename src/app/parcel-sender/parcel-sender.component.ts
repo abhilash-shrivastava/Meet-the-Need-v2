@@ -35,6 +35,12 @@ export class ParcelSenderComponent {
     isDeliveryAddressLoading = false;
     serviceProviderSelected = false;
     submitted = false;
+    id: any;
+    mapAddress:any;
+    currentServiceAddress: any;
+    currentSenderAddress:any;
+    deliveryAddress:any;
+    destinationAddress:any;
 
     currentAddressAutocomplete: any;
     deliveryAddressAutocomplete: any;
@@ -138,6 +144,31 @@ export class ParcelSenderComponent {
               });
             this.getParcelSenderDetails(this.profile);
         });
+    }
+    
+    mapLoadAssignedParcel(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, type:any){
+        
+        this.currentServiceAddress = currentServiceAddress;
+        this.currentSenderAddress = currentSenderAddress;
+        this.deliveryAddress = deliveryAddress;
+        this.destinationAddress = destinationAddress;
+        
+        
+        if (this.id !== id && type === 'Title'){
+            this.id = id;
+            this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
+            this.mapAddress = "Map Direction To Service Provider";
+        }
+        if (type === 'Provider'){
+            this.id = id;
+            this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
+            this.mapAddress = "Map Direction To Service Provider";
+        }
+        if (type === 'Receiver'){
+            this.id = id;
+            this.panel.initMap(this.id, this.deliveryAddress, this.destinationAddress);
+            this.mapAddress = "Map Direction from Service Provider to Receiver";
+        }
     }
 
     addProviderDistanceAndDuration(requests: any){
