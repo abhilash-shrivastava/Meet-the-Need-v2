@@ -163,6 +163,12 @@ export class ServiceProviderComponent {
   selectParcel(parcel){
         parcel['serviceProvider'] = this.model;
         this.parcelOrderSelected = true;
+        this.card_tab=1;
+        this.mapLoadAssignedService(parcel._id + 'selected-parcel', parcel.currentAddreddaddressLine1 + ' ' + parcel.currentAddreddaddressLine2 + ' ' + parcel.currentCity
+      + ' ' + parcel.currentState + ' ' + parcel.currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
+      + ' ' + this.model.currentState + ' ' + this.model.currentZip, parcel.deliveryAddreddaddressLine1 + ' ' + parcel.deliveryAddreddaddressLine2 + ' ' + parcel.deliveryCity
+      + ' ' + parcel.deliveryState + ' ' + parcel.deliveryZip, this.model.destinationAddreddaddressLine1 + ' ' + this.model.destinationAddreddaddressLine2 + ' ' + this.model.destinationCity
+      + ' ' + this.model.destinationState + ' ' + this.model.destinationZip, 'Sender');
         this.selectParcelOrder(parcel)
     }
 

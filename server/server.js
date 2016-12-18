@@ -262,6 +262,10 @@ var assignParcelForApproval =  function (data, callback) {
   responseToSender = [];
   responseToSender.push(data);
   callback(responseToSender);
+  db.collection('parcelSender').deleteOne({"_id": ObjectId(data._id)}, function (err, result) {
+    if (err) return console.log(err);
+    console.log('Deleted from parcel Sender');
+  });
   sendAssignedEmailToProvider(data, data.serviceProvider);
   sendAssignedEmailToSender (data, data.serviceProvider);
   sendAssignedEmailToReceiver(data, data.serviceProvider);

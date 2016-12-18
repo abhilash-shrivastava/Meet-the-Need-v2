@@ -307,7 +307,7 @@
                 </div>
                 <!--<h4>{{mapAddress}}</h4>-->
 
-                <button class="resubmit-button" (click)="selectParcel(request)">Select</button>
+                <button class="resubmit-button" (click)="selectParcel(request); $event.stopPropagation()">Select</button>
 
             </div>
             <div class="flex-item" style="margin: 10px">
@@ -321,33 +321,31 @@
     </pagination-controls>
 </div>
 
-<div  *ngIf="loggedIn()" class="form-style-10" [hidden]="!parcelOrderSelected || !submitted || isLoading">
-    <h1>Selected Request</h1>
-    <h2>You have selected the following parcel request</h2>
+<div class="matches"  *ngIf="loggedIn()" [hidden]="!parcelOrderSelected || !submitted || isLoading">
     <div *ngIf="requests" >
-            <ul *ngFor="let request of requests " class="form-style-10-assign">
+            <ul *ngFor="let request of requests">
                 <div class="match">
                     <div class="form-style-10 match-content">
-                        <h3>Request Details:</h3>
+                        <h3>Selected Request:</h3>
                         <div class="card text-xs-center">
                             <div class="card-header">
                                 <ul class="nav nav-tabs card-header-tabs">
                                     <li class="nav-item">
-                                        <a class="nav-link active" (click)="card_tab=1; mapLoadAssignedService(request._id + 'service-provider', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                                        <a class="nav-link active" (click)="card_tab=1; mapLoadAssignedService(request._id + 'selected-parcel', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
                        + ' ' + request.currentState + ' ' + request.currentZip, model.currentAddreddaddressLine1 + ' ' + model.currentAddreddaddressLine2 + ' ' + model.currentCity
                        + ' ' + model.currentState + ' ' + model.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
                        + ' ' + request.deliveryState + ' ' + request.deliveryZip, model.destinationAddreddaddressLine1 + ' ' + model.destinationAddreddaddressLine2 + ' ' + model.destinationCity
                        + ' ' + model.destinationState + ' ' + model.destinationZip, 'Sender')">Parcel Details</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" (click)="card_tab=2; mapLoadAssignedService(request._id + 'service-provider', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                                        <a class="nav-link" (click)="card_tab=2; mapLoadAssignedService(request._id + 'selected-parcel', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
                        + ' ' + request.currentState + ' ' + request.currentZip, model.currentAddreddaddressLine1 + ' ' + model.currentAddreddaddressLine2 + ' ' + model.currentCity
                        + ' ' + model.currentState + ' ' + model.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
                        + ' ' + request.deliveryState + ' ' + request.deliveryZip, model.destinationAddreddaddressLine1 + ' ' + model.destinationAddreddaddressLine2 + ' ' + model.destinationCity
                        + ' ' + model.destinationState + ' ' + model.destinationZip, 'Sender')">Sender</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" (click)="card_tab=3; mapLoadAssignedService(request._id + 'service-provider', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
+                                        <a class="nav-link" (click)="card_tab=3; mapLoadAssignedService(request._id + 'selected-parcel', request.currentAddreddaddressLine1 + ' ' + request.currentAddreddaddressLine2 + ' ' + request.currentCity
                        + ' ' + request.currentState + ' ' + request.currentZip, model.currentAddreddaddressLine1 + ' ' + model.currentAddreddaddressLine2 + ' ' + model.currentCity
                        + ' ' + model.currentState + ' ' + model.currentZip, request.deliveryAddreddaddressLine1 + ' ' + request.deliveryAddreddaddressLine2 + ' ' + request.deliveryCity
                        + ' ' + request.deliveryState + ' ' + request.deliveryZip, model.destinationAddreddaddressLine1 + ' ' + model.destinationAddreddaddressLine2 + ' ' + model.destinationCity
@@ -433,7 +431,7 @@
                     </div>
                     <div class="flex-item" style="margin: 10px">
                         <h4 style="background-color: #0273D4; color: white; padding: 5px; width: 500px">{{mapAddress}}</h4>
-                        <div id="{{request._id}}service-provider" style="height: 400px; background-color: white; margin-right: 20%; padding: 5px"></div>
+                        <div id="{{request._id}}selected-parcel" style="height: 400px; background-color: white; margin-right: 20%; padding: 5px"></div>
                     </div>
                 </div>
             </ul>
