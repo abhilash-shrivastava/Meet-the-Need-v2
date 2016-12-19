@@ -145,13 +145,32 @@
                 <div [hidden]="segment !== 6">
                     <div class="section"><span>{{segment}}</span>Parcel Carrying Capacity</div>
                     <div class="inner-wrap">
-                        <label>Max. Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.maxParcelWeight" required [ngModelOptions]="{standalone: true}"></label>
+                        <label>Max. Parcel Weight <input type="number" placeholder="in oz" [(ngModel)]="model.maxParcelWeight" (ngModelChange)="getParcelPrice()" required [ngModelOptions]="{standalone: true}"></label>
                         <label>Max Parcel Dimensions </label>
-                        <label>Height (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelHeight" required [ngModelOptions]="{standalone: true}"></label>
-                        <label>Length (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.maxParcelLength" required [ngModelOptions]="{standalone: true}"></label>
-                        <label>Width (approx.) <input type="number"  placeholder="in cm" [(ngModel)]="model.maxParcelWidth" required [ngModelOptions]="{standalone: true}"></label>
+                        <label>Height (approx.) <input type="number" placeholder="in inch" [(ngModel)]="model.maxParcelHeight" (ngModelChange)="getParcelPrice()" required [ngModelOptions]="{standalone: true}"></label>
+                        <label>Length (approx.) <input type="number" placeholder="in inch" [(ngModel)]="model.maxParcelLength" (ngModelChange)="getParcelPrice()" required [ngModelOptions]="{standalone: true}"></label>
+                        <label>Width (approx.) <input type="number"  placeholder="in inch" [(ngModel)]="model.maxParcelWidth" (ngModelChange)="getParcelPrice()" required [ngModelOptions]="{standalone: true}"></label>
+                        <label>Parcel Delivery Charge (approx) <input type="number"  placeholder="in USD" [(ngModel)]="model.expectedParcelDeliveryCharge" required [ngModelOptions]="{standalone: true}"></label>
                     </div>
-
+                    <div *ngIf="parcelRates && parcelRates.length>0">
+                        <label>Standard Parcel Charges</label>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Carrier</th>
+                                <th>Service</th>
+                                <th>Price</th>
+                            </tr>
+                            </thead>
+                            <tbody *ngFor="let rate of parcelRates">
+                                <tr>
+                                    <td>{{rate.carrier}}</td>
+                                    <td>{{rate.service}}</td>
+                                    <td>${{rate.rate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="submit-button pull-right">
                         <input type="submit" name="Submit"/>
                     </div>

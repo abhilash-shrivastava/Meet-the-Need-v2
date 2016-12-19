@@ -23,7 +23,8 @@ var jwtCheck = jwt({
   secret: new Buffer(auth0Settings.secret, 'base64'),
   audience: auth0Settings.audience
 });
-
+var apiKey = 'OHqPyicFcGk6b5LEu7gbrw';
+var easypost = require('node-easypost')(apiKey);
 
 
 var db;
@@ -194,6 +195,66 @@ app.post('/reject-request', function (req, res) {
     res.send(JSON.stringify(response));
   })
 });
+
+app.use('/parcel-price', jwtCheck);
+
+app.post('/parcel-price', function (req, res) {
+  res.connection.setTimeout(0);
+  getParcelRates(req.body, function(response){
+    res.send(JSON.stringify(response));
+  })
+});
+
+var getParcelRates = function(parcelDetails, callback) {
+  // set addresses
+  var toAddress = {
+    "street1": parcelDetails.destinationAddreddaddressLine1,
+    "street 2": parcelDetails.destinationAddreddaddressLine2,
+    "city": parcelDetails.destinationCity,
+    "state": parcelDetails.destinationState,
+    "zip": parcelDetails.destinationZip,
+    "country": 'US'
+  };
+
+  var fromAddress = {
+    "street1": parcelDetails.currentAddreddaddressLine1,
+    "street2": parcelDetails.currentAddreddaddressLine2,
+    "city": parcelDetails.currentCity,
+    "state": parcelDetails.currentState,
+    "zip": parcelDetails.currentZip,
+    "country": 'US'
+  };
+
+  var parcel={
+    "length": parseInt(parcelDetails.maxParcelLength),
+    "width": parseInt(parcelDetails.maxParcelWidth),
+    "height": parseInt(parcelDetails.maxParcelHeight),
+    "weight": parseInt(parcelDetails.maxParcelWeight)
+  };
+
+// create shipment
+  easypost.Shipment.create({
+    to_address: toAddress,
+    from_address: fromAddress,
+    parcel: parcel
+  }, function(err, shipment) {
+    if (err){
+      console.error(err);
+      return
+    }
+    var rates = [];
+    if (shipment.rates.length > 0){
+      for (var index in shipment.rates) {
+        var rate = {};
+        rate.service = shipment.rates[index].service;
+        rate.carrier = shipment.rates[index].carrier;
+        rate.rate = shipment.rates[index].rate;
+        rates.push(rate)
+      }
+    }
+    callback(rates);
+  });
+};
 
 var assignProvider =  function (data, callback) {
   if (data._id != null){

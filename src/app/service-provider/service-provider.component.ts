@@ -10,13 +10,14 @@ import {GoogleApiService} from "../services/googleAPIService.service";
 import {Panel} from "../profile/panel";
 import {GeoByteService} from "../services/geobyte.service";
 import {PaginationService} from "ng2-pagination";
+import {PriceCalculatorService} from "../services/priceCalculator.service";
 
 
 @Component({
     selector: 'service-provider',
     templateUrl: './service-provider.component.html',
     styleUrls: ['./service-provider.component.css'],
-    providers: [ ServiceProviderCRUDService, Panel, GoogleApiService, GeoByteService, PaginationService ],
+    providers: [ ServiceProviderCRUDService, Panel, GoogleApiService, GeoByteService, PaginationService, PriceCalculatorService ],
 })
 
 export class ServiceProviderComponent {
@@ -68,6 +69,7 @@ export class ServiceProviderComponent {
     class6 = 'btn btn-default btn-circle';
     geocoder: any;
     card_tab = 1;
+    parcelRates: any;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -131,7 +133,8 @@ export class ServiceProviderComponent {
     status: string;
     constructor(private panel: Panel, private geoByteService: GeoByteService,
                 private googleApi:GoogleApiService,
-        private serviceProviderCRUDService: ServiceProviderCRUDService) {
+                private serviceProviderCRUDService: ServiceProviderCRUDService,
+                private priceCalculatorService: PriceCalculatorService) {
     }
   
     mapLoadAssignedService(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, type:any){
@@ -495,6 +498,19 @@ export class ServiceProviderComponent {
             );
 
     }
+  
+  getParcelPrice(){
+    if (!this.model.maxParcelHeight && !this.model.maxParcelLength && !this.model.maxParcelWidth && !this.model.maxParcelWeigth) { return; }
+    //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+    this.priceCalculatorService.getParcelPrice(this.model)
+      .subscribe(
+        data  => {
+          this.parcelRates = data;
+        },
+        error =>  this.errorMessage = <any>error
+      );
+    
+  }
   
   getNearByCities(lat:any, lng:any, radius:any){
     if (!lat || !lng || !radius) { return; }
