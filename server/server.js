@@ -370,7 +370,7 @@ var assignProviderForApproval =  function (data, callback) {
   db.collection('providerAssigned').insertOne(data, function(err, result){
     if (err) return console.log(err);
   responseToSender = [];
-  responseToSender.push(data.serviceProvider);
+  responseToSender.push(data);
   callback(responseToSender);
   sendAssignedEmailToProvider(data, data.serviceProvider);
   sendAssignedEmailToSender (data, data.serviceProvider);

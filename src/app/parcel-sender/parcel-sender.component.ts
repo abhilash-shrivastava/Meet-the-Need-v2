@@ -9,13 +9,14 @@ import { ParcelSenderCRUDService } from './../services/parcel-sender-crud.servic
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {Panel} from "../profile/panel";
 import {ActivatedRoute } from '@angular/router';
+import {PaginationService} from "ng2-pagination";
 
 
 @Component({
     selector: 'parcel-sender',
     templateUrl: './parcel-sender.component.html',
     styleUrls: ['./parcel-sender.component.css'],
-    providers: [ ParcelSenderCRUDService, Panel, GoogleApiService ]
+    providers: [ ParcelSenderCRUDService, Panel, GoogleApiService, PaginationService ]
 })
 
 export class ParcelSenderComponent {
@@ -105,7 +106,8 @@ export class ParcelSenderComponent {
     constructor( private panel: Panel,
                  public route: ActivatedRoute,
                  private googleApi:GoogleApiService,
-        private parcelSenderCRUDService: ParcelSenderCRUDService) {
+                 private parcelSenderCRUDService: ParcelSenderCRUDService,
+                private paginationService: PaginationService) {
     }
 
     selectProvider(provider){
@@ -137,7 +139,6 @@ export class ParcelSenderComponent {
             this.sub = this.route
               .params
               .subscribe(params => {
-                  // Récupération des valeurs de l'URL
                   this.profile["id"] = params['id'];
                   this.model["_id"] = params['id'];
                   console.log(this.profile.id);
@@ -180,6 +181,18 @@ export class ParcelSenderComponent {
                 + ' ' + this.model.currentState + ' ' + this.model.currentZip, req, function (req: any, distanceAndDurationToSender: any) {
                 requests[req]["ProviderDistanceAndDuration"] = distanceAndDurationToSender;
                 return distanceAndDurationToSender;
+            });
+        }
+    }
+    addReceiverDistanceAndDuration(requests: any){
+        for (var request in requests){
+            var req = request
+            //noinspection TypeScriptUnresolvedVariable
+            this.panel.getDistanceAndDuration(requests[request].destinationAddreddaddressLine1 + ' ' + requests[request].destinationAddreddaddressLine2 + ' ' + requests[request].destinationCity
+              + ' ' + requests[request].destinationState + ' ' + requests[request].destinationZip, this.model.deliveryAddreddaddressLine1 + ' ' + this.model.deliveryAddreddaddressLine2 + ' ' + this.model.deliveryCity
+              + ' ' + this.model.deliveryState + ' ' + this.model.deliveryZip, req, function (req: any, distanceAndDurationToReceiver: any) {
+                requests[req]["ReceiverDistanceAndDuration"] = distanceAndDurationToReceiver;
+                return distanceAndDurationToReceiver;
             });
         }
     }
@@ -336,6 +349,7 @@ export class ParcelSenderComponent {
                     this.requests = [];
                     this.requests = data;
                     this.addProviderDistanceAndDuration(this.requests);
+                    this.addReceiverDistanceAndDuration(this.requests);
                     if(this.requests.length > 0){
                         console.log(this.showDetails);
                         this.showDetails = true;
@@ -359,6 +373,7 @@ export class ParcelSenderComponent {
                 data  => {
                     this.requests = [];
                     this.requests = data;
+                    console.log(this.requests);
                     if(this.requests.length > 0){
                         this.showDetails = true;
                     }else{
