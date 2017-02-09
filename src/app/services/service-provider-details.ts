@@ -44,4 +44,5 @@ export class ServiceProviderDetails{
     currentCityLat: any;
     currentCityLng: any;
     nearByCitiesArray: any;
+    expectedParcelDeliveryCharge: number
 }

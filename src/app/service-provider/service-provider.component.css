@@ -406,3 +406,21 @@ div.inline { float:left; }
     width: 33.33% !important;
     text-align: center;
 }
+
+.matches {
+    margin-left: 350px;
+}
+
+.match-content {
+    margin-left: -5%;
+}
+
+.match{
+    display:flex;
+}
+.fixed{
+    width: 450px;
+}
+.flex-item{
+    flex-grow: 1;
+}

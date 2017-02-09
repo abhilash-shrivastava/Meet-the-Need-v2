@@ -54,20 +54,26 @@ export class AllServiceRequestsComponent{
             this.rejectRequest({requestId: requestId, requestType: requestType});
         }
     }
-
-    mapLoadAssignedService(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
-
+    
+    mapLoadAssignedService(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, type:any){
+        
         this.currentServiceAddress = currentServiceAddress;
         this.currentSenderAddress = currentSenderAddress;
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
-
-        if (this.id !== id && (status === 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender')){
+        
+        if (this.id !== id && type === 'Title'){
             this.id = id;
             this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
             this.mapAddress = "Map Direction To Parcel Sender";
         }
-        if (this.id !== id && (status === 'Parcel Given To Service Provider' || status ==='Parcel Collected From Sender' || status ==='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+        
+        if (type === 'Sender'){
+            this.id = id;
+            this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
+            this.mapAddress = "Map Direction To Parcel Sender";
+        }
+        if (type === 'Receiver'){
             this.id = id;
             this.panel.initMap(this.id, this.destinationAddress, this.deliveryAddress);
             this.mapAddress = "Map Direction To Receiver"

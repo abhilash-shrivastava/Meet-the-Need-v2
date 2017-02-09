@@ -213,3 +213,11 @@ h1 {
 li :first-child {
     color: white;
 }
+
+html {
+    background: url("./../assets/img/667uuswqliy-pablo-garcia-saldana.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
