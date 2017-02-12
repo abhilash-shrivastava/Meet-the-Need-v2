@@ -205,6 +205,18 @@ app.post('/parcel-price', function (req, res) {
   })
 });
 
+app.use('/payment-charge', jwtCheck);
+app.post('/payment-charge', function(req, res) {
+  res.connection.setTimeout(0);
+  saveCard(req.body, function (response) {
+    res.send(JSON.stringify(response));
+  });
+});
+
+var saveCard = function(cardDetails) {
+  console.log(cardDetails);
+};
+
 var getParcelRates = function(parcelDetails, callback) {
   // set addresses
   var toAddress = {

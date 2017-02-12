@@ -24,6 +24,7 @@
                     <li><a *ngIf="loggedIn()" (click)="selection='receiver'" >Parcel Receiver</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a *ngIf="loggedIn()" (click)="selection='payment-charge'">Payment Details</a></li>
                     <li><img src="{{profile.picture}}" style="width: 50px" /></li>
                     <li><a>{{profile.name}}</a></li>
                     <li><a *ngIf="loggedIn()" (click)="logout()" >Logout</a></li>
@@ -49,6 +50,9 @@
 </div>
 <div *ngIf="selection == 'receiver'">
     <receiver-sidebar [selection]="selection" (sidebarChange)="selectionChange($event);"></receiver-sidebar>
+</div>
+<div *ngIf="selection == 'payment-charge'">
+    <payment-sidebar [selection]="selection" (sidebarChange)="selectionChange($event);"></payment-sidebar>
 </div>
 <router-outlet></router-outlet>
 </body>

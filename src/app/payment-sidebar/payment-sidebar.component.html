@@ -1,0 +1,13 @@
+<div id="mySidenav" class="sidenav" [hidden]="!loggedIn()">
+<div>
+    <ul class="sidebar-nav">
+        <li>
+            <label >Payment Details</label>
+            <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+        </li>
+        <li>
+            <a routerLink="/payment-charge" routerLinkActive="active">Add Card</a>
+        </li>
+    </ul>
+</div>
+</div>
