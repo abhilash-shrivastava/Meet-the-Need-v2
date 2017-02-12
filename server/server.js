@@ -227,10 +227,23 @@ var saveCard = function(cardDetails, callback) {
   });
 };
 var chargeCard = function(email, callback) {
-  var cursor = db.collection('cardDetails').find({email: email});
+  var cursor = db.collection('customer').find({email: email});
   cursor.each(function(error, data) {
     if (error) return console.error(error);
-    console.log(data);
+    if (data != null) {
+      stripe.charges.create({
+        amount: 1500, // $15.00 this time
+        currency: "usd",
+        customer: data.id
+      }).then(function(charge) {
+        charge.receipt_email = email;
+        db.collection('chargeDetails').save(charge, function(err, result){
+          if (err) return console.error(err);
+          // callback(200);
+          console.log("saved to charge details");
+        });
+      });
+    }
   })
 };
 
