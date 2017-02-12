@@ -25,7 +25,7 @@ var jwtCheck = jwt({
 });
 var apiKey = 'OHqPyicFcGk6b5LEu7gbrw';
 var easypost = require('node-easypost')(apiKey);
-
+var stripe = require("stripe")("sk_test_kVfd9jhyoTvCG7ILbb5oBft2");
 
 var db;
 var responseToSender = [];
@@ -205,16 +205,33 @@ app.post('/parcel-price', function (req, res) {
   })
 });
 
-app.use('/payment-charge', jwtCheck);
-app.post('/payment-charge', function(req, res) {
+app.use('/save-card', jwtCheck);
+app.post('/save-card', function(req, res) {
   res.connection.setTimeout(0);
   saveCard(req.body, function (response) {
     res.send(JSON.stringify(response));
   });
 });
 
-var saveCard = function(cardDetails) {
-  console.log(cardDetails);
+var saveCard = function(cardDetails, callback) {
+  // Create a Customer:
+  stripe.customers.create({
+    email: cardDetails.email,
+    source: cardDetails.token,
+  }).then(function(customer) {
+    db.collection('customer').save(customer, function(err, result){
+      if (err) return console.error(err);
+      callback(200);
+      console.log("saved to customer");
+    });
+  });
+};
+var chargeCard = function(email, callback) {
+  var cursor = db.collection('cardDetails').find({email: email});
+  cursor.each(function(error, data) {
+    if (error) return console.error(error);
+    console.log(data);
+  })
 };
 
 var getParcelRates = function(parcelDetails, callback) {

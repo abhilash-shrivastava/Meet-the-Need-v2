@@ -11,7 +11,7 @@ export class PaymentService {
   constructor (private http: Http, private jsonp: Jsonp) {}
   
   public saveCard (cardDetails: any) {
-    let saveCardDetailsURL = 'http://localhost:9000/payment-charge';
+    let saveCardDetailsURL = 'http://localhost:9000/save-card';
     let body = JSON.stringify(cardDetails);
     let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
     let options = new RequestOptions({ headers: headers });
