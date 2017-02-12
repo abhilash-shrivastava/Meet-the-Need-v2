@@ -1,12 +1,13 @@
 /**
  * Created by Abhi on 2/9/17.
  */
-import {Component} from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {tokenNotExpired} from "angular2-jwt";
 import {PaymentService} from "../services/payment.service";
 import {error} from "util";
 
 interface ICardDetails {
+  card_name: string;
   card_number: string;
   card_cvc: string;
   exp_month_year: string;
@@ -21,12 +22,14 @@ interface ICardDetails {
 
 export class PaymentChargeComponent {
   private profile: any;
+  private cardAdded: boolean = false;
   private cardDetails: ICardDetails = {
+    card_name: '',
     card_number: '',
     card_cvc: '',
     exp_month_year: ''
   };
-  constructor( private paymentService: PaymentService) {
+  constructor( private paymentService: PaymentService, private zone:NgZone) {
     
   }
   ngOnInit() {
@@ -49,8 +52,8 @@ export class PaymentChargeComponent {
       let cardDetails = response.card;
       cardDetails.token = response.id;
       cardDetails.email = this.profile.email;
+      cardDetails.cardName = this.cardDetails.card_name;
       delete cardDetails['metadata'];
-      delete cardDetails['_proto_'];
       console.log(cardDetails);
       this.saveCard(cardDetails);
     }
@@ -60,6 +63,9 @@ export class PaymentChargeComponent {
     this.paymentService.saveCard(stripeResponse)
       .subscribe(
         data => {
+          this.zone.run(() => {
+            this.cardAdded = true;
+          });
           console.log(data);
         },
         error => {

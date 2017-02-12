@@ -8,12 +8,13 @@ import {tokenNotExpired} from "angular2-jwt/angular2-jwt";
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {PaginationService} from "ng2-pagination/index";
 import { ActivatedRoute, Router, Params } from '@angular/router';
+import {PaymentService} from "../services/payment.service";
 
 @Component({
     selector: 'receiver-sidebar',
     templateUrl: './receiver-sidebar.component.html',
     styleUrls: ['./receiver-sidebar.component.css'],
-    providers: [PaginationService, RequestsService, Panel, GoogleApiService],
+    providers: [PaginationService, RequestsService, Panel, GoogleApiService, PaymentService],
     
 })
 
@@ -52,7 +53,7 @@ export class ReceiverSidebarComponent {
     @Output() sidebarChange = new EventEmitter();
     
     constructor(private requestsService: RequestsService, private route: ActivatedRoute, private router: Router,
-                private panel: Panel) {
+                private panel: Panel, private paymentService: PaymentService) {
     }
     
     ngOnInit(){

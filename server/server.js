@@ -217,8 +217,9 @@ var saveCard = function(cardDetails, callback) {
   // Create a Customer:
   stripe.customers.create({
     email: cardDetails.email,
-    source: cardDetails.token,
+    source: cardDetails.token
   }).then(function(customer) {
+    customer.cardName = cardDetails.cardName;
     db.collection('customer').save(customer, function(err, result){
       if (err) return console.error(err);
       callback(200);
@@ -226,20 +227,19 @@ var saveCard = function(cardDetails, callback) {
     });
   });
 };
-var chargeCard = function(email, callback) {
+var chargeCard = function(email, charge) {
   var cursor = db.collection('customer').find({email: email});
   cursor.each(function(error, data) {
     if (error) return console.error(error);
     if (data != null) {
       stripe.charges.create({
-        amount: 1500, // $15.00 this time
+        amount: charge*100,
         currency: "usd",
         customer: data.id
       }).then(function(charge) {
         charge.receipt_email = email;
         db.collection('chargeDetails').save(charge, function(err, result){
           if (err) return console.error(err);
-          // callback(200);
           console.log("saved to charge details");
         });
       });
@@ -762,6 +762,7 @@ var parcelReceivingRequest = function (data, callback) {
 var parcelStatusChange = function (data, callback) {
   var cursor = db.collection('providerAssigned').find( { "_id": ObjectId(data.parcelId)} );
   cursor.each(function(err, parcel){
+    console.log(parcel);
     if (parcel !== null) {
       var status='';
       if (parcel.senderEmail === data.email){
@@ -781,6 +782,9 @@ var parcelStatusChange = function (data, callback) {
           status = "Assigned To Service Provider"
         }
       }else if (parcel.receiverEmail === data.email){
+        if (parcel.serviceProvider.expectedParcelDeliveryCharge) {
+          chargeCard(parcel.senderEmail, parcel.serviceProvider.expectedParcelDeliveryCharge)
+        }
         role = "Receiver";
         status = "Parcel Received From Service Provider"
       }

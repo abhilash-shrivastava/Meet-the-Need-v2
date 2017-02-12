@@ -5,13 +5,14 @@
     <title>Credit Card</title>
 </head>
 <body>
-<div *ngIf="loggedIn()">
+<div *ngIf="loggedIn()" [hidden] ='cardAdded'>
     <div class="container">
         <div class="form-style-10 inline">
             <h1>Add Card</h1>
             <form (ngSubmit) = "onSubmit()" #serviceProviderDetailsForm="ngForm">
                 <div class="section"><span></span>Credit Card Details</div>
                 <div class="inner-wrap">
+                    <label>Card Number <input type="text" placeholder="VISA/MASTER..." [(ngModel)]="cardDetails.card_name" required [ngModelOptions]="{standalone: true}"/></label>
                     <label>Card Number <input type="text" placeholder="xxxx-xxxx-xxxx-xxxx" [(ngModel)]="cardDetails.card_number" required [ngModelOptions]="{standalone: true}"/></label>
                     <label>Card CVC <input type="text" placeholder="xxx" [(ngModel)]="cardDetails.card_cvc" required [ngModelOptions]="{standalone: true}"/></label>
                     <label>Expiry Month and Year<input type="month" [(ngModel)]="cardDetails.exp_month_year" required [ngModelOptions]="{standalone: true}"/></label>
@@ -21,16 +22,16 @@
         </div>
     </div>
 </div>
-<!--<div  *ngIf="loggedIn()">-->
-    <!--<div id="wrapper" style="text-align: center" *ngIf="requests" [hidden]="!showDetails">-->
-        <!--<div id="yourdiv" style="display: inline-block; padding: 20px; background-color: #279636; width: 100%; font-size: 30px; color: white; margin: 15px">Matches</div>-->
-    <!--</div>-->
-    <!--<div class="form-style-10">-->
-        <!--<div class = "alert alert-success">-->
-            <!--Card Added!!!!!-->
-        <!--</div>-->
-        <!--<button class="resubmit-button" (click)="initializeFlag()">Add Another Card</button>-->
-    <!--</div>-->
-<!--</div>-->
+<div  *ngIf="loggedIn()" [hidden] ='!cardAdded'>
+    <div id="wrapper" style="text-align: center" *ngIf="requests" [hidden]="!showDetails">
+        <div id="yourdiv" style="display: inline-block; padding: 20px; background-color: #279636; width: 100%; font-size: 30px; color: white; margin: 15px">Matches</div>
+    </div>
+    <div class="form-style-10">
+        <div class = "alert alert-success">
+            Card Added!!!!!
+        </div>
+        <button class="resubmit-button" (click)="cardAdded = false">Add Another Card</button>
+    </div>
+</div>
 </body>
 </html>
