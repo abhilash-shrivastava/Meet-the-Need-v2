@@ -10,13 +10,14 @@ import {GoogleApiService} from "../services/googleAPIService.service";
 import {Panel} from "../profile/panel";
 import {ActivatedRoute } from '@angular/router';
 import {PaginationService} from "ng2-pagination";
+import {PriceCalculatorService} from "../services/priceCalculator.service";
 
 
 @Component({
     selector: 'parcel-sender',
     templateUrl: './parcel-sender.component.html',
     styleUrls: ['./parcel-sender.component.css'],
-    providers: [ ParcelSenderCRUDService, Panel, GoogleApiService, PaginationService ]
+    providers: [ ParcelSenderCRUDService, Panel, GoogleApiService, PaginationService, PriceCalculatorService ]
 })
 
 export class ParcelSenderComponent {
@@ -60,6 +61,7 @@ export class ParcelSenderComponent {
     class6 = 'btn btn-default btn-circle';
     geocoder: any;
     card_tab = 1;
+    parcelRates: any;
     private sub: any;      // -> Subscriber
     componentForm = {
         street_number: 'short_name',
@@ -107,7 +109,7 @@ export class ParcelSenderComponent {
                  public route: ActivatedRoute,
                  private googleApi:GoogleApiService,
                  private parcelSenderCRUDService: ParcelSenderCRUDService,
-                private paginationService: PaginationService) {
+                private paginationService: PaginationService, private priceCalculatorService: PriceCalculatorService) {
     }
 
     selectProvider(provider){
@@ -412,6 +414,19 @@ export class ParcelSenderComponent {
                 error =>  this.errorMessage = <any>error
             );
 
+    }
+    
+    getParcelPrice(){
+        if (!this.model.parcelHeight && !this.model.parcelLength && !this.model.parcelWidth && !this.model.parcelWeigth) { return; }
+        //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+        this.priceCalculatorService.getParcelPrice(this.model)
+          .subscribe(
+            data  => {
+                this.parcelRates = data;
+            },
+            error =>  this.errorMessage = <any>error
+          );
+        
     }
 
     onChange(selectedState) {

@@ -11,8 +11,8 @@ export class PriceCalculatorService{
   constructor (private http: Http) {}
   
   private priceCalculatorUrl = 'http://localhost:9000/parcel-price';
-  getParcelPrice (serviceProviderDetails: ServiceProviderDetails ): Observable<ServiceProviderDetails> {
-    let body = JSON.stringify(serviceProviderDetails);
+  getParcelPrice (parcelDetails: any ): Observable<ServiceProviderDetails> {
+    let body = JSON.stringify(parcelDetails);
     let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'bearer '+localStorage.getItem('id_token')+'' });
     let options = new RequestOptions({ headers: headers });
     

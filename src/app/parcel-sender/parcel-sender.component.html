@@ -103,12 +103,32 @@
                     <label>From <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.startDeliveryDate" required [ngModelOptions]="{standalone: true}"/></label>
                     <label> To
                         <input type="date" placeholder="YYYY-MM-DD" [(ngModel)]="model.endDeliveryDate" required [ngModelOptions]="{standalone: true}"/></label>
-                    <label>Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.parcelWeight" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>Parcel Weight <input type="number" placeholder="in pound" [(ngModel)]="model.parcelWeight" (ngModelChange)="getParcelPrice()" required [ngModelOptions]="{standalone: true}"></label>
                     <label>Parcel Dimensions </label>
-                    <label>Height (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelHeight" required [ngModelOptions]="{standalone: true}"></label>
-                    <label>Length (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelLength" required [ngModelOptions]="{standalone: true}"></label>
-                    <label>Width (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelWidth" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>Height (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelHeight" (ngModelChange)="getParcelPrice()" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>Length (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelLength" (ngModelChange)="getParcelPrice()" required [ngModelOptions]="{standalone: true}"></label>
+                    <label>Width (approx.) <input type="number" placeholder="in cm" [(ngModel)]="model.parcelWidth" (ngModelChange)="getParcelPrice()" required [ngModelOptions]="{standalone: true}"></label>
                     <label>Disclosure <textarea [(ngModel)]="model.parcelDisclosure" required [ngModelOptions]="{standalone: true}"></textarea></label>
+                    <label>Parcel Delivery Charge (approx) <input type="number"  placeholder="in USD" [(ngModel)]="model.expectedParcelDeliveryCharge" required [ngModelOptions]="{standalone: true}"></label>
+                </div>
+                <div *ngIf="parcelRates && parcelRates.length>0">
+                    <label>Standard Parcel Charges</label>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Carrier</th>
+                            <th>Service</th>
+                            <th>Price</th>
+                        </tr>
+                        </thead>
+                        <tbody *ngFor="let rate of parcelRates">
+                        <tr>
+                            <td>{{rate.carrier}}</td>
+                            <td>{{rate.service}}</td>
+                            <td>${{rate.rate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="submit-button pull-right">
                     <input type="submit" name="Submit"/>

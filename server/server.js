@@ -168,7 +168,6 @@ app.post('/sender-details', function (req, res) {
 });
 
 app.use('/cancel-request', jwtCheck);
-
 app.post('/cancel-request', function (req, res) {
   res.connection.setTimeout(0);
   cancelRequest(req.body, function(response){
@@ -178,7 +177,6 @@ app.post('/cancel-request', function (req, res) {
 
 
 app.use('/update-request', jwtCheck);
-
 app.post('/update-request', function (req, res) {
   res.connection.setTimeout(0);
   updateRequest(req.body, function(response){
@@ -197,7 +195,6 @@ app.post('/reject-request', function (req, res) {
 });
 
 app.use('/parcel-price', jwtCheck);
-
 app.post('/parcel-price', function (req, res) {
   res.connection.setTimeout(0);
   getParcelRates(req.body, function(response){
@@ -227,6 +224,7 @@ var saveCard = function(cardDetails, callback) {
     });
   });
 };
+
 var chargeCard = function(email, charge) {
   var cursor = db.collection('customer').find({email: email});
   cursor.each(function(error, data) {
@@ -249,30 +247,59 @@ var chargeCard = function(email, charge) {
 
 var getParcelRates = function(parcelDetails, callback) {
   // set addresses
-  var toAddress = {
-    "street1": parcelDetails.destinationAddreddaddressLine1,
-    "street 2": parcelDetails.destinationAddreddaddressLine2,
-    "city": parcelDetails.destinationCity,
-    "state": parcelDetails.destinationState,
-    "zip": parcelDetails.destinationZip,
-    "country": 'US'
-  };
+  var toAddress, fromAddress, parcel;
+  if (parcelDetails.senderEmail) {
+    toAddress = {
+      "street1": parcelDetails.deliveryAddreddaddressLine1,
+      "street 2": parcelDetails.deliveryAddreddaddressLine2,
+      "city": parcelDetails.deliveryCity,
+      "state": parcelDetails.deliveryState,
+      "zip": parcelDetails.deliveryZip,
+      "country": 'US'
+    };
 
-  var fromAddress = {
-    "street1": parcelDetails.currentAddreddaddressLine1,
-    "street2": parcelDetails.currentAddreddaddressLine2,
-    "city": parcelDetails.currentCity,
-    "state": parcelDetails.currentState,
-    "zip": parcelDetails.currentZip,
-    "country": 'US'
-  };
+    fromAddress = {
+      "street1": parcelDetails.currentAddreddaddressLine1,
+      "street2": parcelDetails.currentAddreddaddressLine2,
+      "city": parcelDetails.currentCity,
+      "state": parcelDetails.currentState,
+      "zip": parcelDetails.currentZip,
+      "country": 'US'
+    };
 
-  var parcel={
-    "length": parseInt(parcelDetails.maxParcelLength),
-    "width": parseInt(parcelDetails.maxParcelWidth),
-    "height": parseInt(parcelDetails.maxParcelHeight),
-    "weight": parseInt(parcelDetails.maxParcelWeight)
-  };
+    parcel={
+      "length": parseInt(parcelDetails.parcelLength),
+      "width": parseInt(parcelDetails.parcelWidth),
+      "height": parseInt(parcelDetails.parcelHeight),
+      "weight": parseInt(parcelDetails.parcelWeight)
+    };
+
+  } else if (parcelDetails.email) {
+    toAddress = {
+      "street1": parcelDetails.destinationAddreddaddressLine1,
+      "street 2": parcelDetails.destinationAddreddaddressLine2,
+      "city": parcelDetails.destinationCity,
+      "state": parcelDetails.destinationState,
+      "zip": parcelDetails.destinationZip,
+      "country": 'US'
+    };
+
+    fromAddress = {
+      "street1": parcelDetails.currentAddreddaddressLine1,
+      "street2": parcelDetails.currentAddreddaddressLine2,
+      "city": parcelDetails.currentCity,
+      "state": parcelDetails.currentState,
+      "zip": parcelDetails.currentZip,
+      "country": 'US'
+    };
+
+    parcel={
+      "length": parseInt(parcelDetails.maxParcelLength),
+      "width": parseInt(parcelDetails.maxParcelWidth),
+      "height": parseInt(parcelDetails.maxParcelHeight),
+      "weight": parseInt(parcelDetails.maxParcelWeight)
+    };
+  }
 
 // create shipment
   easypost.Shipment.create({
@@ -762,36 +789,42 @@ var parcelReceivingRequest = function (data, callback) {
 var parcelStatusChange = function (data, callback) {
   var cursor = db.collection('providerAssigned').find( { "_id": ObjectId(data.parcelId)} );
   cursor.each(function(err, parcel){
-    console.log(parcel);
     if (parcel !== null) {
       var status='';
+      var setObject;
       if (parcel.senderEmail === data.email){
         var role = "Sender";
         if (parcel.status === "Pending Approval At Parcel Sender"){
-          status = "Assigned To Service Provider"
+          status = "Assigned To Service Provider";
+          setObject= { "status": status, 'finalCharge': parcel.serviceProvider.expectedParcelDeliveryCharge };
         }else if (parcel.status === "Assigned To Service Provider"){
-          status = "Parcel Given To Service Provider"
+          status = "Parcel Given To Service Provider";
+          setObject= { "status": status};
         }
       }else if (parcel.serviceProvider.email === data.email){
         role = "Provider";
         if (parcel.status === "Parcel Given To Service Provider"){
-          status = "Parcel Collected From Sender"
+          status = "Parcel Collected From Sender";
+          setObject= { "status": status};
         }else if (parcel.status === "Parcel Collected From Sender"){
-          status = "Parcel Delivered To Receiver"
+          status = "Parcel Delivered To Receiver";
+          setObject= { "status": status};
         }else if (parcel.status === "Pending Approval At Service Provider"){
-          status = "Assigned To Service Provider"
+          status = "Assigned To Service Provider";
+          setObject= { "status": status, 'finalCharge': parcel.expectedParcelDeliveryCharge };
         }
       }else if (parcel.receiverEmail === data.email){
-        if (parcel.serviceProvider.expectedParcelDeliveryCharge) {
-          chargeCard(parcel.senderEmail, parcel.serviceProvider.expectedParcelDeliveryCharge)
+        if (parcel.finalCharge) {
+          chargeCard(parcel.senderEmail, parcel.finalCharge)
         }
         role = "Receiver";
-        status = "Parcel Received From Service Provider"
+        status = "Parcel Received From Service Provider";
+        setObject= { "status": status};
       }
       db.collection('providerAssigned').updateOne(
         { "_id": ObjectId(data.parcelId)},
         {
-          $set: { "status": status },
+          $set: setObject,
         }, function(err, results) {
           console.log('status updated');
           sendStatusChangeEmail(parcel, status)
