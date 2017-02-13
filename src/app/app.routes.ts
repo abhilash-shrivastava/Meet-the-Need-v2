@@ -13,11 +13,13 @@ import {AllParcelRequestsComponent} from "./all-parcel-requests/all-parcel-reque
 import {ReceiverActionComponent} from "./receiver-action/receiver-action.component";
 import {AllReceiverRequestsComponent} from "./all-receiver-requests/all-receiver-requests.component";
 import {PaymentChargeComponent} from "./payment-charge/payment-charge.component";
+import {PaymentDetailsComponent} from "./payment-details/payment-details.component";
 
 
 export const ROUTES: Routes = [
   { path: '',      component: HomeComponent },
   { path: 'payment-charge',      component: PaymentChargeComponent },
+  { path: 'payment-details',      component: PaymentDetailsComponent },
   {path: 'all-receiver-requests',    component: AllReceiverRequestsComponent},
   {path: 'receiver-action',    component: ReceiverActionComponent},
   {path: 'all-parcel-requests',    component: AllParcelRequestsComponent},

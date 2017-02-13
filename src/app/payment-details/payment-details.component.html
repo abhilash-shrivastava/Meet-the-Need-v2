@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction Details</title>
+</head>
+<body>
+<div *ngIf="loggedIn()" class="matches">
+    <ul *ngFor="let transaction of chargedDetails | paginate: { itemsPerPage: 5, currentPage: p2 } ">
+        <panel [title]="transaction.created">
+            <div class="match">
+                <div class="form-style-10 match-content">
+                    <h3>Transaction Details:</h3>
+                    <div>
+                        <div class="panel panel-success">
+                            <div class="panel-heading">Transaction date :</div>
+                            <div class="panel-body"><label>{{transaction.created}}</label></div>
+                        </div>
+                        <div class="panel panel-success">
+                            <div class="panel-heading">Transaction Amount :</div>
+                            <div class="panel-body">
+                                <label>Amount: {{transaction.amount/100}} {{transaction.currency}}</label>
+                            </div>
+                        </div>
+                        <div class="panel panel-success">
+                            <div class="panel-heading">Transaction Status :</div>
+                            <div class="panel-body">
+                                <label>{{transaction.status}}</label>
+                            </div>
+                        </div>
+                        <div class="panel panel-success">
+                            <div class="panel-heading">Last Four Digits :</div>
+                            <div class="panel-body">
+                                <label>{{transaction.source.last4}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </panel>
+    </ul>
+    <pagination-controls (pageChange)="p2 = $event" #api>
+    </pagination-controls>
+</div>
+</body>
+</html>

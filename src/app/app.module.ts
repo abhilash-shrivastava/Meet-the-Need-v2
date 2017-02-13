@@ -38,6 +38,7 @@ import {CheckboxFilterPipe} from "./pipes/checkbox-filter.pipe";
 import {DndModule} from 'ng2-dnd';
 import {PaymentChargeComponent} from "./payment-charge/payment-charge.component";
 import {PaymentSidebarComponent} from "./payment-sidebar/payment-sidebar.component";
+import {PaymentDetailsComponent} from "./payment-details/payment-details.component";
 
 
 
@@ -84,7 +85,8 @@ type StoreType = {
     ReceiverSidebarComponent,
     CheckboxFilterPipe,
     PaymentChargeComponent,
-    PaymentSidebarComponent
+    PaymentSidebarComponent,
+    PaymentDetailsComponent
   ],
   imports: [ // import Angular's modules
     BrowserModule,

@@ -210,6 +210,14 @@ app.post('/save-card', function(req, res) {
   });
 });
 
+app.use('/charged-details', jwtCheck);
+app.post('/charged-details', function(req, res) {
+  res.connection.setTimeout(0);
+  getChargedDetails(req.body, function (response) {
+    res.send(JSON.stringify(response));
+  });
+});
+
 var saveCard = function(cardDetails, callback) {
   // Create a Customer:
   stripe.customers.create({
@@ -225,7 +233,7 @@ var saveCard = function(cardDetails, callback) {
   });
 };
 
-var chargeCard = function(email, charge) {
+var chargeCard = function(id, email, charge) {
   var cursor = db.collection('customer').find({email: email});
   cursor.each(function(error, data) {
     if (error) return console.error(error);
@@ -235,12 +243,33 @@ var chargeCard = function(email, charge) {
         currency: "usd",
         customer: data.id
       }).then(function(charge) {
-        charge.receipt_email = email;
+        charge.email = email;
+        charge.created = new Date(charge.created*1000).split('T')[0];
         db.collection('chargeDetails').save(charge, function(err, result){
           if (err) return console.error(err);
           console.log("saved to charge details");
+          db.collection('providerAssigned').updateOne(
+            { "_id": ObjectId(id)},
+            {
+              $set: {'transaction_id': charge.id},
+            }, function(err, results) {
+              console.log('transaction id attached');
+            });
         });
       });
+    }
+  })
+};
+
+var getChargedDetails = function(data, callback) {
+  var chargedDetails = [];
+  var cursor = db.collection('chargeDetails').find({email: data.email});
+  cursor.each(function(error, data) {
+    if (error) return console.error(error);
+    if (data != null) {
+      chargedDetails.push(data);
+    }else {
+      callback(chargedDetails);
     }
   })
 };
@@ -815,7 +844,7 @@ var parcelStatusChange = function (data, callback) {
         }
       }else if (parcel.receiverEmail === data.email){
         if (parcel.finalCharge) {
-          chargeCard(parcel.senderEmail, parcel.finalCharge)
+          chargeCard(data.parcelId, parcel.senderEmail, parcel.finalCharge)
         }
         role = "Receiver";
         status = "Parcel Received From Service Provider";
