@@ -375,8 +375,11 @@
                         </div>
                         <div [hidden]="card_tab!==1">
                             <div class="panel panel-success">
-                                <div class="panel-heading">Parcel Description :</div>
-                                <div class="panel-body"><label>{{request.parcelDisclosure}}</label></div>
+                                <div class="panel-heading">Parcel Description & Charge :</div>
+                                <div class="panel-body">
+                                    <label>Description: {{request.parcelDisclosure}}</label>
+                                    <label>Charges: {{request.expectedParcelDeliveryCharge}}</label>
+                                </div>
                             </div>
                             <div class="panel panel-success">
                                 <div class="panel-heading">Parcel Dimensions :</div>
