@@ -219,13 +219,23 @@ app.post('/charged-details', function(req, res) {
 });
 
 var saveCard = function(cardDetails, callback) {
-  // Create a Customer:
-  stripe.customers.create({
+  stripe.accounts.create({
+    managed: true,
+    country: 'US',
     email: cardDetails.email,
-    source: cardDetails.token
-  }).then(function(customer) {
-    customer.cardName = cardDetails.cardName;
-    db.collection('customer').save(customer, function(err, result){
+    tos_acceptance: {
+      date: Math.floor(+ new Date()/1000),
+      ip: "127.0.0.1"
+    },
+    external_account: cardDetails.token
+  }, function(err, account) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    // asynchronously called
+    account.email = cardDetails.email;
+    db.collection('account').save(account, function(err, result){
       if (err) return console.error(err);
       callback(200);
       console.log("saved to customer");
@@ -234,32 +244,63 @@ var saveCard = function(cardDetails, callback) {
 };
 
 var chargeCard = function(id, email, charge) {
-  var cursor = db.collection('customer').find({email: email});
+  var cursor = db.collection('account').find({email: email});
   cursor.each(function(error, data) {
     if (error) return console.error(error);
     if (data != null) {
       stripe.charges.create({
         amount: charge*100,
         currency: "usd",
-        customer: data.id
+        source: data.id
       }).then(function(charge) {
         charge.email = email;
-        charge.created = new Date(charge.created*1000).split('T')[0];
+        charge.transaction_type = 'deduction'
+        charge.created = new Date(charge.created*1000);
         db.collection('chargeDetails').save(charge, function(err, result){
           if (err) return console.error(err);
           console.log("saved to charge details");
           db.collection('providerAssigned').updateOne(
             { "_id": ObjectId(id)},
             {
-              $set: {'transaction_id': charge.id},
+              $set: {'deduction_transaction_id': charge.id},
             }, function(err, results) {
-              console.log('transaction id attached');
+              console.log('deduction transaction id attached');
             });
         });
       });
     }
   })
 };
+
+var makePayment = function(id, email, charge) {
+  var cursor = db.collection('customer').find({email: email});
+  cursor.each(function(error, data) {
+    if (error) return console.error(error);
+    if (data != null) {
+      stripe.transfers.create({
+        amount: charge*100,
+        currency: "usd",
+        customer: data.id
+      }).then(function(pay) {
+        pay.email = email;
+        pay.transaction_type = 'pay'
+        pay.created = new Date(pay.created*1000).split('T')[0];
+        db.collection('chargeDetails').save(pay, function(err, result){
+          if (err) return console.error(err);
+          console.log("saved to charge details");
+          db.collection('providerAssigned').updateOne(
+            { "_id": ObjectId(id)},
+            {
+              $set: {'pay_transaction_id': pay.id},
+            }, function(err, results) {
+              console.log('pay transaction id attached');
+            });
+        });
+      });
+    }
+  })
+};
+
 
 var getChargedDetails = function(data, callback) {
   var chargedDetails = [];
@@ -845,6 +886,7 @@ var parcelStatusChange = function (data, callback) {
       }else if (parcel.receiverEmail === data.email){
         if (parcel.finalCharge) {
           chargeCard(data.parcelId, parcel.senderEmail, parcel.finalCharge)
+          // makePayment(data.parcelId, parcel.serviceProvider.email, parcel.finalCharge*0.9);
         }
         role = "Receiver";
         status = "Parcel Received From Service Provider";

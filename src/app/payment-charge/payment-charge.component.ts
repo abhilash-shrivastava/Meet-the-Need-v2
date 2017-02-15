@@ -7,10 +7,13 @@ import {PaymentService} from "../services/payment.service";
 import {error} from "util";
 
 interface ICardDetails {
-  card_name: string;
+  first_name: string;
+  last_name: string;
   card_number: string;
   card_cvc: string;
   exp_month_year: string;
+  DOB: any;
+  type: string
 }
 
 @Component({
@@ -24,10 +27,13 @@ export class PaymentChargeComponent {
   private profile: any;
   private cardAdded: boolean = false;
   private cardDetails: ICardDetails = {
-    card_name: '',
+    first_name: '',
+    last_name: '',
     card_number: '',
     card_cvc: '',
-    exp_month_year: ''
+    exp_month_year: '',
+    DOB: '',
+    type: ''
   };
   constructor( private paymentService: PaymentService, private zone:NgZone) {
     
@@ -42,7 +48,8 @@ export class PaymentChargeComponent {
       number: this.cardDetails.card_number,
       cvc: this.cardDetails.card_cvc,
       exp_month: parseInt(this.cardDetails.exp_month_year.split('-')[1]),
-      exp_year: parseInt(this.cardDetails.exp_month_year.split('-')[0])
+      exp_year: parseInt(this.cardDetails.exp_month_year.split('-')[0]),
+      currency: "usd",
     };
     Stripe.card.createToken(cardObject, this.stripeResponseHandler);
   }
@@ -52,7 +59,10 @@ export class PaymentChargeComponent {
       let cardDetails = response.card;
       cardDetails.token = response.id;
       cardDetails.email = this.profile.email;
-      cardDetails.cardName = this.cardDetails.card_name;
+      cardDetails.first_name = this.cardDetails.first_name;
+      cardDetails.last_name = this.cardDetails.last_name;
+      cardDetails.DOB = this.cardDetails.DOB;
+      cardDetails.type = this.cardDetails.type;
       delete cardDetails['metadata'];
       console.log(cardDetails);
       this.saveCard(cardDetails);
