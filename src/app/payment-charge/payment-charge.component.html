@@ -12,16 +12,16 @@
             <form (ngSubmit) = "onSubmit()" #serviceProviderDetailsForm="ngForm">
                 <div class="section"><span></span>Credit Card Details</div>
                 <div class="inner-wrap">
-                    <label>First Name <input type="text" placeholder="" [(ngModel)]="cardDetails.first_name" required [ngModelOptions]="{standalone: true}"/></label>
-                    <label>Last Name <input type="text" placeholder="" [(ngModel)]="cardDetails.last_name" required [ngModelOptions]="{standalone: true}"/></label>
+                    <!--<label>First Name <input type="text" placeholder="" [(ngModel)]="cardDetails.first_name" required [ngModelOptions]="{standalone: true}"/></label>-->
+                    <!--<label>Last Name <input type="text" placeholder="" [(ngModel)]="cardDetails.last_name" required [ngModelOptions]="{standalone: true}"/></label>-->
                     <label>Card Number <input type="text" placeholder="xxxx-xxxx-xxxx-xxxx" [(ngModel)]="cardDetails.card_number" required [ngModelOptions]="{standalone: true}"/></label>
                     <label>Card CVC <input type="text" placeholder="xxx" [(ngModel)]="cardDetails.card_cvc" required [ngModelOptions]="{standalone: true}"/></label>
                     <label>Expiry Month and Year<input type="month" [(ngModel)]="cardDetails.exp_month_year" required [ngModelOptions]="{standalone: true}"/></label>
                     <label>Date of Birth <input type="date" placeholder="" [(ngModel)]="cardDetails.DOB" required [ngModelOptions]="{standalone: true}"/></label>
-                    <select [(ngModel)]="cardDetails.type" required [ngModelOptions]="{standalone: true}">
-                        <option value="individual">individual</option>
-                        <option value="business">business</option>
-                    </select>
+                    <!--<select [(ngModel)]="cardDetails.type" required [ngModelOptions]="{standalone: true}">-->
+                        <!--<option value="individual">individual</option>-->
+                        <!--<option value="business">business</option>-->
+                    <!--</select>-->
                 </div>
                 <div ><input class="resubmit-button" type="submit" name="Add"/></div>
             </form>
@@ -36,7 +36,7 @@
         <div class = "alert alert-success">
             Card Added!!!!!
         </div>
-        <button class="resubmit-button" (click)="cardAdded = false">Add Another Card</button>
+        <!--<button class="resubmit-button" (click)="cardAdded = false">Add Another Card</button>-->
     </div>
 </div>
 </body>

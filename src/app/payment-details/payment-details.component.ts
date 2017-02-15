@@ -33,6 +33,9 @@ export class PaymentDetailsComponent {
         data => {
           this.zone.run(() => {
             this.chargedDetails = data;
+            for (let index in this.chargedDetails) {
+              this.chargedDetails[index].created = this.chargedDetails[index].created.split('T')[0]
+            }
           });
           console.log(data);
         },

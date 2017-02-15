@@ -273,18 +273,20 @@ var chargeCard = function(id, email, charge) {
 };
 
 var makePayment = function(id, email, charge) {
-  var cursor = db.collection('customer').find({email: email});
+  var cursor = db.collection('account').find({email: email});
   cursor.each(function(error, data) {
     if (error) return console.error(error);
     if (data != null) {
       stripe.transfers.create({
         amount: charge*100,
         currency: "usd",
-        customer: data.id
+        recipient: "self"
+      }, {
+        stripe_account: data.id
       }).then(function(pay) {
         pay.email = email;
         pay.transaction_type = 'pay'
-        pay.created = new Date(pay.created*1000).split('T')[0];
+        pay.created = new Date(pay.created*1000);
         db.collection('chargeDetails').save(pay, function(err, result){
           if (err) return console.error(err);
           console.log("saved to charge details");
@@ -886,7 +888,7 @@ var parcelStatusChange = function (data, callback) {
       }else if (parcel.receiverEmail === data.email){
         if (parcel.finalCharge) {
           chargeCard(data.parcelId, parcel.senderEmail, parcel.finalCharge)
-          // makePayment(data.parcelId, parcel.serviceProvider.email, parcel.finalCharge*0.9);
+          makePayment(data.parcelId, parcel.serviceProvider.email, parcel.finalCharge*0.9);
         }
         role = "Receiver";
         status = "Parcel Received From Service Provider";
