@@ -551,9 +551,30 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
   if (parcelDetails._id != null){
     parcelDetails._id = ObjectId(parcelDetails._id);
   }
-  console.log(new Date().toISOString().split('T')[0]);
   var cursorone = db.collection('serviceProvider')
-    .find({$and: [ {$or:[{"currentCity": parcelDetails.currentCity}, {"itineraryCitiesToDestination.city": parcelDetails.currentCity}]}, {$or:[{"destinationCity": parcelDetails.deliveryCity}, {"itineraryCitiesToDestination.city": parcelDetails.deliveryCity}]}, {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }}, {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}}, {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}}, {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}}, {"journeyDate" : {$gte: parcelDetails.startDeliveryDate,  $lte: parcelDetails.endDeliveryDate}}, {"journeyDate" : {$gte: new Date().toISOString().split('T')[0]}}]}).sort({maxParcelWeight: + 1});
+    .find(
+      {$and: [
+          {$or:[
+              {"currentCity": parcelDetails.currentCity},
+              {"itineraryCitiesToDestination.city": parcelDetails.currentCity}
+            ]
+          },
+          {$or:[
+              {"destinationCity": parcelDetails.deliveryCity},
+              {"itineraryCitiesToDestination.city": parcelDetails.deliveryCity}
+            ]
+          },
+          {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }},
+          {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}},
+          {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}},
+          {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}},
+          {"journeyDate" : {$gte: parcelDetails.startDeliveryDate,
+          $lte: parcelDetails.endDeliveryDate}},
+          {"journeyDate" : {$gte: new Date().toISOString().split('T')[0]}}
+        ]
+      }
+      )
+    .sort({maxParcelWeight: + 1});
 
   cursorone.count(function (e, count) {
 
@@ -568,34 +589,33 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
     }else {
       cursorone.each(function(err, provider){
         if (provider !== null && provider !== undefined){
-            // if (provider.currentCity === parcelDetails.currentCity || parcelDetails.nearByCitiesArray.indexOf(sender.currentCity) >= 0){
-            //   if (sender.deliveryCity === parcelDetails.deliveryCity){
-            //     responseToSender.push(sender);
-            //   }else {
-            //     for (var i in parcelDetails.itineraryCitiesToDestination){
-            //       if (parcelDetails.itineraryCitiesToDestination[i].city === sender.deliveryCity){
-            //         responseToSender.push(sender);
-            //       }
-            //     }
-            //   }
-            // }else {
-            //   for (var index in parcelDetails.itineraryCitiesToDestination){
-            //     if (parcelDetails.itineraryCitiesToDestination[index].city === sender.currentCity){
-            //       if (parcelDetails.destinationCity === sender.deliveryCity){
-            //         responseToSender.push(sender);
-            //       }else {
-            //         for (var i in parcelDetails.itineraryCitiesToDestination){
-            //           if (parcelDetails.itineraryCitiesToDestination[i].city === sender.deliveryCity){
-            //             if (parcelDetails.itineraryCitiesToDestination[index].index <= parcelDetails.itineraryCitiesToDestination[i].index){
-            //               responseToSender.push(sender);
-            //             }
-            //           }
-            //         }
-            //       }
-            //     }
-            //   }
-            // }
-          responseToSender.push(provider);
+          if (parcelDetails.currentCity === provider.currentCity || provider.nearByCitiesArray.indexOf(parcelDetails.currentCity) >= 0){
+            if (parcelDetails.deliveryCity === provider.destinationCity){
+              responseToSender.push(provider);
+            }else {
+              for (var i in provider.itineraryCitiesToDestination){
+                if (provider.itineraryCitiesToDestination[i].city === parcelDetails.deliveryCity){
+                  responseToSender.push(provider);
+                }
+              }
+            }
+          }else {
+            for (var index in provider.itineraryCitiesToDestination){
+              if (provider.itineraryCitiesToDestination[index].city === parcelDetails.currentCity){
+                if (provider.destinationCity === parcelDetails.deliveryCity){
+                  responseToSender.push(provider);
+                }else {
+                  for (var i in provider.itineraryCitiesToDestination){
+                    if (provider.itineraryCitiesToDestination[i].city === parcelDetails.deliveryCity){
+                      if (provider.itineraryCitiesToDestination[index].index <= provider.itineraryCitiesToDestination[i].index){
+                        responseToSender.push(provider);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
           count--;
           if (count === 0){
             sendResponse(responseToSender);
