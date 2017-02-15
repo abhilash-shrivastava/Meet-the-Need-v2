@@ -500,7 +500,12 @@ export class ServiceProviderComponent {
     }
   
   getParcelPrice(){
-    if (!this.model.maxParcelHeight && !this.model.maxParcelLength && !this.model.maxParcelWidth && !this.model.maxParcelWeigth) { return; }
+    if (!this.model.maxParcelHeight || !this.model.maxParcelLength || !this.model.maxParcelWidth || !this.model.maxParcelWeight) {
+      return;
+    }
+    // if (this.model.maxParcelWeight === parseInt(this.model.maxParcelWeight.toString(), 10) && this.model.maxParcelWidth === parseInt(this.model.maxParcelWidth.toString(), 10) && this.model.maxParcelHeight === parseInt(this.model.maxParcelHeight.toString(), 10) && this.model.maxParcelLength === parseInt(this.model.maxParcelLength.toString(), 10)) {
+    //   return
+    // }
     //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
     this.priceCalculatorService.getParcelPrice(this.model)
       .subscribe(

@@ -417,7 +417,7 @@ export class ParcelSenderComponent {
     }
     
     getParcelPrice(){
-        if (!this.model.parcelHeight && !this.model.parcelLength && !this.model.parcelWidth && !this.model.parcelWeigth) { return; }
+        if (!this.model.parcelHeight || !this.model.parcelLength || !this.model.parcelWidth || !this.model.parcelWeight) { return; }
         //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
         this.priceCalculatorService.getParcelPrice(this.model)
           .subscribe(

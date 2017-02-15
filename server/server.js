@@ -320,7 +320,7 @@ var getChargedDetails = function(data, callback) {
 var getParcelRates = function(parcelDetails, callback) {
   // set addresses
   var toAddress, fromAddress, parcel;
-  if (parcelDetails.senderEmail) {
+  if (parcelDetails.parcelWeight === parseInt(parcelDetails.parcelWeight, 10) && parcelDetails.parcelWidth === parseInt(parcelDetails.parcelWidth, 10) && parcelDetails.parcelHeight === parseInt(parcelDetails.parcelHeight, 10) && parcelDetails.parcelWeight === parseInt(parcelDetails.parcelLength, 10)) {
     toAddress = {
       "street1": parcelDetails.deliveryAddreddaddressLine1,
       "street 2": parcelDetails.deliveryAddreddaddressLine2,
@@ -346,7 +346,7 @@ var getParcelRates = function(parcelDetails, callback) {
       "weight": parseInt(parcelDetails.parcelWeight)
     };
 
-  } else if (parcelDetails.email) {
+  } else if (parcelDetails.maxParcelWeight === parseInt(parcelDetails.maxParcelWeight, 10) && parcelDetails.maxParcelWidth === parseInt(parcelDetails.maxParcelWidth, 10) && parcelDetails.maxParcelHeight === parseInt(parcelDetails.maxParcelHeight, 10) && parcelDetails.maxParcelLength === parseInt(parcelDetails.maxParcelLength, 10)) {
     toAddress = {
       "street1": parcelDetails.destinationAddreddaddressLine1,
       "street 2": parcelDetails.destinationAddreddaddressLine2,
@@ -371,6 +371,8 @@ var getParcelRates = function(parcelDetails, callback) {
       "height": parseInt(parcelDetails.maxParcelHeight),
       "weight": parseInt(parcelDetails.maxParcelWeight)
     };
+  } else {
+    return;
   }
 
 // create shipment

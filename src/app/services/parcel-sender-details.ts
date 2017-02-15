@@ -23,7 +23,7 @@ export class ParcelSenderDetails{
         state: string;
         zip: number;
     };
-    parcelWeigth: number;
+    parcelWeight: number;
     parcelHeight: number;
     parcelLength: number;
     parcelWidth: number;
