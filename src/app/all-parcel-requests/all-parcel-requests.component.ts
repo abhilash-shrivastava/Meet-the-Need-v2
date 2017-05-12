@@ -10,6 +10,7 @@ import {RequestsService} from "../services/request.service";
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {PaginationService} from "ng2-pagination/index";
 import {tokenNotExpired} from "angular2-jwt/angular2-jwt";
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -32,8 +33,9 @@ export class AllParcelRequestsComponent{
     deliveryAddress:any;
     destinationAddress:any;
     status:any;
+    card_tab = 1;
 
-    constructor(private requestsService: RequestsService,
+    constructor(private requestsService: RequestsService, private router: Router,
                 private panel: Panel) {
     }
 
@@ -53,24 +55,49 @@ export class AllParcelRequestsComponent{
             this.rejectRequest({requestId: requestId, requestType: requestType});
         }
     }
-
-    mapLoadAssignedParcel(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
-
+    
+    onCancelClick(requestId, requestType){
+        if (confirm("Cancel Request?")){
+            if (requestType == 'Service'){
+                this.cancelRequest({requestId: requestId, requestType: requestType})
+            }
+            if (requestType == 'Parcel'){
+                this.cancelRequest({requestId: requestId, requestType: requestType})
+            }
+        }
+    }
+    
+    onUpdateClick(requestId, requestType){
+        if (requestType == 'Service'){
+            this.router.navigate( ['service-provider', {id: requestId}] );
+        }
+        if (requestType == 'Parcel'){
+            this.router.navigate( ['parcel-sender', {id: requestId}] );
+        }
+    }
+    
+    mapLoadAssignedParcel(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, type:any){
+        
         this.currentServiceAddress = currentServiceAddress;
         this.currentSenderAddress = currentSenderAddress;
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
-
-
-        if (this.id !== id && (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender') ){
+        
+        
+        if (this.id !== id && type === 'Title'){
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
             this.mapAddress = "Map Direction To Service Provider";
         }
-        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+        if (type === 'Provider'){
+            this.id = id;
+            this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
+            this.mapAddress = "Map Direction To Service Provider";
+        }
+        if (type === 'Receiver'){
             this.id = id;
             this.panel.initMap(this.id, this.deliveryAddress, this.destinationAddress);
-            this.mapAddress = "Map Direction Between Service Provider and Receiver";
+            this.mapAddress = "Map Direction from Service Provider to Receiver";
         }
     }
 
@@ -118,10 +145,26 @@ export class AllParcelRequestsComponent{
                 data  => {
                     this.res = data;
                     if (this.res.role == 'Service'){
-                        this.getAssignedSenderRequests(this.profile);                    }
+                        this.getAssignedSenderRequests(this.profile);
+                    }
                 },
                 error =>  this.errorMessage = <any>error
             );
+    }
+    
+    cancelRequest(data){
+        if (!data.requestId || !data.requestType) { return; }
+        //noinspection TypeScriptUnresolvedFunction
+        this.requestsService.cancelRequest(data)
+          .subscribe(
+            data  => {
+                this.res = data;
+                if (this.res.role == 'Parcel'){
+                    this.getAssignedSenderRequests(this.profile);
+                }
+            },
+            error =>  this.errorMessage = <any>error
+          );
     }
 
     loggedIn() {

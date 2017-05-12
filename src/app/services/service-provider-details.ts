@@ -25,7 +25,7 @@ export class ServiceProviderDetails{
         from: string;
         to: string;
     };
-    maxParcelWeigth: number;
+    maxParcelWeight: number;
     maxParcelHeight: number;
     maxParcelLength: number;
     maxParcelWidth: number;
@@ -44,4 +44,5 @@ export class ServiceProviderDetails{
     currentCityLat: any;
     currentCityLng: any;
     nearByCitiesArray: any;
+    expectedParcelDeliveryCharge: number
 }

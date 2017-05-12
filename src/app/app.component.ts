@@ -6,7 +6,6 @@ import {UserCRUDService} from "./services/user-crud.service";
 import {AppState} from "./app.service";
 import {JwtHelper, tokenNotExpired} from "angular2-jwt/angular2-jwt";
 import {UserDetails} from "./services/user";
-import {ProfileComponent} from "./profile/profile.component";
 declare var Auth0Lock;
 
 /*

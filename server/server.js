@@ -23,8 +23,9 @@ var jwtCheck = jwt({
   secret: new Buffer(auth0Settings.secret, 'base64'),
   audience: auth0Settings.audience
 });
-
-
+var apiKey = 'OHqPyicFcGk6b5LEu7gbrw';
+var easypost = require('node-easypost')(apiKey);
+var stripe = require("stripe")("sk_test_kVfd9jhyoTvCG7ILbb5oBft2");
 
 var db;
 var responseToSender = [];
@@ -167,7 +168,6 @@ app.post('/sender-details', function (req, res) {
 });
 
 app.use('/cancel-request', jwtCheck);
-
 app.post('/cancel-request', function (req, res) {
   res.connection.setTimeout(0);
   cancelRequest(req.body, function(response){
@@ -177,7 +177,6 @@ app.post('/cancel-request', function (req, res) {
 
 
 app.use('/update-request', jwtCheck);
-
 app.post('/update-request', function (req, res) {
   res.connection.setTimeout(0);
   updateRequest(req.body, function(response){
@@ -194,6 +193,211 @@ app.post('/reject-request', function (req, res) {
     res.send(JSON.stringify(response));
   })
 });
+
+app.use('/parcel-price', jwtCheck);
+app.post('/parcel-price', function (req, res) {
+  res.connection.setTimeout(0);
+  getParcelRates(req.body, function(response){
+    res.send(JSON.stringify(response));
+  })
+});
+
+app.use('/save-card', jwtCheck);
+app.post('/save-card', function(req, res) {
+  res.connection.setTimeout(0);
+  saveCard(req.body, function (response) {
+    res.send(JSON.stringify(response));
+  });
+});
+
+app.use('/charged-details', jwtCheck);
+app.post('/charged-details', function(req, res) {
+  res.connection.setTimeout(0);
+  getChargedDetails(req.body, function (response) {
+    res.send(JSON.stringify(response));
+  });
+});
+
+var saveCard = function(cardDetails, callback) {
+  stripe.accounts.create({
+    managed: true,
+    country: 'US',
+    email: cardDetails.email,
+    tos_acceptance: {
+      date: Math.floor(+ new Date()/1000),
+      ip: "127.0.0.1"
+    },
+    external_account: cardDetails.token
+  }, function(err, account) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    // asynchronously called
+    account.email = cardDetails.email;
+    db.collection('account').save(account, function(err, result){
+      if (err) return console.error(err);
+      callback(200);
+      console.log("saved to customer");
+    });
+  });
+};
+
+var chargeCard = function(id, email, charge) {
+  var cursor = db.collection('account').find({email: email});
+  cursor.each(function(error, data) {
+    if (error) return console.error(error);
+    if (data != null) {
+      stripe.charges.create({
+        amount: charge*100,
+        currency: "usd",
+        source: data.id
+      }).then(function(charge) {
+        charge.email = email;
+        charge.transaction_type = 'deduction'
+        charge.created = new Date(charge.created*1000);
+        db.collection('chargeDetails').save(charge, function(err, result){
+          if (err) return console.error(err);
+          console.log("saved to charge details");
+          db.collection('providerAssigned').updateOne(
+            { "_id": ObjectId(id)},
+            {
+              $set: {'deduction_transaction_id': charge.id},
+            }, function(err, results) {
+              console.log('deduction transaction id attached');
+            });
+        });
+      });
+    }
+  })
+};
+
+var makePayment = function(id, email, charge) {
+  var cursor = db.collection('account').find({email: email});
+  cursor.each(function(error, data) {
+    if (error) return console.error(error);
+    if (data != null) {
+      stripe.transfers.create({
+        amount: charge*100,
+        currency: "usd",
+        recipient: "self"
+      }, {
+        stripe_account: data.id
+      }).then(function(pay) {
+        pay.email = email;
+        pay.transaction_type = 'pay'
+        pay.created = new Date(pay.created*1000);
+        db.collection('chargeDetails').save(pay, function(err, result){
+          if (err) return console.error(err);
+          console.log("saved to charge details");
+          db.collection('providerAssigned').updateOne(
+            { "_id": ObjectId(id)},
+            {
+              $set: {'pay_transaction_id': pay.id},
+            }, function(err, results) {
+              console.log('pay transaction id attached');
+            });
+        });
+      });
+    }
+  })
+};
+
+
+var getChargedDetails = function(data, callback) {
+  var chargedDetails = [];
+  var cursor = db.collection('chargeDetails').find({email: data.email});
+  cursor.each(function(error, data) {
+    if (error) return console.error(error);
+    if (data != null) {
+      chargedDetails.push(data);
+    }else {
+      callback(chargedDetails);
+    }
+  })
+};
+
+var getParcelRates = function(parcelDetails, callback) {
+  // set addresses
+  var toAddress, fromAddress, parcel;
+  if (parcelDetails.parcelWeight === parseInt(parcelDetails.parcelWeight, 10) && parcelDetails.parcelWidth === parseInt(parcelDetails.parcelWidth, 10) && parcelDetails.parcelHeight === parseInt(parcelDetails.parcelHeight, 10) && parcelDetails.parcelWeight === parseInt(parcelDetails.parcelLength, 10)) {
+    toAddress = {
+      "street1": parcelDetails.deliveryAddreddaddressLine1,
+      "street 2": parcelDetails.deliveryAddreddaddressLine2,
+      "city": parcelDetails.deliveryCity,
+      "state": parcelDetails.deliveryState,
+      "zip": parcelDetails.deliveryZip,
+      "country": 'US'
+    };
+
+    fromAddress = {
+      "street1": parcelDetails.currentAddreddaddressLine1,
+      "street2": parcelDetails.currentAddreddaddressLine2,
+      "city": parcelDetails.currentCity,
+      "state": parcelDetails.currentState,
+      "zip": parcelDetails.currentZip,
+      "country": 'US'
+    };
+
+    parcel={
+      "length": parseInt(parcelDetails.parcelLength),
+      "width": parseInt(parcelDetails.parcelWidth),
+      "height": parseInt(parcelDetails.parcelHeight),
+      "weight": parseInt(parcelDetails.parcelWeight)
+    };
+
+  } else if (parcelDetails.maxParcelWeight === parseInt(parcelDetails.maxParcelWeight, 10) && parcelDetails.maxParcelWidth === parseInt(parcelDetails.maxParcelWidth, 10) && parcelDetails.maxParcelHeight === parseInt(parcelDetails.maxParcelHeight, 10) && parcelDetails.maxParcelLength === parseInt(parcelDetails.maxParcelLength, 10)) {
+    toAddress = {
+      "street1": parcelDetails.destinationAddreddaddressLine1,
+      "street 2": parcelDetails.destinationAddreddaddressLine2,
+      "city": parcelDetails.destinationCity,
+      "state": parcelDetails.destinationState,
+      "zip": parcelDetails.destinationZip,
+      "country": 'US'
+    };
+
+    fromAddress = {
+      "street1": parcelDetails.currentAddreddaddressLine1,
+      "street2": parcelDetails.currentAddreddaddressLine2,
+      "city": parcelDetails.currentCity,
+      "state": parcelDetails.currentState,
+      "zip": parcelDetails.currentZip,
+      "country": 'US'
+    };
+
+    parcel={
+      "length": parseInt(parcelDetails.maxParcelLength),
+      "width": parseInt(parcelDetails.maxParcelWidth),
+      "height": parseInt(parcelDetails.maxParcelHeight),
+      "weight": parseInt(parcelDetails.maxParcelWeight)
+    };
+  } else {
+    return;
+  }
+
+// create shipment
+  easypost.Shipment.create({
+    to_address: toAddress,
+    from_address: fromAddress,
+    parcel: parcel
+  }, function(err, shipment) {
+    if (err){
+      console.error(err);
+      return
+    }
+    var rates = [];
+    if (shipment.rates.length > 0){
+      for (var index in shipment.rates) {
+        var rate = {};
+        rate.service = shipment.rates[index].service;
+        rate.carrier = shipment.rates[index].carrier;
+        rate.rate = shipment.rates[index].rate;
+        rates.push(rate)
+      }
+    }
+    callback(rates);
+  });
+};
 
 var assignProvider =  function (data, callback) {
   if (data._id != null){
@@ -262,17 +466,22 @@ var assignParcelForApproval =  function (data, callback) {
   responseToSender = [];
   responseToSender.push(data);
   callback(responseToSender);
+  db.collection('parcelSender').deleteOne({"_id": ObjectId(data._id)}, function (err, result) {
+    if (err) return console.log(err);
+    console.log('Deleted from parcel Sender');
+  });
   sendAssignedEmailToProvider(data, data.serviceProvider);
   sendAssignedEmailToSender (data, data.serviceProvider);
   sendAssignedEmailToReceiver(data, data.serviceProvider);
-  data.serviceProvider.maxParcelWeight -= data.serviceProvider.parcelWeight;
-  data.serviceProvider.maxParcelHeight -= data.serviceProvider.parcelHeight;
-  data.serviceProvider.maxParcelLength -= data.serviceProvider.parcelLength;
-  data.serviceProvider.maxParcelWidth -= data.serviceProvider.parcelWidth;
+  data.serviceProvider.maxParcelWeight -= data.parcelWeight;
+  data.serviceProvider.maxParcelHeight -= data.parcelHeight;
+  data.serviceProvider.maxParcelLength -= data.parcelLength;
+  data.serviceProvider.maxParcelWidth -= data.parcelWidth;
   if ((data.serviceProvider.maxParcelWeight < 1) || (data.serviceProvider.maxParcelHeight < 1) || (data.serviceProvider.maxParcelLength < 1) || (data.serviceProvider.maxParcelWidth < 1) ) {
     db.collection('serviceProvider').deleteOne(
-      { "_id": data.serviceProvider._id },
+      { "_id": ObjectId(data.serviceProvider._id) },
       function(err, results) {
+        if (err) return console.log(err);
         console.log("Deleted from serviceProvider");
         db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
           console.log('saved to serviceProvided');
@@ -280,10 +489,11 @@ var assignParcelForApproval =  function (data, callback) {
       });
   }else {
     db.collection('serviceProvider').updateOne(
-      { "_id": data.serviceProvider._id },
+      { "_id": ObjectId(data.serviceProvider._id) },
       {
         $set: { "maxParcelWeight": data.serviceProvider.maxParcelWeight, "maxParcelHeight": data.serviceProvider.maxParcelHeight, "maxParcelLength": data.serviceProvider.maxParcelLength, "maxParcelWidth": data.serviceProvider.maxParcelWidth },
       }, function(err, results) {
+        if (err) return console.log(err);
         console.log('updated serviceProvider');
         db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
           console.log('saved to serviceProvided');
@@ -303,19 +513,20 @@ var assignProviderForApproval =  function (data, callback) {
   db.collection('providerAssigned').insertOne(data, function(err, result){
     if (err) return console.log(err);
   responseToSender = [];
-  responseToSender.push(data.serviceProvider);
+  responseToSender.push(data);
   callback(responseToSender);
   sendAssignedEmailToProvider(data, data.serviceProvider);
   sendAssignedEmailToSender (data, data.serviceProvider);
   sendAssignedEmailToReceiver(data, data.serviceProvider);
-  data.serviceProvider.maxParcelWeight -= data.serviceProvider.parcelWeight;
-  data.serviceProvider.maxParcelHeight -= data.serviceProvider.parcelHeight;
-  data.serviceProvider.maxParcelLength -= data.serviceProvider.parcelLength;
-  data.serviceProvider.maxParcelWidth -= data.serviceProvider.parcelWidth;
+  data.serviceProvider.maxParcelWeight -= data.parcelWeight;
+  data.serviceProvider.maxParcelHeight -= data.parcelHeight;
+  data.serviceProvider.maxParcelLength -= data.parcelLength;
+  data.serviceProvider.maxParcelWidth -= data.parcelWidth;
   if ((data.serviceProvider.maxParcelWeight < 1) || (data.serviceProvider.maxParcelHeight < 1) || (data.serviceProvider.maxParcelLength < 1) || (data.serviceProvider.maxParcelWidth < 1) ) {
     db.collection('serviceProvider').deleteOne(
-      { "_id": data.serviceProvider._id },
+      { "_id": ObjectId(data.serviceProvider._id) },
       function(err, results) {
+        if (err) return console.log(err);
         console.log("Deleted from serviceProvider");
         db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
           console.log('saved to serviceProvided');
@@ -323,10 +534,11 @@ var assignProviderForApproval =  function (data, callback) {
       });
   }else {
     db.collection('serviceProvider').updateOne(
-      { "_id": data.serviceProvider._id },
+      { "_id": ObjectId(data.serviceProvider._id) },
       {
         $set: { "maxParcelWeight": data.serviceProvider.maxParcelWeight, "maxParcelHeight": data.serviceProvider.maxParcelHeight, "maxParcelLength": data.serviceProvider.maxParcelLength, "maxParcelWidth": data.serviceProvider.maxParcelWidth },
       }, function(err, results) {
+        if (err) return console.log(err);
         console.log('updated serviceProvider');
         db.collection('serviceProvided').insertOne( data.serviceProvider, function(err, results) {
           console.log('saved to serviceProvided');
@@ -342,7 +554,29 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
     parcelDetails._id = ObjectId(parcelDetails._id);
   }
   var cursorone = db.collection('serviceProvider')
-    .find({$and: [ {$or:[{"currentCity": parcelDetails.currentCity}, {"itineraryCitiesToDestination.city": parcelDetails.currentCity}]}, {$or:[{"destinationCity": parcelDetails.deliveryCity}, {"itineraryCitiesToDestination.city": parcelDetails.deliveryCity}]}, {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }}, {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}}, {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}}, {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}}, {"journeyDate" : {$gte: [parcelDetails.startDeliveryDate, new Date().toISOString().split('T')[0]], $lte: parcelDetails.endDeliveryDate}}]}).sort({maxParcelWeight: + 1});
+    .find(
+      {$and: [
+          {$or:[
+              {"currentCity": parcelDetails.currentCity},
+              {"itineraryCitiesToDestination.city": parcelDetails.currentCity}
+            ]
+          },
+          {$or:[
+              {"destinationCity": parcelDetails.deliveryCity},
+              {"itineraryCitiesToDestination.city": parcelDetails.deliveryCity}
+            ]
+          },
+          {"maxParcelWeight": { $gte: (parcelDetails.parcelWeight) }},
+          {"maxParcelHeight": { $gte: (parcelDetails.parcelHeight)}},
+          {"maxParcelLength": { $gte: (parcelDetails.parcelLength)}},
+          {"maxParcelWidth": { $gte: (parcelDetails.parcelWidth)}},
+          {"journeyDate" : {$gte: parcelDetails.startDeliveryDate,
+          $lte: parcelDetails.endDeliveryDate}},
+          {"journeyDate" : {$gte: new Date().toISOString().split('T')[0]}}
+        ]
+      }
+      )
+    .sort({maxParcelWeight: + 1});
 
   cursorone.count(function (e, count) {
 
@@ -356,8 +590,34 @@ var getServiceProviderList = function (parcelDetails,  sendResponse) {
     })
     }else {
       cursorone.each(function(err, provider){
-        if (provider !== null){
-          responseToSender.push(provider);
+        if (provider !== null && provider !== undefined){
+          if (parcelDetails.currentCity === provider.currentCity || provider.nearByCitiesArray.indexOf(parcelDetails.currentCity) >= 0){
+            if (parcelDetails.deliveryCity === provider.destinationCity){
+              responseToSender.push(provider);
+            }else {
+              for (var i in provider.itineraryCitiesToDestination){
+                if (provider.itineraryCitiesToDestination[i].city === parcelDetails.deliveryCity){
+                  responseToSender.push(provider);
+                }
+              }
+            }
+          }else {
+            for (var index in provider.itineraryCitiesToDestination){
+              if (provider.itineraryCitiesToDestination[index].city === parcelDetails.currentCity){
+                if (provider.destinationCity === parcelDetails.deliveryCity){
+                  responseToSender.push(provider);
+                }else {
+                  for (var i in provider.itineraryCitiesToDestination){
+                    if (provider.itineraryCitiesToDestination[i].city === parcelDetails.deliveryCity){
+                      if (provider.itineraryCitiesToDestination[index].index <= provider.itineraryCitiesToDestination[i].index){
+                        responseToSender.push(provider);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
           count--;
           if (count === 0){
             sendResponse(responseToSender);
@@ -564,12 +824,20 @@ var assignedSenderRequest = function (data, callback) {
       }
     })
   }else {
-    var cursor = db.collection('providerAssigned').find( { "senderEmail": data.email} );
-    cursor.each(function(err, request){
+    var cursor1 = db.collection('providerAssigned').find( { "senderEmail": data.email} );
+    cursor1.each(function(err, request){
       if (request !== null) {
         assignedServiceRequests.push(request);
       }else {
-        callback(assignedServiceRequests)
+        // var cursor2 = db.collection('parcelSender').find( { "senderEmail": data.email} );
+        // cursor2.each(function(err, request){
+        //   if (request !== null) {
+        //     assignedServiceRequests.push(request);
+        //   }else {
+        //     callback(assignedServiceRequests)
+        //   }
+        // });
+        callback(assignedServiceRequests);
       }
     })
   }
@@ -617,30 +885,41 @@ var parcelStatusChange = function (data, callback) {
   cursor.each(function(err, parcel){
     if (parcel !== null) {
       var status='';
+      var setObject;
       if (parcel.senderEmail === data.email){
         var role = "Sender";
         if (parcel.status === "Pending Approval At Parcel Sender"){
-          status = "Assigned To Service Provider"
+          status = "Assigned To Service Provider";
+          setObject= { "status": status, 'finalCharge': parcel.serviceProvider.expectedParcelDeliveryCharge };
         }else if (parcel.status === "Assigned To Service Provider"){
-          status = "Parcel Given To Service Provider"
+          status = "Parcel Given To Service Provider";
+          setObject= { "status": status};
         }
       }else if (parcel.serviceProvider.email === data.email){
         role = "Provider";
         if (parcel.status === "Parcel Given To Service Provider"){
-          status = "Parcel Collected From Sender"
+          status = "Parcel Collected From Sender";
+          setObject= { "status": status};
         }else if (parcel.status === "Parcel Collected From Sender"){
-          status = "Parcel Delivered To Receiver"
+          status = "Parcel Delivered To Receiver";
+          setObject= { "status": status};
         }else if (parcel.status === "Pending Approval At Service Provider"){
-          status = "Assigned To Service Provider"
+          status = "Assigned To Service Provider";
+          setObject= { "status": status, 'finalCharge': parcel.expectedParcelDeliveryCharge };
         }
       }else if (parcel.receiverEmail === data.email){
+        if (parcel.finalCharge) {
+          chargeCard(data.parcelId, parcel.senderEmail, parcel.finalCharge)
+          makePayment(data.parcelId, parcel.serviceProvider.email, parcel.finalCharge*0.9);
+        }
         role = "Receiver";
-        status = "Parcel Received From Service Provider"
+        status = "Parcel Received From Service Provider";
+        setObject= { "status": status};
       }
       db.collection('providerAssigned').updateOne(
         { "_id": ObjectId(data.parcelId)},
         {
-          $set: { "status": status },
+          $set: setObject,
         }, function(err, results) {
           console.log('status updated');
           sendStatusChangeEmail(parcel, status)
@@ -751,6 +1030,9 @@ var updateRequest = function (data, callback) {
 
 var rejectRequest = function (data, callback) {
   db.collection('providerAssigned').findOne({"_id": ObjectId(data.requestId)}, function (err, request) {
+      if (request['_id']){
+        delete request['_id'];
+      }
       db.collection('serviceProvider').insertOne(
         request.serviceProvider,
         function(err, results) {

@@ -8,12 +8,13 @@ import {tokenNotExpired} from "angular2-jwt/angular2-jwt";
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {PaginationService} from "ng2-pagination/index";
 import { ActivatedRoute, Router, Params } from '@angular/router';
+import {PaymentService} from "../services/payment.service";
 
 @Component({
     selector: 'receiver-sidebar',
     templateUrl: './receiver-sidebar.component.html',
     styleUrls: ['./receiver-sidebar.component.css'],
-    providers: [PaginationService, RequestsService, Panel, GoogleApiService],
+    providers: [PaginationService, RequestsService, Panel, GoogleApiService, PaymentService],
     
 })
 
@@ -46,12 +47,13 @@ export class ReceiverSidebarComponent {
     deliveryAddress:any;
     destinationAddress:any;
     status:any;
+    card_tab = 1;
     
     @Input('selection') selection: string;
     @Output() sidebarChange = new EventEmitter();
     
     constructor(private requestsService: RequestsService, private route: ActivatedRoute, private router: Router,
-                private panel: Panel) {
+                private panel: Panel, private paymentService: PaymentService) {
     }
     
     ngOnInit(){
@@ -62,22 +64,27 @@ export class ReceiverSidebarComponent {
         this.openNav();
     }
     
-    mapLoadAssignedReceiver(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
+    mapLoadAssignedReceiver(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, type:any){
         
         this.currentServiceAddress = currentServiceAddress;
         this.currentSenderAddress = currentSenderAddress;
         this.deliveryAddress = deliveryAddress;
         this.destinationAddress = destinationAddress;
         
-        if (this.id !== id && (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender')){
-            this.id = id;
-            this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
-            this.mapAddress = "Map Direction Between Service Provider and Parcel Sender";
-        }
-        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+        if (this.id !== id && type === 'Title'){
             this.id = id;
             this.panel.initMap(this.id, this.deliveryAddress, this.destinationAddress);
             this.mapAddress = "Map Direction To Service Provider";
+        }
+        if (type === 'Provider'){
+            this.id = id;
+            this.panel.initMap(this.id, this.deliveryAddress, this.destinationAddress);
+            this.mapAddress = "Map Direction To Service Provider";
+        }
+        if (type === 'Sender'){
+            this.id = id;
+            this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
+            this.mapAddress = "Map Direction from Provider to Sender";
         }
     }
     
@@ -379,8 +386,8 @@ export class ReceiverSidebarComponent {
     }
     
     openNav() {
-        document.getElementById("mySidenav").style.width = "350px";
-        document.getElementById("main").style.marginLeft = "350px";
+        document.getElementById("mySidenav").style.width = "280px";
+        document.getElementById("main").style.marginLeft = "280px";
         document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
     }
     

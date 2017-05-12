@@ -10,7 +10,7 @@ import {GoogleApiService} from "../services/googleAPIService.service";
     styles: [`
     .hide {
       display: none;
-    },
+    }
     .list-title {
     background: #0273D4;
     color: white;
@@ -19,7 +19,7 @@ import {GoogleApiService} from "../services/googleAPIService.service";
     ],
     template: `
   <div class="card" *ngIf="title">
-    <div style="background: #0273D4; color: white; padding: 20px; width: 80%;" (click)="toggle()">{{title}}  </div>
+    <div style="background: #0273D4; color: white; padding: 20px; width: 80%; margin-left: -70px;" (click)="toggle()">{{title}}  </div>
     <div  [hidden]="!opened"><ng-content></ng-content></div>
   </div>`,
     inputs: ['title']
@@ -184,6 +184,7 @@ export class Panel {
   
   currentAddressMarker: any;
   destinationAddressMarker : any;
+  deliveryAddressMarker: any;
   intermediateStopsMarkers = [];
   placeMarkerAndPanTo(address, id, addressType) {
     this.geocoder = new google.maps.Geocoder();
@@ -223,6 +224,13 @@ export class Panel {
             this.destinationAddressMarker.setMap(null);
           }
           this.destinationAddressMarker = marker;
+          this.map.setZoom(5);
+        }
+        if (addressType === "Delivery Address") {
+          if (this.deliveryAddressMarker){
+            this.deliveryAddressMarker.setMap(null);
+          }
+          this.deliveryAddressMarker = marker;
           this.map.setZoom(5);
         }
         if (addressType === "Intermediate Stop"){

@@ -1,0 +1,5 @@
+{
+  "globalDependencies": {
+    "stripe": "registry:dt/stripe#2.0.0+20170208014700"
+  }
+}

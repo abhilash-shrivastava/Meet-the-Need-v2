@@ -47,6 +47,7 @@ export class SenderSidebarComponent {
     deliveryAddress:any;
     destinationAddress:any;
     status:any;
+    card_tab =1;
     
     @Input('selection') selection: string;
     @Output() sidebarChange = new EventEmitter();
@@ -361,8 +362,8 @@ export class SenderSidebarComponent {
     }
     
     openNav() {
-        document.getElementById("mySidenav").style.width = "350px";
-        document.getElementById("main").style.marginLeft = "350px";
+        document.getElementById("mySidenav").style.width = "280px";
+        document.getElementById("main").style.marginLeft = "280px";
         document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
     }
     
@@ -386,7 +387,7 @@ export class SenderSidebarComponent {
         }
     }
     
-    mapLoadAssignedParcel(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
+    mapLoadAssignedParcel(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, type:any){
         
         this.currentServiceAddress = currentServiceAddress;
         this.currentSenderAddress = currentSenderAddress;
@@ -394,15 +395,20 @@ export class SenderSidebarComponent {
         this.destinationAddress = destinationAddress;
         
         
-        if (this.id !== id && (status == 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender') ){
+        if (this.id !== id && type === 'Title'){
             this.id = id;
             this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
             this.mapAddress = "Map Direction To Service Provider";
         }
-        if (this.id !== id && (status == 'Parcel Given To Service Provider' || status =='Parcel Collected From Sender' || status =='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
+        if (type === 'Provider'){
+            this.id = id;
+            this.panel.initMap(this.id, this.currentSenderAddress, this.currentServiceAddress);
+            this.mapAddress = "Map Direction To Service Provider";
+        }
+        if (type === 'Receiver'){
             this.id = id;
             this.panel.initMap(this.id, this.deliveryAddress, this.destinationAddress);
-            this.mapAddress = "Map Direction Between Service Provider and Receiver";
+            this.mapAddress = "Map Direction from Service Provider to Receiver";
         }
     }
     

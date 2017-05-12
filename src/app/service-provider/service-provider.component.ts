@@ -9,13 +9,15 @@ import {tokenNotExpired} from 'angular2-jwt';
 import {GoogleApiService} from "../services/googleAPIService.service";
 import {Panel} from "../profile/panel";
 import {GeoByteService} from "../services/geobyte.service";
+import {PaginationService} from "ng2-pagination";
+import {PriceCalculatorService} from "../services/priceCalculator.service";
 
 
 @Component({
     selector: 'service-provider',
     templateUrl: './service-provider.component.html',
     styleUrls: ['./service-provider.component.css'],
-    providers: [ ServiceProviderCRUDService, Panel, GoogleApiService, GeoByteService ],
+    providers: [ ServiceProviderCRUDService, Panel, GoogleApiService, GeoByteService, PaginationService, PriceCalculatorService ],
 })
 
 export class ServiceProviderComponent {
@@ -47,6 +49,12 @@ export class ServiceProviderComponent {
     nearByCities: any;
     radius: number;
     segment = 1;
+    id: any;
+    mapAddress:any;
+    currentServiceAddress: any;
+    currentSenderAddress:any;
+    deliveryAddress:any;
+    destinationAddress:any;
     disabled1 = true;
     disabled2 = false;
     disabled3 = false;
@@ -59,6 +67,9 @@ export class ServiceProviderComponent {
     class4 = 'btn btn-default btn-circle';
     class5 = 'btn btn-default btn-circle';
     class6 = 'btn btn-default btn-circle';
+    geocoder: any;
+    card_tab = 1;
+    parcelRates: any;
     componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -122,12 +133,45 @@ export class ServiceProviderComponent {
     status: string;
     constructor(private panel: Panel, private geoByteService: GeoByteService,
                 private googleApi:GoogleApiService,
-        private serviceProviderCRUDService: ServiceProviderCRUDService) {
+                private serviceProviderCRUDService: ServiceProviderCRUDService,
+                private priceCalculatorService: PriceCalculatorService) {
     }
-
-    selectParcel(parcel){
+  
+    mapLoadAssignedService(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, type:any){
+      
+      this.currentServiceAddress = currentServiceAddress;
+      this.currentSenderAddress = currentSenderAddress;
+      this.deliveryAddress = deliveryAddress;
+      this.destinationAddress = destinationAddress;
+  
+      if (this.id !== id && type === 'Title'){
+        this.id = id;
+        this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
+        this.mapAddress = "Map Direction To Parcel Sender";
+      }
+      
+      if (type === 'Sender'){
+        this.id = id;
+        this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
+        this.mapAddress = "Map Direction To Parcel Sender";
+      }
+      if (type === 'Receiver'){
+        this.id = id;
+        this.panel.initMap(this.id, this.destinationAddress, this.deliveryAddress);
+        this.mapAddress = "Map Direction To Receiver"
+      }
+    }
+  
+  
+  selectParcel(parcel){
         parcel['serviceProvider'] = this.model;
         this.parcelOrderSelected = true;
+        this.card_tab=1;
+        this.mapLoadAssignedService(parcel._id + 'selected-parcel', parcel.currentAddreddaddressLine1 + ' ' + parcel.currentAddreddaddressLine2 + ' ' + parcel.currentCity
+      + ' ' + parcel.currentState + ' ' + parcel.currentZip, this.model.currentAddreddaddressLine1 + ' ' + this.model.currentAddreddaddressLine2 + ' ' + this.model.currentCity
+      + ' ' + this.model.currentState + ' ' + this.model.currentZip, parcel.deliveryAddreddaddressLine1 + ' ' + parcel.deliveryAddreddaddressLine2 + ' ' + parcel.deliveryCity
+      + ' ' + parcel.deliveryState + ' ' + parcel.deliveryZip, this.model.destinationAddreddaddressLine1 + ' ' + this.model.destinationAddreddaddressLine2 + ' ' + this.model.destinationCity
+      + ' ' + this.model.destinationState + ' ' + this.model.destinationZip, 'Sender');
         this.selectParcelOrder(parcel)
     }
 
@@ -136,6 +180,7 @@ export class ServiceProviderComponent {
         this.parcelOrderSelected= false;
         this.isLoading =false;
         this.model.itineraryCitiesToDestination = [];
+        this.requests = [];
     }
 
     ngOnInit(): void {
@@ -163,6 +208,7 @@ export class ServiceProviderComponent {
           // }
           this.getServiceProviderDetails(this.profile);
         });
+        console.log(this.model);
     }
   
     onRadiusChange(radius){
@@ -209,7 +255,7 @@ export class ServiceProviderComponent {
             this.model.currentCity = "";
             this.model.currentState ="";
             this.model.currentZip = "";
-            var completeCurrentAddress="" 
+            var completeCurrentAddress=""
 
             // Get each component of the address from the place details
             // and fill the corresponding field on the form.
@@ -236,6 +282,16 @@ export class ServiceProviderComponent {
                         }
                     }
                 }
+              this.geocoder = new google.maps.Geocoder();
+              this.geocoder.geocode({'address': completeCurrentAddress}, (results, status) => {
+                if (status === 'OK') {
+                  this.model.currentCityLat = results[0].geometry.location.lat();
+                  this.model.currentCityLng = results[0].geometry.location.lng();
+      
+                } else {
+                  alert('Geocode was not successful for the following reason: ' + status);
+                }
+              });
                 if (place.address_components.length > 0){
                     setTimeout(() => {
                         this.isCurrentAddressLoading = false;
@@ -309,8 +365,6 @@ export class ServiceProviderComponent {
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
-              this.model.currentCityLat = position.coords.latitude;
-              this.model.currentCityLng = position.coords.longitude;
                 this.geolocation = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
@@ -442,6 +496,24 @@ export class ServiceProviderComponent {
             );
 
     }
+  
+  getParcelPrice(){
+    if (!this.model.maxParcelHeight || !this.model.maxParcelLength || !this.model.maxParcelWidth || !this.model.maxParcelWeight) {
+      return;
+    }
+    // if (this.model.maxParcelWeight === parseInt(this.model.maxParcelWeight.toString(), 10) && this.model.maxParcelWidth === parseInt(this.model.maxParcelWidth.toString(), 10) && this.model.maxParcelHeight === parseInt(this.model.maxParcelHeight.toString(), 10) && this.model.maxParcelLength === parseInt(this.model.maxParcelLength.toString(), 10)) {
+    //   return
+    // }
+    //noinspection TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+    this.priceCalculatorService.getParcelPrice(this.model)
+      .subscribe(
+        data  => {
+          this.parcelRates = data;
+        },
+        error =>  this.errorMessage = <any>error
+      );
+    
+  }
   getNearByCities(lat:any, lng:any, radius:any){
     if (!lat || !lng || !radius) { return; }
     this.geoByteService.getNearByCities(lat, lng, radius)

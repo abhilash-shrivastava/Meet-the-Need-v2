@@ -87,14 +87,15 @@ nav label {
     width: 40px;
     border-radius: 50%;
 }
-.bg-image {
-    /*background-image: url(http://www.mbagusi.com/i/light-abstract-background-wallpaper-2.jpg);*/
-    background-image: url(http://www.ngepluk.com/p/plain-white-wallpaper-images-f44.jpeg);
-    animation: animatedBackground 40s linear infinite;
-}
+/*.bg-image {*/
+    /*!*background-image: url(http://www.mbagusi.com/i/light-abstract-background-wallpaper-2.jpg);*!*/
+    /*background-image: url(http://www.ngepluk.com/p/plain-white-wallpaper-images-f44.jpeg);*/
+    /*animation: animatedBackground 40s linear infinite;*/
+/*}*/
 
 body {
     margin: 0px !important;
+    background-color: transparent !important;
 }
 
 
@@ -150,4 +151,73 @@ body {
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
+}
+
+.fullscreen-bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -100;
+}
+
+.fullscreen-bg__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-aspect-ratio: 16/9) {
+    .fullscreen-bg__video {
+        height: 300%;
+        top: -100%;
+    }
+}
+
+@media (max-aspect-ratio: 16/9) {
+    .fullscreen-bg__video {
+        width: 300%;
+        left: -100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .fullscreen-bg__video {
+        display: none;
+    }
+}
+
+.simple-panel {
+    width: 250px !important;
+    height: 250px !important;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+    background-image: url("./../assets/img/login-background.jpg");
+    border-style: inset;
+    border-width: 2px;
+}
+
+div {
+    color: black;
+}
+
+h1 {
+    color: white !important;
+}
+
+li :first-child {
+    color: white;
+}
+
+html {
+    background: url("./../assets/img/667uuswqliy-pablo-garcia-saldana.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }

@@ -47,6 +47,7 @@ export class ProviderSidebarComponent {
     destinationAddress:any;
     status:any;
     showAllRequestClicked = false;
+    card_tab=1;
   
   
     @Input('selection') selection: string;
@@ -55,9 +56,9 @@ export class ProviderSidebarComponent {
 
 
   openNav() {
-      document.getElementById("mySidenav").style.width = "350px";
-      document.getElementById("main").style.marginLeft = "350px";
-    }
+      document.getElementById("mySidenav").style.width = "280px";
+      document.getElementById("main").style.marginLeft = "280px";
+  }
 
     closeNav() {
       document.getElementById("mySidenav").style.width = "0";
@@ -388,25 +389,31 @@ export class ProviderSidebarComponent {
             this.rejectRequest({requestId: requestId, requestType: requestType});
         }
     }
-
-    mapLoadAssignedService(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, status:any){
-
-        this.currentServiceAddress = currentServiceAddress;
-        this.currentSenderAddress = currentSenderAddress;
-        this.deliveryAddress = deliveryAddress;
-        this.destinationAddress = destinationAddress;
-
-        if (this.id !== id && (status === 'Assigned To Service Provider' || status === 'Pending Approval At Service Provider' || status === 'Pending Approval At Parcel Sender')){
-            this.id = id;
-            this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
-            this.mapAddress = "Map Direction To Parcel Sender";
-        }
-        if (this.id !== id && (status === 'Parcel Given To Service Provider' || status ==='Parcel Collected From Sender' || status ==='Parcel Delivered To Receiver' || status =='Parcel Received From Service Provider')){
-            this.id = id;
-            this.panel.initMap(this.id, this.destinationAddress, this.deliveryAddress);
-            this.mapAddress = "Map Direction To Receiver"
-        }
+  
+  mapLoadAssignedService(id:any, currentSenderAddress: any, currentServiceAddress:any, deliveryAddress:any, destinationAddress:any, type:any){
+    
+    this.currentServiceAddress = currentServiceAddress;
+    this.currentSenderAddress = currentSenderAddress;
+    this.deliveryAddress = deliveryAddress;
+    this.destinationAddress = destinationAddress;
+    
+    if (this.id !== id && type === 'Title'){
+      this.id = id;
+      this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
+      this.mapAddress = "Map Direction To Parcel Sender";
     }
+    
+    if (type === 'Sender'){
+      this.id = id;
+      this.panel.initMap(this.id, this.currentServiceAddress, this.currentSenderAddress);
+      this.mapAddress = "Map Direction To Parcel Sender";
+    }
+    if (type === 'Receiver'){
+      this.id = id;
+      this.panel.initMap(this.id, this.destinationAddress, this.deliveryAddress);
+      this.mapAddress = "Map Direction To Receiver"
+    }
+  }
     
     getAssignedServiceRequests(data){
         if (!this.profile.email) { return; }
