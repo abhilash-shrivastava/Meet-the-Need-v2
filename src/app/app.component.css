@@ -87,11 +87,11 @@ nav label {
     width: 40px;
     border-radius: 50%;
 }
-.bg-image {
-    /*background-image: url(http://www.mbagusi.com/i/light-abstract-background-wallpaper-2.jpg);*/
-    background-image: url(http://www.ngepluk.com/p/plain-white-wallpaper-images-f44.jpeg);
-    animation: animatedBackground 40s linear infinite;
-}
+/*.bg-image {*/
+    /*!*background-image: url(http://www.mbagusi.com/i/light-abstract-background-wallpaper-2.jpg);*!*/
+    /*background-image: url(http://www.ngepluk.com/p/plain-white-wallpaper-images-f44.jpeg);*/
+    /*animation: animatedBackground 40s linear infinite;*/
+/*}*/
 
 body {
     margin: 0px !important;
